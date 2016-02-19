@@ -1,2 +1,2 @@
-# breakfast
+# Breakfast
 Bachelor project
