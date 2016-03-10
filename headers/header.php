@@ -41,11 +41,11 @@
 				<nav id="navigation">
 					<ul>
 					  <li>
-						<a href="project.php">Breakfast project</a>
+						<a href="project.php">Overview</a>
 					  </li><li>
-						<a href="products.php">Breakfast products</a>
+						<a href="products.php">Products</a>
 					  </li><li>
-						<a href="participants.php">Breakfast participants</a>
+						<a href="participants.php">Participants</a>
 					  </li><li>
 						<a href="about.php">About</a>
 					  </li>
