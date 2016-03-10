@@ -41,7 +41,7 @@
 				<nav id="navigation">
 					<ul>
 					  <li>
-						<a href="breakfast.php">Breakfast list</a>
+						<a href="project.php">Breakfast project</a>
 					  </li><li>
 						<a href="products.php">Breakfast products</a>
 					  </li><li>

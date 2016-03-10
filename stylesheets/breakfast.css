@@ -167,36 +167,86 @@ color:#00506f;
 }
 
 
-/* BODY */
+/****************** BODY *******************/
 
 /* FRONTPAGE */
 #frontpage{
 	text-align: center;
 }
-#frontpage ul li#pageTitle{
+	#frontpage ul li#pageTitle{
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	#frontpage ul li#adminContent span{
+		display: inline-block;
+		width: 100%;
+		padding: 2px;
+	}
+	#frontpage ul li#adminContent span input{
+		text-align: center;
+	}
+	#frontpage ul li#adminShift{
+		padding-top: 5px;
+	}
+	#frontpage ul li#about{
+		padding-top: 20px;
+	}
+	#frontpage ul li#about span{
+		display: inline-block;
+		width: 50%;
+	}
+	#frontpage ul li#about span.title{
+		font-size: 1.0em;
+		text-decoration: underline;
+	}
+	#frontpage ul li#about span.content{
+		font-size: 0.8em;
+	}
+
+/* PROJECT PAGE */
+#projectpage{
+	text-align: left;
+}
+#projectpage ul li#pageTitle{
 	font-size: 1.5em;
 	font-weight: bold;
 }
-#frontpage ul li#logIn span{
-	display: inline-block;
-	width: 100%;
-	padding: 2px;
+#projectpage ul li#pageSubTitle{
+	font-size: 0.9em;
+	font-style: italic;
 }
-#frontpage ul li#logIn span input{
-	text-align: center;
+#projectpage ul li#projectContent{
+	padding-top: 30px;
 }
-#frontpage ul li#about{
-	padding-top: 20px;
-	text-align: center;
+
+/* PRODUCTS PAGE */
+#productspage{
+	text-align: left;
 }
-#frontpage ul li#about span{
-	display: inline-block;
-	width: 50%;
+#productspage ul li#pageTitle{
+	font-size: 1.5em;
+	font-weight: bold;
 }
-#frontpage ul li#about span.title{
-	font-size: 1.0em;
-	text-decoration: underline;
+#productspage ul li#pageSubTitle{
+	font-size: 1.0.9em;
+	font-style: italic;
 }
-#frontpage ul li#about span.content{
-	font-size: 0.8em;
+#productspage ul li#projectContent{
+	padding-top: 30px;
+}
+
+/* PARTICIPANTS PAGE */
+#participantspage{
+	text-align: left;
+}
+#participantspage ul li#pageTitle{
+	font-size: 1.5em;
+	font-weight: bold;
+}
+#participantspage ul li#pageSubTitle{
+	font-size: 0.9em;
+	font-style: italic;
+}
+#participantspage ul li#projectContent{
+	padding-top: 30px;
 }
