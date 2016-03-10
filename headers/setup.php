@@ -80,14 +80,14 @@ try{
 		$session_db->execute();
 		$valid_session = $session_db->fetchColumn();
 		if($valid_session > 0){
-			$project_db = $conn->prepare("SELECT * FROM agabel_projects WHERE project_id = :project_id LIMIT 1");
+			$project_db = $conn->prepare("SELECT * FROM breakfast_projects WHERE project_id = :project_id LIMIT 1");
 			$project_db->bindParam(':project_id', $cookie_project_id);		
 			$project_db->execute();
 			$project = $project_db->fetch();
 			$project_name = str_replace ( "\"", "&quot;", $project['project_name']);
 		}else{
-			setcookie ("cookie_project_id", "", time() -36000000000, '/', '127.0.0.1');
-			setcookie ("cookie_hash", "", time() -36000000000, '/', '127.0.0.1');
+			setcookie ("cookie_project_id", "", time() -36000000000, '/', 'localhost');
+			setcookie ("cookie_hash", "", time() -36000000000, '/', 'localhost');
 			$cookie_project_id	= "";
 			$cookie_hash	= "";			
 		}

@@ -1,18 +1,23 @@
 <?php
 include("../headers/setup.php");
+
+if(isset($cookie_project_id)){header('Location: project.php'); exit;}
+
 include("../headers/header.php");
+
 ?>
+	<head>
+		<title>
+			Breakfast management
+		</title>	
+		<script>
+			window.onload = shiftLogin();
+		</script>	
+	</head>
+
 	<div id="frontpage">
 		<ul>
-			<li id="pageTitle">
-				LOG IN
-			</li>
-			<li id="logIn">
-				<form>
-					<span><input type="text" placeholder="Username"/></span>
-					<span><input type="text" placeholder="Password"/></span>
-					<span><input type="submit" value="Log in"/></span>
-				</form>
+			<li id="adminAllContent">
 			</li>
 			<li id="about">
 				<span class="title">About this webapp</span>
@@ -21,7 +26,6 @@ include("../headers/header.php");
 			</li>
 		</ul>
 	</div>
-
 <?php
 include("../headers/footer.php");
 ?>
