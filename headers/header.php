@@ -26,6 +26,8 @@
 	<script type="text/javascript" src="http://agabel.dk/jscripts/jquery.hammer.js" ></script>
 	<script type="text/javascript" src="http://agabel.dk/jscripts/modernizer.min.js" ></script>
 	<script type="text/javascript" src="http://agabel.dk/jscripts/moment.min.js" ></script>
+	
+	<script>var project_id = "<?php echo $cookie_project_id; ?>";</script>
 </head>
  
 <body> 
@@ -47,7 +49,7 @@
 					  </li><li>
 						<a href="participants.php">Participants</a>
 					  </li><li>
-						<a href="about.php">About</a>
+						<a href="about.php">Log out</a>
 					  </li>
 					</ul>
 				</nav>

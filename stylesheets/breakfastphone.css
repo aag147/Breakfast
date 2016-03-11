@@ -11,7 +11,20 @@
 	.div_title{
 	font-size: 2.0em;
 	}
+	
+	#standardContent{
+		width: 100%;
+		padding-right: 0px;
+	}
+	#standardPanel{
+		width: 100%;
+		padding-top: 20px;
+	}
+	
 }
+
+
+
 @media screen and (min-width: 0px) and (max-width: 0px) {
 	/*----------- PHONE MENU -------------*/
 	/* NOT USED */

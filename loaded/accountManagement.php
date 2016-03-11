@@ -86,9 +86,9 @@ try{
 			// Empty inputs
 			if (empty($name) OR empty($password)){$errmsg[0] = -1; goto registerError;}		
 			// Double name
-			if ($check_name > 0){$errmsg[0] = -3; goto registerError;}	
+			if ($check_name > 0){$errmsg[0] = -2; goto registerError;}	
 			// Too long password
-			if (strlen($password) > 30){$errmsg[0] = -4; goto registerError;}
+			if (strlen($password) > 30){$errmsg[0] = -3; goto registerError;}
 			
 			// hasher
 			$hasher = new PasswordHash(8, false);

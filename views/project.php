@@ -6,21 +6,35 @@ include("../headers/header.php");
 		<title>
 			Your breakfast project
 		</title>	
-		<script>
-			window.onload = shiftLogin();
-		</script>	
 	</head>
 
-	<div id="projectpage">
+	<div id="standardTitle">
 		<ul>
-			<li id="pageTitle">
+			<li id="title">
 				<?php echo $project_name; ?>
 			</li>
-			<li id="pageSubTitle">
+			<li id="subtitle">
 				Your breakfast project
 			</li>
-			<li id="projectContent">
-				Something here
+		</ul>
+	</div>
+	<div id="standardContent">
+		<ul>
+			<li>
+				Forthcoming breakfasts
+			</li>
+			<li>
+				Not implemented!
+			</li>
+		</ul>
+	</div><?php
+	?><div id="standardPanel">
+		<ul>
+			<li id="title">
+				Missing breakfast products
+			</li>
+			<li>
+				Not implemented!
 			</li>
 		</ul>
 	</div>

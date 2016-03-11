@@ -38,13 +38,13 @@ try{
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
 	$createProjectsTable->execute();
 	$createUsersTable = $conn->prepare("
-			CREATE TABLE IF NOT EXISTS `breakfast_users` (
-			  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+			CREATE TABLE IF NOT EXISTS `breakfast_participants` (
+			  `participant_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `project_id` int(11) NOT NULL,
-			  `user_name` varchar(100) NOT NULL,
-			  `user_email` text NOT NULL,
-			  `user_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  PRIMARY KEY (`user_id`)
+			  `participant_name` varchar(100) NOT NULL,
+			  `participant_email` text NOT NULL,
+			  `participant_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  PRIMARY KEY (`participant_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
 	$createUsersTable->execute();
 	$createProductsTable = $conn->prepare("
