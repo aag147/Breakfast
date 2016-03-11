@@ -29,6 +29,11 @@ try{
 	</div>
 	<div id="standardContent">
 		<ul id="standardList">
+			<li class="listLegend">
+				<span class="name">Name</span><?php
+				?><span class="status"></span><?php
+				?><span class="admin">Admin</span>
+			</li>
 			<?php
 			while($participant = $participants_db->fetch(PDO::FETCH_ASSOC)){
 				echo "<li id='participant_".$participant['participant_id']."'>";
@@ -36,6 +41,7 @@ try{
 						echo "<span class='name'>".$participant['participant_name']."</span>";
 						echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
 					echo "</span>";
+					echo "<span class='status'></span>";
 					echo "<span class='options'>";
 						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[save]</a>";
 						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[edit]</a>";
@@ -48,7 +54,7 @@ try{
 	</div><?php
 	
 	?><div id="standardPanel">
-		<ul>
+		<ul id="adminPanel">
 			<li id="title">
 				Administration
 			</li>
@@ -63,7 +69,7 @@ try{
 				</span>
 				<span class="optionSubmit">
 					<input name="project_id" type="hidden" value="<?php echo $cookie_project_id; ?>" />
-					<input type="submit" value="Submit"/>
+					<input type="submit" value="Send"/>
 				</span>
 			</form>
 			</li>

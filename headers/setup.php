@@ -37,16 +37,17 @@ try{
 			  PRIMARY KEY (`project_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
 	$createProjectsTable->execute();
-	$createUsersTable = $conn->prepare("
+	$createParticipantsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_participants` (
 			  `participant_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `project_id` int(11) NOT NULL,
 			  `participant_name` varchar(100) NOT NULL,
 			  `participant_email` text NOT NULL,
 			  `participant_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  `participant_lastTime` date NOT NULL,
 			  PRIMARY KEY (`participant_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
-	$createUsersTable->execute();
+	$createParticipantsTable->execute();
 	$createProductsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_products` (
 			  `product_id` int(11) NOT NULL AUTO_INCREMENT,

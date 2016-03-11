@@ -217,34 +217,6 @@ color:#248f24;
 	width: 30%;
 	vertical-align: top;
 }
-	#standardPanel ul li#title{
-	font-size: 1.0em;
-	font-weight: bold;
-	border-bottom: 1px solid;
-	}
-	#standardPanel ul li.option{
-	padding: 5px 0px;
-	}
-		#standardPanel ul li.option span{
-		display: inline-block;
-		width: 100%;
-		padding: 2px 0px;
-		}
-		#standardPanel ul li.option span.optionTitle{
-		text-decoration: none;
-		}
-		#standardPanel ul li.option span.optionInputs input{
-		width: 100%;
-		}
-		#standardPanel ul li.option span.optionInputs input:not(:last-child){
-		margin-bottom: 2px;
-		}
-		#standardPanel ul li.option span.optionErrmsg{
-		text-align: right;
-		}
-		#standardPanel ul li.option span.optionSubmit{
-		text-align: right;
-		}
 
 /* FRONTPAGE */
 #frontpage{
@@ -280,13 +252,121 @@ color:#248f24;
 		font-size: 0.8em;
 	}
 
+	
+	
+/* PROJECT CONTENT */
+#projectContent{
+	
+}	
+	#projectContent li#title{
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+	#projectContent li#weeks{
+	width: 100%;
+	}
+	#projectContent li.week{
+		display: inline-block;
+		width: 100%;
+		font-size: 1.1em;
+		margin-bottom: 2px;
+		
+		background: #bbb;
+		background: -moz-linear-gradient(#eee, #bbb); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bbb),color-stop(1, #eee));	
+		background: -webkit-linear-gradient(#eee, #bbb);	
+		background: -o-linear-gradient(#eee, #bbb);
+		background: -ms-linear-gradient(#eee, #bbb);
+		background: linear-gradient(#eee, #bbb);
+		/*-moz-border-radius: 50px;
+		border-radius: 50px;*/
+		-moz-box-shadow: 0 2px 1px #9c9c9c;
+		-webkit-box-shadow: 0 2px 1px #9c9c9c;
+		box-shadow: 0 2px 1px #9c9c9c;
+	}
+	#projectContent li.week a{
+		display: inline-block;
+		height: 100%;
+		width: 100%;
+		padding: 5px 5px;
+	}
+	#projectContent li.week a span.weekTitle{
+		display: inline-block;
+		width: 25%;
+	}
+	#projectContent li.week a span.theChef{
+		display: inline-block;
+		width: 75%;
+		text-align: right;
+	}
+	#projectContent li.week a:hover span.theChef{
+		color: #000;
+	}
+	#projectContent li.participants{
+	width: 100%;
+	padding: 5px;
+	border: 1px solid;
+	border-top: none;
+	margin-bottom: 10px;
+	}
+	
+	#projectContent li.participants span.participantsTitle{
+	display: inline-block;
+	width: 100%;
+	padding-bottom: 5px;
+	}
+	#projectContent li.participants li{
+	display: inline-block;
+	width: 50%;
+	}
+	
+/* PROJECT PANEL */
+#projectPanel{
+}	
+	#projectPanel li#title{
+	font-size: 1.0em;
+	font-weight: bold;
+	border-bottom: 1px solid;
+	}
 
+	
+/* STANDARD ADMIN PANEL */
+#adminPanel li#title{
+font-size: 1.0em;
+font-weight: bold;
+border-bottom: 1px solid;
+}
+#adminPanel li.option{
+padding: 5px 0px;
+}
+	#adminPanel li.option span{
+	display: inline-block;
+	width: 100%;
+	padding: 2px 0px;
+	}
+	#adminPanel li.option span.optionTitle{
+	text-decoration: none;
+	}
+	#adminPanel li.option span.optionInputs input{
+	width: 100%;
+	}
+	#adminPanel li.option span.optionInputs input:not(:last-child){
+	margin-bottom: 2px;
+	}
+	#adminPanel li.option span.optionErrmsg{
+	text-align: right;
+	}
+	#adminPanel li.option span.optionSubmit{
+	text-align: right;
+	}
+	
+	
 /* STANDARD LIST */
 #standardList{
 	text-align: left;
 	width: 100%;
 }
-	#standardList li{
+	#standardList li:not(.listLegend){
 		padding: 5px 5px;
 		background: #bbb;
 		background: -moz-linear-gradient(#eee, #bbb); 
@@ -303,8 +383,26 @@ color:#248f24;
 	}
 	#standardList li span{
 		display: inline-block;
-		padding: 1px 0px; 
+		padding: 1px 0px;
 	}
+	/* THE LIST LEGEND */
+	#standardList li.listLegend span{
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	#standardList li.listLegend span.name{
+		width: 65%;
+		text-align: center;
+	}
+	#standardList li.listLegend span.status{
+		width: 20%;
+		text-align: right;
+	}
+	#standardList li.listLegend span.admin{
+		width: 15%;
+		text-align: right;
+	}
+	/* THE LIST CONTENT */
 	#standardList li span.span2input{
 		width: 80%;
 	}
@@ -320,11 +418,16 @@ color:#248f24;
 			width: 100%;
 			margin: 1px 0px;
 		}
+	#standardList li span.status{
+	width: 5%;
+	text-align: right;
+	}
 	#standardList li span.options{
-	width: 20%;
+	width: 15%;
 	text-align: right;
 	vertical-align: top;
 	}
 	#standardList li span.options a{
 		margin: 0px 2px
 	}
+	
