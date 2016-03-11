@@ -1,6 +1,8 @@
 //************************//
 //****** FUNCTIONS *******//
 //************************//
+
+	// Shift between login and register
 	function shiftLogin(){
 		if(	$('#adminShiftLink' ).hasClass( "register" ) ){ currentClass = "register";}
 		else{ currentClass = "logIn";}
@@ -35,12 +37,12 @@
 		});
 	}
 	
-	// Participant management
-	function participantManagement(formData, type){
-		formData.append("type", type);
+	// Addition management
+	function addElement(formData, type){
+		formData.append("type", "new");
 		
 		$.ajax({
-			url: '../loaded/participantManagement.php',
+			url: '../loaded/'+type+'Management.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -49,6 +51,31 @@
 			success: function(data) {
 				$("#"+type+"Errmsg").html(data);
 				if(data==1){location.reload();}
+			}
+		});
+	}
+	
+
+	// Change status management
+	function changeStatus(id, value, type, remove){
+		formData = new FormData();
+		formData.append("type", "changeStatus");
+		formData.append(type+"_id", id);
+		formData.append("value", value);
+		formData.append("project_id", project_id); // global variable
+		
+		$.ajax({
+			url: '../loaded/'+type+'Management.php',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: function(data) {
+				if(data==1 && remove){
+					var row = document.getElementById(type+"_"+id);
+					if(row){row.parentNode.removeChild(row);}
+				}				
 			}
 		});
 	}
@@ -160,15 +187,14 @@ $(document).ready(function() {
 	$('#newParticipantForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
-		participantManagement(formData, "new");
+		addElement(formData, "participant");
 		event.preventDefault();
-	})
-	
+	})	
 	// New product */
 	$('#newProductForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
-		productManagement(formData, "new");
+		addElement(formData, "product");
 		event.preventDefault();
 	})
 	
@@ -177,11 +203,46 @@ $(document).ready(function() {
 		var id = this.id;
 		deleteElement(id, "participant");	
 	});
+	/* Delete product */
+	$('.deleteProduct').click(function(event){
+		var id = this.id;
+		deleteElement(id, "product");	
+	});
 	
 	/* Edit participant */
 	$('.editParticipant').click(function(event){
 		var id = this.id;
 		editInLine(id, "participant");	
+	});
+	/* Edit product */
+	$('.editProduct').click(function(event){
+		var id = this.id;
+		editInLine(id, "product");	
+	});
+	
+	/* Edit status */
+	$(':checkbox.editProductStatus').change(function() {
+		var id = this.id;
+		var value = this.checked;
+		changeStatus(id, value, "product", false);			
+	}); 
+	/* Edit status and remove span */
+	$(':checkbox.removeProductStatus').change(function() {
+		var id = this.id;
+		var value = this.checked;
+		changeStatus(id, value, "product", true);
+				
+	}); 
+	
+	
+	/* Toogle participants visibility for a week */
+	$('.showParticipants').click(function(event){
+		var participants_id = '#participants_'+this.id;
+		if($(participants_id).hasClass('hide')){
+			$(participants_id).removeClass('hide');
+		}else{
+			$(participants_id).addClass("hide");
+		}
 	});
 	
 });	
