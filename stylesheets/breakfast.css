@@ -16,22 +16,20 @@ body, input, select, submit, textarea{
 font-family:Roboto, Lucida Sans Unicode,Calibri,Verdana,Arial,sans-serif;
 }
 
-p
-{ display: inline;
+p{
+	display: inline;
 }
 
-h1, h2, h3, h4, h5, h6
-{
-padding-bottom:0px;
-margin-bottom:0px;
+h1, h2, h3, h4, h5, h6{
+	padding-bottom:0px;
+	margin-bottom:0px;
 }
 
 
 table, ul, li, ol, div, span, img, a, input, textarea{
--webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
--moz-box-sizing: border-box;    /* Firefox, other Gecko */
-box-sizing: border-box;
-
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
 }
 
 ul, li, ol{
@@ -42,6 +40,8 @@ ul, li, ol{
 
 p.success{color: green;font-size: 0.8em;}
 p.error{color: red;font-size: 0.8em;}
+
+.hide{display: none;}
 
 
 /* LINKS */
@@ -77,6 +77,25 @@ a:hover.blue, a:hover.black
 color:#00506f;
 }
 
+a.red
+{
+color:#FF8585;
+}
+a.red:hover
+{
+color:#FF3333;
+}
+
+a.green
+{
+color:#2eb82e;
+}
+a.green:hover
+{
+color:#248f24;
+}
+
+
 
 /* BODY */
 #content{
@@ -97,7 +116,7 @@ color:#00506f;
 	#contentHeader{
 	display: inline-block;
 	width:100%;
-	padding: 20px;
+	padding: 20px 20px 10px;
 	}
 	#contentMiddle{
 	display: inline-block;
@@ -170,6 +189,63 @@ color:#00506f;
 
 /****************** BODY *******************/
 
+/* PAGE TITLE */
+#standardTitle{
+	text-align: left;
+	padding-bottom: 10px;
+}
+	#standardTitle ul li#title{
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	#standardTitle ul li#subtitle{
+		font-size: 0.9em;
+		font-style: italic;
+	}
+
+/* PAGE CONTENT */
+#standardContent{
+	display: inline-block;
+	width: 70%;
+	padding-right: 50px;
+	vertical-align: top;
+	}
+
+/* PAGE PANEL */
+#standardPanel{
+	display: inline-block;
+	width: 30%;
+	vertical-align: top;
+}
+	#standardPanel ul li#title{
+	font-size: 1.0em;
+	font-weight: bold;
+	border-bottom: 1px solid;
+	}
+	#standardPanel ul li.option{
+	padding: 5px 0px;
+	}
+		#standardPanel ul li.option span{
+		display: inline-block;
+		width: 100%;
+		padding: 2px 0px;
+		}
+		#standardPanel ul li.option span.optionTitle{
+		text-decoration: none;
+		}
+		#standardPanel ul li.option span.optionInputs input{
+		width: 100%;
+		}
+		#standardPanel ul li.option span.optionInputs input:not(:last-child){
+		margin-bottom: 2px;
+		}
+		#standardPanel ul li.option span.optionErrmsg{
+		text-align: right;
+		}
+		#standardPanel ul li.option span.optionSubmit{
+		text-align: right;
+		}
+
 /* FRONTPAGE */
 #frontpage{
 	text-align: center;
@@ -204,50 +280,51 @@ color:#00506f;
 		font-size: 0.8em;
 	}
 
-/* PROJECT PAGE */
-#projectpage{
-	text-align: left;
-}
-#projectpage ul li#pageTitle{
-	font-size: 1.5em;
-	font-weight: bold;
-}
-#projectpage ul li#pageSubTitle{
-	font-size: 0.9em;
-	font-style: italic;
-}
-#projectpage ul li#projectContent{
-	padding-top: 30px;
-}
 
-/* PRODUCTS PAGE */
-#productspage{
+/* STANDARD LIST */
+#standardList{
 	text-align: left;
+	width: 100%;
 }
-#productspage ul li#pageTitle{
-	font-size: 1.5em;
-	font-weight: bold;
-}
-#productspage ul li#pageSubTitle{
-	font-size: 0.9em;
-	font-style: italic;
-}
-#productspage ul li#projectContent{
-	padding-top: 30px;
-}
-
-/* PARTICIPANTS PAGE */
-#participantspage{
-	text-align: left;
-}
-#participantspage ul li#pageTitle{
-	font-size: 1.5em;
-	font-weight: bold;
-}
-#participantspage ul li#pageSubTitle{
-	font-size: 0.9em;
-	font-style: italic;
-}
-#participantspage ul li#projectContent{
-	padding-top: 30px;
-}
+	#standardList li{
+		padding: 5px 5px;
+		background: #bbb;
+		background: -moz-linear-gradient(#eee, #bbb); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bbb),color-stop(1, #eee));	
+		background: -webkit-linear-gradient(#eee, #bbb);	
+		background: -o-linear-gradient(#eee, #bbb);
+		background: -ms-linear-gradient(#eee, #bbb);
+		background: linear-gradient(#eee, #bbb);
+		/*-moz-border-radius: 50px;
+		border-radius: 50px;*/
+		-moz-box-shadow: 0 2px 1px #9c9c9c;
+		-webkit-box-shadow: 0 2px 1px #9c9c9c;
+		box-shadow: 0 2px 1px #9c9c9c;
+	}
+	#standardList li span{
+		display: inline-block;
+		padding: 1px 0px; 
+	}
+	#standardList li span.span2input{
+		width: 80%;
+	}
+		#standardList li span.span2input span.name{
+			width: 100%;
+			font-weight: bold;
+		}
+		#standardList li span.span2input span.email{
+			width: 100%;
+			font-size: 0.9em;
+		}
+		#standardList li span.span2input input{
+			width: 100%;
+			margin: 1px 0px;
+		}
+	#standardList li span.options{
+	width: 20%;
+	text-align: right;
+	vertical-align: top;
+	}
+	#standardList li span.options a{
+		margin: 0px 2px
+	}
