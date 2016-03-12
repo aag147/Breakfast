@@ -40,7 +40,7 @@
 	// Addition management
 	function addElement(formData, type){
 		formData.append("type", "new");
-		
+	
 		$.ajax({
 			url: '../loaded/'+type+'Management.php',
 			type: 'POST',
@@ -57,11 +57,9 @@
 	
 
 	// Change status management
-	function changeStatus(id, value, type, remove){
-		formData = new FormData();
+	function changeStatus(formData, id, type, remove){
 		formData.append("type", "changeStatus");
 		formData.append(type+"_id", id);
-		formData.append("value", value);
 		formData.append("project_id", project_id); // global variable
 		
 		$.ajax({
@@ -220,20 +218,25 @@ $(document).ready(function() {
 		editInLine(id, "product");	
 	});
 	
-	/* Edit status */
+	/* Edit product status */
 	$(':checkbox.editProductStatus').change(function() {
-		var id = this.id;
-		var value = this.checked;
-		changeStatus(id, value, "product", false);			
+		var formData = new FormData();
+		formData.append("value", this.checked);
+		changeStatus(formData, this.id, "product", false);			
 	}); 
-	/* Edit status and remove span */
+	/* Edit product status and remove span */
 	$(':checkbox.removeProductStatus').change(function() {
-		var id = this.id;
-		var value = this.checked;
-		changeStatus(id, value, "product", true);
+		var formData = new FormData();
+		formData.append("value", this.checked);
+		changeStatus(formData, this.id, "product", true);
 				
 	}); 
-	
+	/* Edit participant status */
+	$(':checkbox.editParticipantStatus').change(function() {
+		var formData = new FormData();
+		formData.append("value", this.checked);
+		changeStatus(formData, this.id, "participant", false);
+	}); 	
 	
 	/* Toogle participants visibility for a week */
 	$('.showParticipants').click(function(event){

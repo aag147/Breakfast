@@ -22,9 +22,17 @@ try{
 			$participant_id = (isset($_POST['id']) ? $_POST['id'] : '');
 			
 			/*** DELETE ***/
-			$delete_participant = $conn->prepare("DELETE FROM breakfast_participants WHERE participant_id = :participant_id");
+			$delete_participant = $conn->prepare("UPDATE breakfast_participants SET participant_removed = '1' WHERE participant_id = :participant_id");
 			$delete_participant->bindParam(':participant_id', $participant_id);
 			$delete_participant->execute();
+			
+			$delete_registrations = $conn->prepare("DELETE FROM breakfast_registrations WHERE participant_id = :participant_id");
+			$delete_registrations->bindParam(':participant_id', $participant_id);
+			$delete_registrations->execute();
+
+			$delete_chefs = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef = '0' WHERE breakfast_chef = :participant_id AND breakfast_date > now()");
+			$delete_chefs->bindParam(':participant_id', $participant_id);
+			$delete_chefs->execute();
 			
 			$errmsg[0] = 1;
 			echo json_encode($errmsg);
