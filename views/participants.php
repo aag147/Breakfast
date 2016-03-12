@@ -6,7 +6,7 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id ORDER BY participant_name ASC");
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0' ORDER BY participant_name ASC");
 	$participants_db->bindParam(':project_id', $cookie_project_id);		
 	$participants_db->execute();
 
