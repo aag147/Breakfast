@@ -72,7 +72,7 @@ try{
 	
 	// Handling login/session cookies
 	if(!empty($_COOKIE['cookie_project_id'])){
-		$cookie_project_id			= $_COOKIE['cookie_project_id'];
+		$cookie_project_id		= $_COOKIE['cookie_project_id'];
 		$cookie_hash			= $_COOKIE['cookie_hash'];
 
 		$session_db = $conn->prepare("SELECT COUNT(project_id) C FROM breakfast_projects_sessions WHERE project_id = :project_id AND session_hash = :hash AND session_date > CURRENT_TIMESTAMP LIMIT 1");

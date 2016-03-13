@@ -41,58 +41,46 @@ ul, li, ol{
 p.success{color: green;font-size: 0.8em;}
 p.error{color: red;font-size: 0.8em;}
 
-.hide{display: none;}
+.hide{display: none !important;}
 
 
 /* LINKS */
 a img{
 border:0;}
 
-a:visited, a:link, a:active
-{
-border:0;
-color:#000;
-text-decoration:none;
+a{
+	border:0;
+	color:#000;
+	text-decoration:none;
+}
+a:hover{
+	color:#0186ba;
 }
 
-a:hover
-{
-border:0;
-color:#0186ba;
-text-decoration:none;
+a.blue, .blueinput{
+	color:#0186ba;
 }
 
-a.blue, .blueinput
-{
-color:#0186ba;
+a.black{
+	color:#000;
 }
 
-a.black
-{
-color:#000;
+a:hover.blue, a:hover.black{
+	color:#00506f;
 }
 
-a:hover.blue, a:hover.black
-{
-color:#00506f;
+a.red{
+	color:#FF8585;
+}
+a.red:hover{
+	color:#FF3333;
 }
 
-a.red
-{
-color:#FF8585;
+a.green{
+	color:#2eb82e;
 }
-a.red:hover
-{
-color:#FF3333;
-}
-
-a.green
-{
-color:#2eb82e;
-}
-a.green:hover
-{
-color:#248f24;
+a.green:hover{
+	color:#248f24;
 }
 
 
@@ -195,12 +183,18 @@ color:#248f24;
 	padding-bottom: 10px;
 }
 	#standardTitle ul li#title{
-		font-size: 1.5em;
+		font-size: 1.9em;
 		font-weight: bold;
 	}
 	#standardTitle ul li#subtitle{
 		font-size: 0.9em;
 		font-style: italic;
+	}
+	/* ADMIN */
+	#standardTitle ul li#title span.span2input input{
+		margin: 1px 0px;
+		font-size: 1.0em;
+		font-weight: bold;
 	}
 
 /* PAGE CONTENT */
@@ -222,21 +216,24 @@ color:#248f24;
 #frontpage{
 	text-align: center;
 }
-	#frontpage ul li#pageTitle{
-		font-size: 1.5em;
-		font-weight: bold;
+	#frontpage li#adminAllContent{
+		height: 150px;
 	}
-	#frontpage ul li#adminContent span{
-		display: inline-block;
-		width: 100%;
-		padding: 2px;
-	}
-	#frontpage ul li#adminContent span input{
-		text-align: center;
-	}
-	#frontpage ul li#adminShift{
-		padding-top: 5px;
-	}
+		#frontpage ul li#pageTitle{
+			font-size: 1.5em;
+			font-weight: bold;
+		}
+		#frontpage ul li#adminContent span{
+			display: inline-block;
+			width: 100%;
+			padding: 2px;
+		}
+		#frontpage ul li#adminContent span input{
+			text-align: center;
+		}
+		#frontpage ul li#adminShift{
+			padding-top: 5px;
+		}
 	#frontpage ul li#about{
 		padding-top: 20px;
 	}
@@ -262,13 +259,32 @@ color:#248f24;
 	font-size: 1.2em;
 	font-weight: bold;
 	}
-	#projectContent li#weeks{
-	width: 100%;
+	#projectContent li#breakfastPlan span.loadingText{
+		padding: 50px 10px 0px;
 	}
 	#projectContent li.week{
 		display: inline-block;
 		width: 100%;
 		font-size: 1.1em;
+		border-bottom: 1px solid;
+	}
+	#projectContent li.week a{
+		display: inline-block;
+		height: 100%;
+		width: 100%;
+		padding: 5px 5px;
+	}
+	#projectContent li.week a span.weekTitle{
+		display: inline-block;
+		width: 100%;
+	}
+	#projectContent li.weekdays{
+		padding-bottom: 15px;
+	}
+	#projectContent li.weekdays li.weekday{
+		display: inline-block;
+		width: 100%;
+		font-size: 0.9em;
 		margin-bottom: 2px;
 		
 		background: #bbb;
@@ -284,24 +300,44 @@ color:#248f24;
 		-webkit-box-shadow: 0 2px 1px #9c9c9c;
 		box-shadow: 0 2px 1px #9c9c9c;
 	}
-	#projectContent li.week a{
+	#projectContent li.weekdays li.weekday.done{ /* DONE BREAKFAST */
+		background: #ddd;
+		background: -moz-linear-gradient(#fff, #ddd); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ddd),color-stop(1, #fff));	
+		background: -webkit-linear-gradient(#fff, #ddd);	
+		background: -o-linear-gradient(#fff, #ddd);
+		background: -ms-linear-gradient(#fff, #ddd);
+		background: linear-gradient(#fff, #ddd);
+	}
+	#projectContent li.weekdays li.weekday a{
 		display: inline-block;
 		height: 100%;
 		width: 100%;
-		padding: 5px 5px;
+		padding: 4px 5px;
 	}
-	#projectContent li.week a span.weekTitle{
-		display: inline-block;
-		width: 25%;
+	#projectContent li.weekdays li.weekday.done a:not(:hover){ /* DONE BREAKFAST */
+		color: grey;
 	}
-	#projectContent li.week a span.theChef{
+	#projectContent li.weekdays li.weekday a span.weekdayTitle{
 		display: inline-block;
-		width: 75%;
+		width: 80px;
+	}
+	#projectContent li.weekdays li.weekday a span.weekdayDate{
+		display: inline-block;
+		width: 80px;
+	}
+	#projectContent li.weekdays li.weekday a span.theChef{
+		display: inline-block;
+		width: calc(100% - 160px);
 		text-align: right;
 	}
-	#projectContent li.week a:hover span.theChef{
+	#projectContent li.weekdays li.weekday a:hover span.theChef{
 		color: #000;
 	}
+	#projectContent li.weekdays li.weekday.done a:hover span.theChef{ /* DONE BREAKFAST */
+		color: grey;
+	}
+	
 	#projectContent li.participants{
 	width: 100%;
 	padding: 5px;
@@ -322,11 +358,53 @@ color:#248f24;
 	
 /* PROJECT PANEL */
 #projectPanel{
+	padding-bottom: 20px;
 }	
 	#projectPanel li#title{
 	font-size: 1.0em;
 	font-weight: bold;
 	border-bottom: 1px solid;
+	}
+	#projectPanel li#title:not(:first-child){
+	padding-top: 20px;
+	}
+	
+/* SETTINGS CONTENT */	
+#settingsContent{
+	display: inline-block;
+	text-align: center;
+	width: 100%;
+}
+	#settingsContent li#title{
+	font-size: 1.0em;
+	font-weight: bold;
+	border-bottom: 1px solid;
+	}
+	#settingsContent li span.options{
+		display: inline-block;
+		width: 50%;
+	}
+	#settingsContent li span.options a{
+		display: inline-block;
+		width: 100%;
+		margin: 10px 0px 30px;
+		padding: 4px 2px;
+		border: 2px solid;
+		text-align: center;
+		
+		background-color: #ebebe0;
+		background: #ebebe0;
+		background: -moz-linear-gradient(#eee, #ebebe0); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ebebe0),color-stop(1, #eee));	
+		background: -webkit-linear-gradient(#eee, #ebebe0);	
+		background: -o-linear-gradient(#eee, #ebebe0);
+		background: -ms-linear-gradient(#eee, #ebebe0);
+		background: linear-gradient(#eee, #ebebe0);
+		/*-moz-border-radius: 50px;
+		border-radius: 50px;*/		
+		-moz-box-shadow: 0 2px 1px #9c9c9c;
+		-webkit-box-shadow: 0 2px 1px #9c9c9c;
+		box-shadow: 0 2px 1px #9c9c9c;
 	}
 
 	
@@ -347,7 +425,7 @@ padding: 5px 0px;
 	#adminPanel li.option span.optionTitle{
 	text-decoration: none;
 	}
-	#adminPanel li.option span.optionInputs input{
+	#adminPanel li.option span.optionInputs input:not(:check){
 	width: 100%;
 	}
 	#adminPanel li.option span.optionInputs input:not(:last-child){
@@ -368,13 +446,13 @@ padding: 5px 0px;
 }
 	#standardList li:not(.listLegend){
 		padding: 5px 5px;
-		background: #bbb;
-		background: -moz-linear-gradient(#eee, #bbb); 
-		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bbb),color-stop(1, #eee));	
-		background: -webkit-linear-gradient(#eee, #bbb);	
-		background: -o-linear-gradient(#eee, #bbb);
-		background: -ms-linear-gradient(#eee, #bbb);
-		background: linear-gradient(#eee, #bbb);
+		background: #ddd;
+		background: -moz-linear-gradient(#eee, #ddd); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ddd),color-stop(1, #eee));	
+		background: -webkit-linear-gradient(#eee, #ddd);	
+		background: -o-linear-gradient(#eee, #ddd);
+		background: -ms-linear-gradient(#eee, #ddd);
+		background: linear-gradient(#eee, #ddd);
 		/*-moz-border-radius: 50px;
 		border-radius: 50px;*/
 		-moz-box-shadow: 0 2px 1px #9c9c9c;
@@ -391,20 +469,20 @@ padding: 5px 0px;
 		text-decoration: underline;
 	}
 	#standardList li.listLegend span.name{
-		width: 65%;
+		width: calc(100% - 140px);
 		text-align: center;
 	}
 	#standardList li.listLegend span.status{
-		width: 20%;
+		width: 80px;
 		text-align: right;
 	}
 	#standardList li.listLegend span.admin{
-		width: 15%;
+		width: 60px;
 		text-align: right;
 	}
 	/* THE LIST CONTENT */
 	#standardList li span.span2input{
-		width: 80%;
+		width: calc(100% - 90px);
 	}
 		#standardList li span.span2input span.name{
 			width: 100%;
@@ -419,11 +497,11 @@ padding: 5px 0px;
 			margin: 1px 0px;
 		}
 	#standardList li span.status{
-	width: 5%;
+	width: 10px;
 	text-align: right;
 	}
 	#standardList li span.options{
-	width: 15%;
+	width: 80px;
 	text-align: right;
 	vertical-align: top;
 	}
