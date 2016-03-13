@@ -1,8 +1,6 @@
 <?php
 include("../headers/setup.php");
-
-if(isset($cookie_project_id)){header('Location: project.php'); exit;}
-
+if(!empty($cookie_project_id)){header('Location: project.php'); exit;}
 include("../headers/header.php");
 
 ?>

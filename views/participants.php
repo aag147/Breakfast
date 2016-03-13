@@ -1,5 +1,6 @@
 <?php
 include("../headers/setup.php");
+if(empty($cookie_project_id)){header('Location: index.php'); exit;}
 include("../headers/header.php");
 
 try{ 
@@ -68,7 +69,6 @@ try{
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>
 				<span class="optionSubmit">
-					<input name="project_id" type="hidden" value="<?php echo $cookie_project_id; ?>" />
 					<input type="submit" value="Send"/>
 				</span>
 			</form>

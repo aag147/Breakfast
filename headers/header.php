@@ -43,13 +43,13 @@
 				<nav id="navigation">
 					<ul>
 					  <li>
-						<a href="project.php">Overview</a>
+						<a href="project.php">Planner</a>
 					  </li><li>
 						<a href="products.php">Products</a>
 					  </li><li>
 						<a href="participants.php">Participants</a>
 					  </li><li>
-						<a href="about.php">Log out</a>
+						<a href="settings.php">Settings</a>
 					  </li>
 					</ul>
 				</nav>
