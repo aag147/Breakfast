@@ -30,7 +30,7 @@ try{
 			$delete_registrations->bindParam(':participant_id', $participant_id);
 			$delete_registrations->execute();
 
-			$delete_chefs = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef = '0' WHERE breakfast_chef = :participant_id AND breakfast_date > now()");
+			$delete_chefs = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef = '0' WHERE breakfast_chef = :participant_id AND (breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW()))");
 			$delete_chefs->bindParam(':participant_id', $participant_id);
 			$delete_chefs->execute();
 			

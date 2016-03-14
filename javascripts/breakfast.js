@@ -16,10 +16,19 @@
 		});
 	}
 	
+	function buildBreakfastPlan(){
+		 $.ajax({
+			   type: "POST",
+			   url: '../loaded/buildBreakfastPlan.php',
+			   success: function(data) {
+				  $("#breakfastPlan").html(data);
+			   }
+		  });
+	}
+	
 	// Account management
 	function accountManagement(formData, type){
 		formData.append("type", type);
-		
 		$.ajax({
 			url: '../loaded/accountManagement.php',
 			type: 'POST',
@@ -28,8 +37,9 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
+				$("#"+type+"Errmsg").html(data);
 				if(data[0]==1){
-					window.location.href = "../views/project.php";
+					if(type!="weekdays"){window.location.href = "../views/index.php";}
 				}else{
 					alert("error: "+data);
 				}
@@ -49,7 +59,7 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
-				$("#"+type+"Errmsg").html(data);
+				$("#newErrmsg").html(data);
 				if(data==1){location.reload();}
 			}
 		});
@@ -60,8 +70,6 @@
 	function changeStatus(formData, id, type, remove){
 		formData.append("type", "changeStatus");
 		formData.append(type+"_id", id);
-		formData.append("project_id", project_id); // global variable
-		
 		$.ajax({
 			url: '../loaded/'+type+'Management.php',
 			type: 'POST',
@@ -100,10 +108,13 @@
 		
 		var $span = $('#'+type+'_'+id+' span.span2input');
 		var $options = $('#'+type+'_'+id+' span.options');
+		if(type=="account"){
+			$span = $('span.span2input');
+			$options = $('span.options');
+		}
 		
 		// Creating new span for inputs
 		inputs = $('<span />', {
-			'id': type+'_'+id,
 			'class': 'span2input' 
 		});
 		
@@ -122,13 +133,14 @@
 		});
 		
 		// Visual change of span to input
-		$span.replaceWith(inputs);	
-		$("#standardList a.edit"+typeUCF).addClass('hide');
+		$span.replaceWith(inputs);
+		
+		$("a.edit"+typeUCF).addClass('hide');
 		$options.children("a.save"+typeUCF).removeClass('hide');
 		inputs.children("input:first").focus();
 		
 		// Save input and return to span
-		$options.children("a.save"+typeUCF).one("click", function(event){			
+		$options.children("a.save"+typeUCF).one("click", function(event){		
 			setTimeout(function (){
 				
 				// Creating formdata
@@ -138,7 +150,6 @@
 				});
 				formData.append(type+"_id", id);
 				formData.append("type", "edit");
-				formData.append("project_id", project_id); // global variable
 				
 				// Ajax to insert new element
 				$.ajax({
@@ -149,17 +160,19 @@
 					contentType: false,
 					dataType: "json",
 					success: function(data) {
-						inputs.children('input').each(function () {
-							value = $(this).val();
-							if($(this).attr('name')=="email"){value = "Email: " + value;}
-							$span.children('.'+$(this).attr('name')).text(value);
-						});	
+						if(data[0] == 1){
+							inputs.children('input').each(function () {
+								value = $(this).val();
+								if($(this).attr('name')=="email"){value = "Email: " + value;}
+								$span.children('.'+$(this).attr('name')).text(value);
+							});	
+						}
 					}
 				});	
 				
 				// Return to span
 				inputs.replaceWith($span);
-				$("#standardList a.edit"+typeUCF).removeClass('hide');
+				$("a.edit"+typeUCF).removeClass('hide');
 				$options.children("a.save"+typeUCF).addClass('hide');
 			}, 100);
 		});		
@@ -181,6 +194,20 @@ $(document).ready(function() {
 		
 	});
 	
+	
+	/***** SHOW SLASH TOOGLE VIEW *****/
+	// Toogle participants visibility for a week
+	$('.showParticipants').click(function(event){
+		var participants_id = '#participants_'+this.id;
+		if($(participants_id).hasClass('hide')){
+			$(participants_id).removeClass('hide');
+		}else{
+			$(participants_id).addClass("hide");
+		}
+	});
+	
+	
+	/***** ADMIN FORM SUBMITS *****/
 	// New participant */
 	$('#newParticipantForm').submit(function(event) {
 		var id = event.target.id;
@@ -195,29 +222,50 @@ $(document).ready(function() {
 		addElement(formData, "product");
 		event.preventDefault();
 	})
+	// Edit breakfast weekdays */
+	$('#editBreakfastWeekdays').submit(function(event) {
+		var id = event.target.id;
+		var formData = new FormData(document.getElementById(id));
+		accountManagement(formData, "weekdays");
+		event.preventDefault();
+	})
 	
+	
+	/***** ADMIN LINK CLICKS *****/
 	/* Delete participant */
 	$('.deleteParticipant').click(function(event){
-		var id = this.id;
-		deleteElement(id, "participant");	
+		deleteElement(this.id, "participant");	
 	});
 	/* Delete product */
 	$('.deleteProduct').click(function(event){
-		var id = this.id;
-		deleteElement(id, "product");	
+		deleteElement(this.id, "product");	
 	});
 	
 	/* Edit participant */
 	$('.editParticipant').click(function(event){
-		var id = this.id;
-		editInLine(id, "participant");	
+		editInLine(this.id, "participant");	
 	});
 	/* Edit product */
 	$('.editProduct').click(function(event){
-		var id = this.id;
-		editInLine(id, "product");	
+		editInLine(this.id, "product");	
+	});
+	/* Edit project */
+	$('.editAccount').click(function(event){
+		editInLine(this.id, "account");	
+	});
+	/* Delete project */
+	$('.deleteAccount').click(function(event){
+		if(confirm("Are you sure?")){
+			accountManagement(new FormData(), "delete");	
+		}
+	});
+	/* Log out */
+	$('.logOut').click(function(event){
+		accountManagement(new FormData(), "logout");	
 	});
 	
+	
+	/***** ADMIN CHECK BOXES *****/
 	/* Edit product status */
 	$(':checkbox.editProductStatus').change(function() {
 		var formData = new FormData();
@@ -237,16 +285,12 @@ $(document).ready(function() {
 		formData.append("value", this.checked);
 		changeStatus(formData, this.id, "participant", false);
 	}); 	
-	
-	/* Toogle participants visibility for a week */
-	$('.showParticipants').click(function(event){
-		var participants_id = '#participants_'+this.id;
-		if($(participants_id).hasClass('hide')){
-			$(participants_id).removeClass('hide');
-		}else{
-			$(participants_id).addClass("hide");
-		}
-	});
+	/* Edit weekdays status */
+	$(':checkbox.editWeekdaysStatus').change(function() {
+		var formData = new FormData();
+		formData.append("value", this.checked);
+		changeStatus(formData, this.id, "account", false);
+	}); 
 	
 });	
 
