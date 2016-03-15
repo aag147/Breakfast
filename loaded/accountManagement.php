@@ -1,8 +1,13 @@
 <?php
+// AJAX SECURITY CHECK
+define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+if(!IS_AJAX) {die('Restricted access');}
+$pos = strpos($_SERVER['HTTP_REFERER'],getenv('HTTP_HOST'));
+if($pos===false)
+  die('Restricted access');
 
 // FIRST HEADER		
 require('../headers/setup.php');
-
 
 Header('Content-Type:text/html; charset=ISO-8859-1');
 /*************** AJAX ***************/
