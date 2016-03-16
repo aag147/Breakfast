@@ -195,18 +195,6 @@ $(document).ready(function() {
 	});
 	
 	
-	/***** SHOW SLASH TOOGLE VIEW *****/
-	// Toogle participants visibility for a week
-	$('.showParticipants').click(function(event){
-		var participants_id = '#participants_'+this.id;
-		if($(participants_id).hasClass('hide')){
-			$(participants_id).removeClass('hide');
-		}else{
-			$(participants_id).addClass("hide");
-		}
-	});
-	
-	
 	/***** ADMIN FORM SUBMITS *****/
 	// New participant */
 	$('#newParticipantForm').submit(function(event) {
@@ -295,11 +283,23 @@ $(document).ready(function() {
 });	
 
 $(document).ajaxStop(function () {
+	/***** SHOW SLASH TOOGLE VIEW *****/
+	// Toogle participants visibility for a weekday
+	$('.showParticipants').click(function(event){
+		var participants_id = '#participants_'+this.id;
+		if($(participants_id).hasClass('hide')){
+			$(participants_id).removeClass('hide');
+		}else{
+			$(participants_id).addClass("hide");
+		}
+	});
 	/* FRONTPAGE ADMIN SHIFT */
 	$('#adminShiftLink').click(function(event){
 		shiftLogin();	
 	});
 	
+	
+	/***** INDEX LOGIN/REGISTER *****/
 	// LOG IN */
 	$('#logInForm').submit(function(event) {
 		var id = event.target.id;
