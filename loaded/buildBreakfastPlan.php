@@ -177,149 +177,154 @@ try{
 	
 
 	/******* PRINT PLAN *******/
-	$current_week = date("w");
-	$current_date = date("Y-m-d");
-	$dynamic_chefs_index = 0;
-	echo "<ul>";
-	for($i = 0; $i < 6; $i++){
-		// New week
+	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
+		echo "You need both participants and active weekdays to build breakfast plan.";
+	}else{
 		
-		/***** DATE *****/
-		// week
-		$week = date("W", strtotime("+".($i*7)." days"));
-		// year
-		if($week >= $current_week){$year = date("Y");}
-		else{$year = date("Y", strtotime("+ 1 year"));}
-		// week title
-		if($i==0){$weekShow = "This week";}
-		elseif($i==1){$weekShow = "Next week";}
-		else{$weekShow = "Week ".$week;}
-		
-		// WEEK VIEW
-		echo "<li class='week' id='week_".$week."'>";
-			echo "<span class='weekTitle'>".$weekShow."</span>";
-		echo "</li>";
-		echo "<li class='weekdays' id='weekdays_".$week."'><ul>";
-		
-
-			for($j = 0; $j < 7; $j++){
-				// New week day
+		$current_week = date("w");
+		$current_date = date("Y-m-d");
+		$dynamic_chefs_index = 0;
+		echo "<ul>";
+		for($i = 0; $i < 6; $i++){
+			// New week
+			
+			/***** DATE *****/
+			// week
+			$week = date("W", strtotime("+".($i*7)." days"));
+			// year
+			if($week >= $current_week){$year = date("Y");}
+			else{$year = date("Y", strtotime("+ 1 year"));}
+			// week title
+			if($i==0){$weekShow = "This week";}
+			elseif($i==1){$weekShow = "Next week";}
+			else{$weekShow = "Week ".$week;}
+			
+			// WEEK VIEW
+			echo "<li class='week' id='week_".$week."'>";
+				echo "<span class='weekTitle'>".$weekShow."</span>";
+			echo "</li>";
+			echo "<li class='weekdays' id='weekdays_".$week."'><ul>";
+			
 				
-				$weekday = jddayofweek($j, 1);
-				$breakfast_weekday = strtolower($weekday);
-				$weekday_checked = $project['project_'.strtolower($weekday)];
+				for($j = 0; $j < 7; $j++){
+					// New week day
 					
-				// Full date
-				$gendate = new DateTime();
-				$gendate->setISODate($year,$week,$j+1); // creates date from week, day, year
-				$breakfast_date = $gendate->format('Y-m-d');
-				
-				// Skip unchecked weekdays for future dates
-				if(!$weekday_checked AND $breakfast_date >= $current_date){continue;}
-				
-				/***** BREAKFAST *****/
-				$breakfast_db->execute();
-				$hasBreakfast = $breakfast_db->rowCount();
-				$breakfast_done = 0;
-				if($hasBreakfast){
-					$breakfast = $breakfast_db->fetch();
-					$breakfast_id = $breakfast['breakfast_id'];
-					$breakfast_done = $breakfast['breakfast_done'];
-					if($breakfast_done){$doneClass = "done";}else{$doneClass = "";}
-				}
-				
-				// Skip new breakfast for old dates
-				if(!$breakfast_done AND $breakfast_date < $current_date){
-					continue;
-				}
+					$weekday = jddayofweek($j, 1);
+					$breakfast_weekday = strtolower($weekday);
+					$weekday_checked = $project['project_'.strtolower($weekday)];
+						
+					// Full date
+					$gendate = new DateTime();
+					$gendate->setISODate($year,$week,$j+1); // creates date from week, day, year
+					$breakfast_date = $gendate->format('Y-m-d');
+					
+					// Skip unchecked weekdays for future dates
+					if(!$weekday_checked AND $breakfast_date >= $current_date){continue;}
+					
+					/***** BREAKFAST *****/
+					$breakfast_db->execute();
+					$hasBreakfast = $breakfast_db->rowCount();
+					$breakfast_done = 0;
+					if($hasBreakfast){
+						$breakfast = $breakfast_db->fetch();
+						$breakfast_id = $breakfast['breakfast_id'];
+						$breakfast_done = $breakfast['breakfast_done'];
+						if($breakfast_done){$doneClass = "done";}else{$doneClass = "";}
+					}
+					
+					// Skip new breakfast for old dates
+					if(!$breakfast_done AND $breakfast_date < $current_date){
+						continue;
+					}
 
-				
-				/***** CHEF *****/
-				if(!$breakfast_done){
-					// Dynamic chef
-					while(true){
-						$chef_id = $participant_id = $complete_chefs[$dynamic_chefs_index % COUNT($complete_chefs)];
+					
+					/***** CHEF *****/
+					if(!$breakfast_done){
+						// Dynamic chef
+						while(true){
+							$chef_id = $participant_id = $complete_chefs[$dynamic_chefs_index % COUNT($complete_chefs)];
+							$participant_db->execute();
+							$chef = $participant_db->fetch();
+							// Only includes a potential removed participant for todays breakfast
+							if($i==0 OR $chef['participant_removed']==0){break;}
+							$dynamic_chefs_index++;
+						}
+						
+						// Oldchef
+						if($hasBreakfast AND $breakfast['breakfast_chef'] != 0){
+							$hasChef = true;
+						}else{
+							$hasChef = false;
+						}			
+						
+						// Insert new og update old chef
+						if(!$hasChef OR $breakfast['breakfast_chef'] != $chef_id){
+							if($hasBreakfast){
+								// New chef in existing breakfast
+								$change_chef->execute();
+							}else{
+								// New chef in new breakfast
+								$new_breakfast->execute();
+								$breakfast_id = $conn->lastInsertId('breakfast_breakfasts');
+							}
+						}
+					
+						$dynamic_chefs_index++;
+					}else{
+						$chef_id = $participant_id = $breakfast['breakfast_chef'];
 						$participant_db->execute();
 						$chef = $participant_db->fetch();
-						// Only includes a potential removed participant for todays breakfast
-						if($i==0 OR $chef['participant_removed']==0){break;}
-						$dynamic_chefs_index++;
 					}
+											
+					/***** VIEW *****/
+					view: 
+					echo "<li class='weekday ".$doneClass."' id='weekday_".$week.$weekday."'>";
+						echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
+							echo "<span class='weekdayTitle'>".$weekday."</span>";
+							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
+							echo "<span class='theChef'>".$chef['participant_name']."</span>";
+						echo "</a>";
+					echo "</li>";
+					echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
 					
-					// Oldchef
-					if($hasBreakfast AND $breakfast['breakfast_chef'] != 0){
-						$hasChef = true;
-					}else{
-						$hasChef = false;
-					}			
+						echo "<span class='participantsTitle'>Who else is coming?</span>";
 					
-					// Insert new og update old chef
-					if(!$hasChef OR $breakfast['breakfast_chef'] != $chef_id){
-						if($hasBreakfast){
-							// New chef in existing breakfast
-							$change_chef->execute();
-						}else{
-							// New chef in new breakfast
-							$new_breakfast->execute();
-							$breakfast_id = $conn->lastInsertId('breakfast_breakfasts');
-						}
-					}
-				
-					$dynamic_chefs_index++;
-				}else{
-					$chef_id = $participant_id = $breakfast['breakfast_chef'];
-					$participant_db->execute();
-					$chef = $participant_db->fetch();
-				}
-										
-				/***** VIEW *****/
-				view: 
-				echo "<li class='weekday ".$doneClass."' id='weekday_".$week.$weekday."'>";
-					echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
-						echo "<span class='weekdayTitle'>".$weekday."</span>";
-						echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
-						echo "<span class='theChef'>".$chef['participant_name']."</span>";
-					echo "</a>";
-				echo "</li>";
-				echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
-				
-					echo "<span class='participantsTitle'>Who else is coming?</span>";
-				
-					echo "<ul>";
-					foreach($participants as $participant){
-						$participant_id = $participant['participant_id'];
-						if($participant['participant_name']==$chef['participant_name']){$isChef = 1;}else{$isChef = 0;}
-						
-						// Get registration info or insert new registration
-						$registration_db->execute();
-						$isReg = $registration_db->rowCount();
-						if($isReg > 0){
-							$reg = $registration_db->fetch();
-							$attending = $reg['participant_attending'];
-							$reg_id = $reg['registration_id'];
-						}else{
-							$new_registration->execute();
-							$attending = 1;
-							$reg_id = $conn->lastInsertId('breakfast_registrations');
-						}
-						if($attending){$isComing = "checked";}else{$isComing = "";}
-						
-						// Continue for chef
-						if($isChef){continue;}
+						echo "<ul>";
+						foreach($participants as $participant){
+							$participant_id = $participant['participant_id'];
+							if($participant['participant_name']==$chef['participant_name']){$isChef = 1;}else{$isChef = 0;}
+							
+							// Get registration info or insert new registration
+							$registration_db->execute();
+							$isReg = $registration_db->rowCount();
+							if($isReg > 0){
+								$reg = $registration_db->fetch();
+								$attending = $reg['participant_attending'];
+								$reg_id = $reg['registration_id'];
+							}else{
+								$new_registration->execute();
+								$attending = 1;
+								$reg_id = $conn->lastInsertId('breakfast_registrations');
+							}
+							if($attending){$isComing = "checked";}else{$isComing = "";}
+							
+							// Continue for chef
+							if($isChef){continue;}
 
-						// Write out participant
-						echo "<li id='participant_".$participant_id."'>";
-							echo "<span class='status'><input id='".$reg_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
-							echo "<span class='name'>".$participant['participant_name']."</span>";
-						echo "</li>";					
-					}
-					echo "</ul>";
-				echo "</li>";
-			}
-		
-		echo "</ul></li>";
+							// Write out participant
+							echo "<li id='participant_".$participant_id."'>";
+								echo "<span class='status'><input id='".$reg_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
+								echo "<span class='name'>".$participant['participant_name']."</span>";
+							echo "</li>";					
+						}
+						echo "</ul>";
+					echo "</li>";
+				}
+			
+			echo "</ul></li>";
+		}
+		echo "</ul>";
 	}
-	echo "</ul>";
 
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage();
