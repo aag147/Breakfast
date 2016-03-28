@@ -12,7 +12,7 @@ require('../headers/setup.php');
 // LOGGED IN CHECK
 if(empty($cookie_project_id)){header('Location: index.php'); exit;}
 
-Header('Content-Type:text/html; charset=ISO-8859-1');
+Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
 
 try{ 
@@ -125,6 +125,9 @@ try{
 	$breakfast_db->bindParam(':project_id', $cookie_project_id);
 	$breakfast_db->bindParam(':breakfast_date', $breakfast_date);
 	
+	//EXTRACT SINGLE BREAKFAST REGISTRATIONS
+	$registrations_count_db = $conn->prepare("SELECT COUNT(registration_id) C FROM breakfast_registrations WHERE breakfast_id = :breakfast_id AND participant_attending = '0'");
+	$registrations_count_db->bindParam(':breakfast_id', $breakfast_id);	
 	
 	// ADMINISTRE REGISTRATIONS AND BREAKFAST
 	$new_registration = $conn->prepare("INSERT INTO breakfast_registrations (participant_id, project_id, breakfast_id, participant_attending)
@@ -229,8 +232,8 @@ try{
 						$breakfast = $breakfast_db->fetch();
 						$breakfast_id = $breakfast['breakfast_id'];
 						$breakfast_done = $breakfast['breakfast_done'];
-						if($breakfast_done){$doneClass = "done";}else{$doneClass = "";}
 					}
+					if($breakfast_done){$doneClass = "done";}else{$doneClass = "";}
 					
 					// Skip new breakfast for old dates
 					if(!$breakfast_done AND $breakfast_date < $current_date){
@@ -275,6 +278,11 @@ try{
 						$participant_db->execute();
 						$chef = $participant_db->fetch();
 					}
+					
+					/***** REGISTRATION COUNT *****/
+					$registrations_count_db->execute();
+					$registrations_count = $registrations_count_db->fetchColumn();
+					$registrations_count = COUNT($participants) - $registrations_count;
 											
 					/***** VIEW *****/
 					view: 
@@ -287,7 +295,8 @@ try{
 					echo "</li>";
 					echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
 					
-						echo "<span class='participantsTitle'>Who else is coming?</span>";
+						echo "<span class='participantsCount'>".$registrations_count."</span>";
+						echo "<span class='participantsTitle'>is coming. But who (besides the host)?</span>";
 					
 						echo "<ul>";
 						foreach($participants as $participant){
@@ -313,7 +322,7 @@ try{
 
 							// Write out participant
 							echo "<li id='participant_".$participant_id."'>";
-								echo "<span class='status'><input id='".$reg_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
+								echo "<span class='status'><input id='".$reg_id."' data-id='".$week.$weekday."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
 								echo "<span class='name'>".$participant['participant_name']."</span>";
 							echo "</li>";					
 						}

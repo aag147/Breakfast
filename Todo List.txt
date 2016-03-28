@@ -1,8 +1,8 @@
 Vigtigt:
 Brugbare fejlmeddelelser.
 Sende notifikationer (emails) (hvornår?).
-Vise antallet af personer tilmeldt en morgenmad.
--> Dynamisk ændre det viste antal i takt med at man krydser af.
+Vise antallet af personer tilmeldt en morgenmad. (done)
+-> Dynamisk ændre det viste antal i takt med at man krydser af. (done)
 Lave hjemmesidetitlen til et link.
 
 Knap så vigtigt:

@@ -10,6 +10,8 @@ try{
 	$products_db = $conn->prepare("SELECT * FROM breakfast_products WHERE project_id = :project_id ORDER BY product_name ASC");
 	$products_db->bindParam(':project_id', $cookie_project_id);		
 	$products_db->execute();
+	$products_count = $products_db->rowCount();
+
 ?>
 	<head>
 		<title>
@@ -29,29 +31,37 @@ try{
 	</div>
 	
 	<div id="standardContent">
-		<ul id="standardList">
-			<li class="listLegend">
-				<span class="name">Name</span><?php
-				?><span class="status">In store</span><?php
-				?><span class="admin">Admin</span>
-			</li>
-			<?php
-			while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
-				if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
-				echo "<li id='product_".$product['product_id']."'>";
-					echo "<span class='span2input'>";
-						echo "<span class='name'>".$product['product_name']."</span>";
-					echo "</span>";
-					echo "<span class='status'><input id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
-					echo "<span class='options'>";
-						echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[save]</a>";
-						echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[edit]</a>";
-						echo "<a href='javascript:;' id='".$product['product_id']."' class='deleteProduct red'>[X]</a>";
-					echo "</span>";
-				echo "</li>";
-			}
+		<?php 
+		if($products_count==0){
+			echo "You have not added any products yet.";
+		}else{
 			?>
-		</ul>
+			<ul id="standardList">
+				<li class="listLegend">
+					<span class="name">Name</span><?php
+					?><span class="status">In store</span><?php
+					?><span class="admin">Admin</span>
+				</li>
+				<?php
+				while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
+					if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
+					echo "<li id='product_".$product['product_id']."'>";
+						echo "<span class='span2input'>";
+							echo "<span class='name'>".$product['product_name']."</span>";
+						echo "</span>";
+						echo "<span class='status'><input id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
+						echo "<span class='options'>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[save]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[edit]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='deleteProduct red'>[X]</a>";
+						echo "</span>";
+					echo "</li>";
+				}
+				?>
+			</ul>
+			<?php
+		}
+		?>		
 	</div><?php
 	
 	?><div id="standardPanel">

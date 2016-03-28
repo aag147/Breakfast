@@ -12,7 +12,7 @@ require('../headers/setup.php');
 // LOGGED IN CHECK
 if(empty($cookie_project_id)){header('Location: index.php'); exit;}
 
-Header('Content-Type:text/html; charset=ISO-8859-1');
+Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
 
 
@@ -26,8 +26,8 @@ try{
 	switch ($type){
 		case 'new':			
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
-			$email = utf8_decode(isset($_POST['email']) ? $_POST['email'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$email = (isset($_POST['email']) ? $_POST['email'] : '');
 
 			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_name = :name AND project_id = :project_id LIMIT 1");
 			$participant_db->bindParam(':name', $name);		
@@ -71,9 +71,9 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
-			$email = utf8_decode(isset($_POST['email']) ? $_POST['email'] : '');
-			$participant_id = utf8_decode(isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$email = (isset($_POST['email']) ? $_POST['email'] : '');
+			$participant_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants WHERE participant_name = :name AND project_id = :project_id AND participant_id <> :participant_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -103,8 +103,8 @@ try{
 			
 		case 'changeStatus':		
 			// Variables from form
-			$registration_id = utf8_decode(isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
-			$value = utf8_decode(isset($_POST['value']) ? $_POST['value'] : '');
+			$registration_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
+			$value = (isset($_POST['value']) ? $_POST['value'] : '');
 			if($value=="true"){$value=1;}else{$value=0;}
 			
 			/*** ERROR CHECKING ***/	
