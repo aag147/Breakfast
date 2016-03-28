@@ -3,19 +3,13 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT']."/breakfast");
 
 //Loader passwordhash
 require_once(ROOT."/headers/PasswordHash.php");
-//require_once(ROOT."/headers/class.upload.php");
-//require_once(ROOT."/headers/functions.php");
-require_once(ROOT."/headers/Mobile_Detect.php");
- 
-// SCREEN SIZE / DEVICE TYPE
-$detect = new Mobile_Detect;
-$device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
-$script_version = $detect->getScriptVersion();
  
 
 // SET TIMEZONE
 date_default_timezone_set('Europe/Copenhagen');
 
+// GET FILENAME
+$filename = pathinfo(htmlentities($_SERVER['PHP_SELF']))['filename'];
 
 // Defines database specifications
 define('DB_SERVER', '127.0.0.1');

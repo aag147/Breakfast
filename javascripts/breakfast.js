@@ -2,20 +2,8 @@
 //****** FUNCTIONS *******//
 //************************//
 
-	// Shift between login and register
-	function shiftLogin(){
-		if(	$('#adminShiftLink' ).hasClass( "register" ) ){ currentClass = "register";}
-		else{ currentClass = "logIn";}
-		$.ajax({
-			url: '../loaded/showLogIn.php',
-			type: 'POST',
-			data: {currentClass:currentClass},
-			success: function(data) {
-				$("#adminAllContent").html(data);
-			}
-		});
-	}
-	
+
+	// Build breakfast planner
 	function buildBreakfastPlan(){
 		 $.ajax({
 			   type: "POST",
@@ -40,14 +28,12 @@
 				$("#"+type+"Errmsg").html(data);
 				if(data[0]==1){
 					if(type!="weekdays"){window.location.href = "../views/index.php";}
-				}else{
-					alert("error: "+data);
 				}
 			}
 		});
 	}
 	
-	// Addition management
+	// Add something
 	function addElement(formData, type){
 		formData.append("type", "new");
 	
@@ -66,8 +52,10 @@
 	}
 	
 
-	// Change status management
-	function changeStatus(formData, id, type, remove){
+	// Change status of something
+	function changeStatus(checked, id, type, remove){
+		var formData = new FormData();
+		formData.append("value", checked);
 		formData.append("type", "changeStatus");
 		formData.append(type+"_id", id);
 		$.ajax({
@@ -81,12 +69,20 @@
 				if(data==1 && remove){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
-				}				
+				}else if(data==1 && type=="participant"){
+					date = $("#"+id).data('id');
+					$count = $("#participants_"+date+" span.participantsCount");
+					if(checked){
+						$count.text(parseInt($count.text()) + 1);
+					}else{
+						$count.text(parseInt($count.text()) - 1);
+					}
+				}
 			}
 		});
 	}
 	
-	// Deletion management
+	// Delete something
 	function deleteElement(id, type){
 		$.ajax({
 			url: '../loaded/delete.php',
@@ -102,7 +98,7 @@
 		});
 	}
 	
-	// Edit values in-line
+	// Edit something (in-line)
 	function editInLine(id, type) {
 		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		
@@ -177,58 +173,72 @@
 			}, 100);
 		});		
 	};
+	
+		
+	// Toggle between hide and show for single element
+	function toggleSingle(first) {
+		if($(first).hasClass('hide')){
+			$(first).removeClass('hide');
+		}else{
+			$(first).addClass("hide");
+		}
+	}
 
+	// Toggle between showing one of two elements
+	function toggleTwo(first, second) {
+		if($(first).hasClass('hide')){
+			$(second).addClass("hide");
+			$(first).removeClass('hide');
+		}else{
+			$(first).addClass("hide");
+			$(second).removeClass('hide');
+		}
+	}	
 
 
 //************************//
 //******** EVENTS ********//
 //************************//
 $(document).ready(function() {
-	/* PHONE MENU */
-	$('#navigation').navobile({
-		cta: "#show-navobile",
-		changeDOM: true,
-		bindSwipe: true,
-		bindDrag: true,
-		openOffetLeft:'70%'
-		
-	});
-	
-	
 	/***** ADMIN FORM SUBMITS *****/
-	// New participant */
+	// New participant
 	$('#newParticipantForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
 		addElement(formData, "participant");
 		event.preventDefault();
 	})	
-	// New product */
+	// New product
 	$('#newProductForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
 		addElement(formData, "product");
 		event.preventDefault();
 	})
-	// Edit breakfast weekdays */
+	// Edit breakfast weekdays
 	$('#editBreakfastWeekdays').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
 		accountManagement(formData, "weekdays");
 		event.preventDefault();
 	})
+	// Log in
+	$('#logInForm').submit(function(event) {
+		var id = event.target.id;
+		var formData = new FormData(document.getElementById(id));
+		accountManagement(formData, "login");
+		event.preventDefault();
+	})
+	// Register
+	$('#registerForm').submit(function(event) {
+		var id = event.target.id;
+		var formData = new FormData(document.getElementById(id));
+		accountManagement(formData, "register");
+		event.preventDefault();
+	})
 	
 	
 	/***** ADMIN LINK CLICKS *****/
-	/* Delete participant */
-	$('.deleteParticipant').click(function(event){
-		deleteElement(this.id, "participant");	
-	});
-	/* Delete product */
-	$('.deleteProduct').click(function(event){
-		deleteElement(this.id, "product");	
-	});
-	
 	/* Edit participant */
 	$('.editParticipant').click(function(event){
 		editInLine(this.id, "participant");	
@@ -241,6 +251,14 @@ $(document).ready(function() {
 	$('.editAccount').click(function(event){
 		editInLine(this.id, "account");	
 	});
+	/* Delete participant */
+	$('.deleteParticipant').click(function(event){
+		deleteElement(this.id, "participant");	
+	});
+	/* Delete product */
+	$('.deleteProduct').click(function(event){
+		deleteElement(this.id, "product");	
+	});
 	/* Delete project */
 	$('.deleteAccount').click(function(event){
 		if(confirm("Are you sure?")){
@@ -251,68 +269,32 @@ $(document).ready(function() {
 	$('.logOut').click(function(event){
 		accountManagement(new FormData(), "logout");	
 	});
+	/* Toggle login and register view */
+	$('.adminShiftLink').click(function(event){
+		toggleTwo('#logInView', '#registerView');
+	});
 	
 	
 	/***** ADMIN CHECK BOXES *****/
 	/* Edit product status */
-	$(':checkbox.editProductStatus').change(function() {
-		var formData = new FormData();
-		formData.append("value", this.checked);
-		changeStatus(formData, this.id, "product", false);			
+	$(':checkbox.editProductStatus').off('change').on('change', function() {
+		changeStatus(this.checked, this.id, "product", false);			
 	}); 
 	/* Edit product status and remove span */
-	$(':checkbox.removeProductStatus').change(function() {
-		var formData = new FormData();
-		formData.append("value", this.checked);
-		changeStatus(formData, this.id, "product", true);
-				
-	}); 
-	/* Edit participant status */
-	$(':checkbox.editParticipantStatus').change(function() {
-		var formData = new FormData();
-		formData.append("value", this.checked);
-		changeStatus(formData, this.id, "participant", false);
-	}); 	
-	/* Edit weekdays status */
-	$(':checkbox.editWeekdaysStatus').change(function() {
-		var formData = new FormData();
-		formData.append("value", this.checked);
-		changeStatus(formData, this.id, "account", false);
-	}); 
+	$(':checkbox.removeProductStatus').off('change').on('change', function() {
+		changeStatus(this.checked, this.id, "product", true);	
+	});
 	
 });	
 
 $(document).ajaxStop(function () {
-	/***** SHOW SLASH TOOGLE VIEW *****/
-	// Toogle participants visibility for a weekday
+	/***** FOR SPECIAL EVENTS WAITING FOR AJAX TO FINISH *****/
+	/* Edit participant status */
+	$(':checkbox.editParticipantStatus').off('change').on('change', function() {
+		changeStatus(this.checked, this.id, "participant", false);
+	}); 	
+	// Toggle participants visibility for a weekday
 	$('.showParticipants').click(function(event){
-		var participants_id = '#participants_'+this.id;
-		if($(participants_id).hasClass('hide')){
-			$(participants_id).removeClass('hide');
-		}else{
-			$(participants_id).addClass("hide");
-		}
-	});
-	/* FRONTPAGE ADMIN SHIFT */
-	$('#adminShiftLink').click(function(event){
-		shiftLogin();	
-	});
-	
-	
-	/***** INDEX LOGIN/REGISTER *****/
-	// LOG IN */
-	$('#logInForm').submit(function(event) {
-		var id = event.target.id;
-		var formData = new FormData(document.getElementById(id));
-		accountManagement(formData, "login");
-		event.preventDefault();
-	})
-	// Register */
-	$('#registerForm').submit(function(event) {
-		var id = event.target.id;
-		var formData = new FormData(document.getElementById(id));
-		accountManagement(formData, "register");
-		event.preventDefault();
-	})
-	
+		toggleSingle('#participants_'+this.id);
+	});		
 });

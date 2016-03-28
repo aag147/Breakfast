@@ -12,7 +12,7 @@ require('../headers/setup.php');
 // LOGGED IN CHECK
 if(empty($cookie_project_id)){header('Location: index.php'); exit;}
 
-Header('Content-Type:text/html; charset=ISO-8859-1');
+Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
 
 
@@ -26,7 +26,7 @@ try{
 	switch ($type){
 		case 'new':			
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(product_id) as C FROM breakfast_products WHERE product_name = :name AND project_id = :project_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -56,8 +56,8 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
-			$product_id = utf8_decode(isset($_POST['product_id']) ? $_POST['product_id'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$product_id = (isset($_POST['product_id']) ? $_POST['product_id'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(product_id) as C FROM breakfast_products WHERE product_name = :name AND project_id = :project_id AND product_id <> :product_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -87,8 +87,8 @@ try{
 		case 'changeStatus':
 			
 			// Variables from form
-			$product_id = utf8_decode(isset($_POST['product_id']) ? $_POST['product_id'] : '');
-			$value = utf8_decode(isset($_POST['value']) ? $_POST['value'] : '');
+			$product_id = (isset($_POST['product_id']) ? $_POST['product_id'] : '');
+			$value = (isset($_POST['value']) ? $_POST['value'] : '');
 			if($value=="true"){$value=1;}else{$value=0;}
 			
 			/*** ERROR CHECKING ***/	
