@@ -7,15 +7,44 @@ include("../headers/header.php");
 	<head>
 		<title>
 			Breakfast management
-		</title>	
-		<script>
-			window.onload = shiftLogin();
-		</script>	
+		</title>
 	</head>
 
 	<div id="frontpage">
 		<ul>
 			<li id="adminAllContent">
+				<ul id="logInView">
+					<li id="pageTitle">
+						LOG IN
+					</li>
+					<li id="adminContent">
+						<form id="logInForm" action="" method="POST">
+							<span><input type="text" name="name" placeholder="Username"/></span>
+							<span><input type="password" name="password" placeholder="Password"/></span>
+							<span id="loginErrmsg"></span>
+							<span><input type="submit" value="Log in"/></span>
+						</form>
+					</li>
+					<li id="adminShift">
+						<a href="javascript:;" class="adminShiftLink blue">Register?</a>
+					</li>
+				</ul>
+				<ul id="registerView" class="hide">
+					<li id="pageTitle">
+						REGISTER
+					</li>
+					<li id="adminContent">
+						<form id="registerForm" action="" method="POST">
+							<span><input type="text" name="name" placeholder="Project name"/></span>
+							<span><input type="password" name="password" placeholder="Password"/></span>
+							<span id="registerErrmsg"></span>
+							<span><input type="submit" value="Register"/></span>
+						</form>
+					</li>
+					<li id="adminShift">
+						<a href="javascript:;" class="adminShiftLink blue">Already have an account?</a>
+					</li>
+				</ul>
 			</li>
 			<li id="about">
 				<span class="title">About this webapp</span>

@@ -9,7 +9,7 @@ if($pos===false)
 // FIRST HEADER		
 require('../headers/setup.php');
 
-Header('Content-Type:text/html; charset=ISO-8859-1');
+Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
 
 
@@ -23,8 +23,8 @@ try{
 	switch ($type){
 		case 'login':			
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
-			$password = utf8_decode(isset($_POST['password']) ? $_POST['password'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$password = (isset($_POST['password']) ? $_POST['password'] : '');
 			$checkbox = isset($_POST['checkbox']) ? $_POST['checkbox'] : '';
 
 			$project_db = $conn->prepare("SELECT * FROM breakfast_projects WHERE project_name = :name LIMIT 1");
@@ -79,8 +79,8 @@ try{
 			
 		case 'register':
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
-			$password = utf8_decode(isset($_POST['password']) ? $_POST['password'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$password = (isset($_POST['password']) ? $_POST['password'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(project_id) as C FROM breakfast_projects WHERE project_name = :name LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -149,7 +149,7 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = utf8_decode(isset($_POST['name']) ? $_POST['name'] : '');
+			$name = (isset($_POST['name']) ? $_POST['name'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(project_id) as C FROM breakfast_projects WHERE project_name = :name AND project_id <> :project_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -237,8 +237,8 @@ try{
 			
 		case 'changeStatus':
 			// Variables from form
-			$weekday = utf8_decode(isset($_POST['account_id']) ? $_POST['account_id'] : '');
-			$value = utf8_decode(isset($_POST['value']) ? $_POST['value'] : '');
+			$weekday = (isset($_POST['account_id']) ? $_POST['account_id'] : '');
+			$value = (isset($_POST['value']) ? $_POST['value'] : '');
 			if($value=="true"){$value=1;}else{$value=0;}
 			
 			/*** ERROR CHECKING ***/	

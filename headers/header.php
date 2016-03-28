@@ -1,4 +1,4 @@
-<?php header('Content-Type:text/html; charset=ISO-8859-1'); ?>
+<?php header('Content-Type:text/html; charset=utf-8'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--GLOBAL-->
@@ -39,16 +39,15 @@
 				Breakfast management
 			</div>
 			<?php if(isset($cookie_project_id)){ ?>
-				<a href="javascript:;" id="show-navobile">OPEN MENU</a>
 				<nav id="navigation">
 					<ul>
-					  <li>
+					  <li class='<?php if($filename=="project"){echo "current";} ?>'>
 						<a href="project.php">Planner</a>
-					  </li><li>
+					  </li><li class='<?php if($filename=="products"){echo "current";} ?>'>
 						<a href="products.php">Products</a>
-					  </li><li>
+					  </li><li class='<?php if($filename=="participants"){echo "current";} ?>'>
 						<a href="participants.php">Participants</a>
-					  </li><li>
+					  </li><li class='<?php if($filename=="settings"){echo "current";} ?>'>
 						<a href="settings.php">Settings</a>
 					  </li>
 					</ul>
