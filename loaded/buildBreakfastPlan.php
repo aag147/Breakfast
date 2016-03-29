@@ -10,7 +10,7 @@ if($pos===false)
 require('../headers/setup.php');
 
 // LOGGED IN CHECK
-if(empty($cookie_project_id)){header('Location: index.php'); exit;}
+if(empty($cookie_project_id)){exit;}
 
 Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
@@ -333,6 +333,20 @@ try{
 			echo "</ul></li>";
 		}
 		echo "</ul>";
+	}
+	
+	
+	// Sending notifications
+	if(!empty($_COOKIE['cookie_project_id'])){
+		$tomorrow = jddayofweek(date("N") % 7, 1);
+		if($project['project_'.strtolower($tomorrow)] AND $project['project_lastNotified'] < date("Y-m-d")){
+			// Send notification for tomorrows breakfasts only once
+			?>
+			<script>
+				window.onload = sendNotifications('tomorrow');
+			</script>
+			<?php
+		}
 	}
 
 } catch(PDOException $e) {

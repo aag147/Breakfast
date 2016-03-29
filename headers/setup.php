@@ -22,25 +22,13 @@ try{
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 
 	// Create missing tables
-	$createBreakfastsTable = $conn->prepare("
-			CREATE TABLE IF NOT EXISTS `breakfast_breakfasts` (
-			  `breakfast_id` int(11) NOT NULL AUTO_INCREMENT,
-			  `project_id` int(11) NOT NULL,
-			  `breakfast_date` date NOT NULL,
-			  `breakfast_weekday` varchar(100) CHARACTER SET utf8 NOT NULL,
-			  `breakfast_chef` int(11) NOT NULL,
-			  `breakfast_done` int(11) NOT NULL,
-			  `breakfast_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  `breakfast_dead` int(11) NOT NULL,
-			  PRIMARY KEY (`breakfast_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
-	$createBreakfastsTable->execute();
 	$createProjectsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_projects` (
 			  `project_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `project_name` varchar(100) CHARACTER SET utf8 NOT NULL,
 			  `project_password` varchar(100) CHARACTER SET utf8 NOT NULL,
-			  `project_created` int(11) NOT NULL,
+			  `project_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  `project_lastNotified` date NOT NULL,
 			  `project_monday` int(11) NOT NULL,
 			  `project_tuesday` int(11) NOT NULL,
 			  `project_wednesday` int(11) NOT NULL,
@@ -52,6 +40,19 @@ try{
 			  UNIQUE KEY (`project_name`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
 	$createProjectsTable->execute();
+	$createBreakfastsTable = $conn->prepare("
+			CREATE TABLE IF NOT EXISTS `breakfast_breakfasts` (
+			  `breakfast_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `project_id` int(11) NOT NULL,
+			  `breakfast_date` date NOT NULL,
+			  `breakfast_weekday` varchar(100) CHARACTER SET utf8 NOT NULL,
+			  `breakfast_chef` int(11) NOT NULL,
+			  `breakfast_done` int(11) NOT NULL,
+			  `breakfast_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  `breakfast_asleep` int(11) NOT NULL,
+			  PRIMARY KEY (`breakfast_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
+	$createBreakfastsTable->execute();
 	$createParticipantsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_participants` (
 			  `participant_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -62,7 +63,7 @@ try{
 			  `participant_lastTime` date NOT NULL,
 			  `participant_attendance_count` int(11) NOT NULL,
 			  `participant_chef_count` int(11) NOT NULL,
-			  `participant_removed` int(11) NOT NULL,
+			  `participant_asleep` int(11) NOT NULL,
 			  PRIMARY KEY (`participant_id`),
 			  UNIQUE KEY (`participant_name`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
@@ -99,6 +100,7 @@ try{
 	$createRegistrationsTable->execute();
 	
 	// Handling login/session cookies
+	$cookie_project_id = 0;
 	if(!empty($_COOKIE['cookie_project_id'])){
 		$cookie_project_id		= $_COOKIE['cookie_project_id'];
 		$cookie_hash			= $_COOKIE['cookie_hash'];

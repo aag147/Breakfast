@@ -14,6 +14,18 @@
 		  });
 	}
 	
+	// Send notifications
+	function sendNotifications(type){
+		 $.ajax({
+			   type: "POST",
+			   url: '../loaded/sendNotifications.php',
+			   data: {type: type},
+			   dataType: 'json',
+			   success: function(data) {
+			   }
+		  });
+	}
+	
 	// Account management
 	function accountManagement(formData, type){
 		formData.append("type", type);
