@@ -10,7 +10,7 @@ if($pos===false)
 require('../headers/setup.php');
 
 // LOGGED IN CHECK
-if(empty($cookie_project_id)){header('Location: index.php'); exit;}
+if(empty($cookie_project_id)){exit;}
 
 Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
