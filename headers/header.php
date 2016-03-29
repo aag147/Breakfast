@@ -26,7 +26,7 @@
 			<div class="div_title">
 				Breakfast management
 			</div>
-			<?php if(isset($cookie_project_id)){ ?>
+			<?php if(!empty($cookie_project_id)){ ?>
 				<nav id="navigation">
 					<ul>
 					  <li class='<?php if($filename=="project"){echo "current";} ?>'>

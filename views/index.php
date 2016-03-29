@@ -19,7 +19,7 @@ include("../headers/header.php");
 					</li>
 					<li id="adminContent">
 						<form id="logInForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Username"/></span>
+							<span><input type="text" name="name" placeholder="Project name"/></span>
 							<span><input type="password" name="password" placeholder="Password"/></span>
 							<span id="loginErrmsg"></span>
 							<span><input type="submit" value="Log in"/></span>

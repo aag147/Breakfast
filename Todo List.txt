@@ -1,6 +1,6 @@
 Vigtigt:
 Brugbare fejlmeddelelser.
-Sende notifikationer (emails) (hvornår?).
+Sende notifikationer (emails) (hvornår?). (kinda done)
 Vise antallet af personer tilmeldt en morgenmad. (done)
 -> Dynamisk ændre det viste antal i takt med at man krydser af. (done)
 Lave hjemmesidetitlen til et link.
