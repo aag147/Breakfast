@@ -100,7 +100,6 @@ try{
 	$createRegistrationsTable->execute();
 	
 	// Handling login/session cookies
-	$cookie_project_id = 0;
 	if(!empty($_COOKIE['cookie_project_id'])){
 		$cookie_project_id		= $_COOKIE['cookie_project_id'];
 		$cookie_hash			= $_COOKIE['cookie_hash'];
