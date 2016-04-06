@@ -6,7 +6,7 @@ Vise antallet af personer tilmeldt en morgenmad. (done)
 Lave hjemmesidetitlen til et link. (done)
 
 Knap så vigtigt:
-Implementere foreign-keys i datatabellerne.
+Implementere foreign-keys i datatabellerne. (done)
 
 Måske:
 Ved store arbejdspladser (mange personer) sætte 2+ personer til at sørge for morgenmad.
