@@ -75,14 +75,14 @@ try{
 	
 	// YEARWEEK(breakfast_date, 1) >= YEARWEEK(CURDATE(), 1)
 	/***************** PDO PREPARATIONS FOR BREAKFAST PLAN *****************/
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0' ORDER BY participant_name ASC");
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
 	$participants_db->bindParam(':project_id', $cookie_project_id);		
 	$participants_db->execute();
 	$participants = $participants_db->fetchAll();
 		
 	$dynamic_chefs_db = $conn->prepare("SELECT P.*, (case when registration_id is null then 0 else 1 end) as veteran FROM
 											(SELECT *
-											 FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0') as P
+											 FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0') as P
 										LEFT JOIN
 											(SELECT * FROM breakfast_registrations) as R
 										ON P.participant_id = R.participant_id
@@ -107,7 +107,7 @@ try{
 	$static_chefs = $static_chefs_db->fetchAll();
 	
 	/***************** DELETE GHOST BREAKFASTS *****************/
-	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_dead = '1'");
+	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_asleep = '1'");
 	$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
 	$delete_breakfasts->execute();
 	
@@ -249,7 +249,7 @@ try{
 							$participant_db->execute();
 							$chef = $participant_db->fetch();
 							// Only includes a potential removed participant for todays breakfast
-							if($i==0 OR $chef['participant_removed']==0){break;}
+							if($i==0 OR $chef['participant_asleep']==0){break;}
 							$dynamic_chefs_index++;
 						}
 						
@@ -337,9 +337,12 @@ try{
 	
 	
 	// Sending notifications
-	if(!empty($_COOKIE['cookie_project_id'])){
-		$tomorrow = jddayofweek(date("N") % 7, 1);
-		if($project['project_'.strtolower($tomorrow)] AND $project['project_lastNotified'] < date("Y-m-d")){
+	$breakfast_date = date("Y-m-d", strtotime("+ 1 day"));
+	$breakfast_db->execute();
+	$hasBreakfast = $breakfast_db->rowCount();
+	if($hasBreakfast){
+		$breakfast = $breakfast_db->fetch();
+		if($breakfast['breakfast_notified'] == 0){
 			// Send notification for tomorrows breakfasts only once
 			?>
 			<script>

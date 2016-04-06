@@ -222,7 +222,7 @@ try{
 				$params[$weekday] = $value;
 				
 				if($value==0){
-					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_dead = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
+					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_asleep = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
 					$kill_breakfasts->bindParam(':project_id', $cookie_project_id);
 					$kill_breakfasts->bindParam(':weekday', $weekday);
 					$kill_breakfasts->execute();

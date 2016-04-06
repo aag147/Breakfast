@@ -38,7 +38,7 @@ try{
 			if ($participant_count > 0){
 				$participant = $participant_db->fetch();
 				$participant_id = $participant['participant_id'];
-				$participant_asleep = $participant['participant_removed'];
+				$participant_asleep = $participant['participant_asleep'];
 			}
 			
 			/*** ERROR CHECKING ***/	
@@ -49,7 +49,7 @@ try{
 
 			if($participant_asleep==1){
 				/*** Wake up ***/
-				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_removed = '0' WHERE project_id = :project_id AND participant_id = :participant_id");
+				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0' WHERE project_id = :project_id AND participant_id = :participant_id");
 				$wake_participant->bindParam(':project_id', $cookie_project_id);		
 				$wake_participant->bindParam(':participant_id', $participant_id);
 				$wake_participant->execute();			
