@@ -29,8 +29,8 @@ try{
 			$name = (isset($_POST['name']) ? $_POST['name'] : '');
 			$email = (isset($_POST['email']) ? $_POST['email'] : '');
 
-			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_name = :name AND project_id = :project_id LIMIT 1");
-			$participant_db->bindParam(':name', $name);		
+			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id LIMIT 1");
+			$participant_db->bindParam(':email', $email);		
 			$participant_db->bindParam(':project_id', $cookie_project_id);		
 			$participant_db->execute();
 			$participant_count = $participant_db->rowCount();

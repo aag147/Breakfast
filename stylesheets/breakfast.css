@@ -334,13 +334,26 @@ nav {
 		display: inline-block;
 		width: 80px;
 	}
+	#projectContent li.weekdays li.weekday a span.weekdayToday{
+		display: inline-block;
+		width: 105px;
+		text-align: center;
+		color: #00506f;
+		font-weight: bold;
+	}
 	#projectContent li.weekdays li.weekday a span.theChef{
 		display: inline-block;
-		width: calc(100% - 160px);
+		width: calc(100% - 265px);
 		text-align: right;
+	}
+	#projectContent li.weekdays li.weekday a:hover span.weekdayToday{
+		color: #00506f;
 	}
 	#projectContent li.weekdays li.weekday a:hover span.theChef{
 		color: #000;
+	}
+	#projectContent li.weekdays li.weekday.done a:hover span.weekdayToday{ /* DONE BREAKFAST */
+		color: #00506f;
 	}
 	#projectContent li.weekdays li.weekday.done a:hover span.theChef{ /* DONE BREAKFAST */
 		color: grey;

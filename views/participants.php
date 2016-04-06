@@ -72,7 +72,7 @@ try{
 			<form id="newParticipantForm" action="" method="POST">
 				<span class="optionTitle">Add participant</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Enter participant name"/>
+					<input name="name" type="text" placeholder="Enter participant name" autofocus/>
 					<input name="email" type="email" placeholder="Enter participant email"/>
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">

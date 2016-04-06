@@ -87,7 +87,7 @@ try{
 											(SELECT * FROM breakfast_registrations) as R
 										ON P.participant_id = R.participant_id
 										GROUP BY P.participant_id
-										ORDER BY veteran ASC, participant_lastTime ASC, participant_created DESC
+										ORDER BY veteran ASC, participant_lastTime ASC, participant_created ASC
 										LIMIT 40");
 	$dynamic_chefs_db->bindParam(':project_id', $cookie_project_id);		
 	$dynamic_chefs_db->execute();
@@ -186,6 +186,7 @@ try{
 		
 		$current_week = date("w");
 		$current_date = date("Y-m-d");
+		$tomorrow_date = date("Y-m-d", strtotime("+ 1 day"));
 		$dynamic_chefs_index = 0;
 		echo "<ul>";
 		for($i = 0; $i < 6; $i++){
@@ -290,6 +291,10 @@ try{
 						echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
 							echo "<span class='weekdayTitle'>".$weekday."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
+							echo "<span class='weekdayToday'>";
+								if($breakfast_date == $current_date){echo "(TODAY)";}
+								if($breakfast_date == $tomorrow_date){echo "(TOMORROW)";}
+							echo "</span>";
 							echo "<span class='theChef'>".$chef['participant_name']."</span>";
 						echo "</a>";
 					echo "</li>";

@@ -73,7 +73,7 @@ try{
 			<form id="newProductForm" action="" method="POST">
 				<span class="optionTitle">Add product</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Enter product name"/>
+					<input name="name" type="text" placeholder="Enter product name" autofocus/>
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>
