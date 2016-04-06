@@ -27,16 +27,20 @@
 	}
 	
 	// Account management
-	function accountManagement(formData, type){
+	function accountManager(formData, type){
 		formData.append("type", type);
 		$.ajax({
-			url: '../loaded/accountManagement.php',
+			url: '../loaded/accountManager.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
+				if(type=='weekdays'){
+					sendNotifications(type);
+				}
+				
 				$("#"+type+"Errmsg").html(data);
 				if(data[0]==1){
 					if(type!="weekdays"){window.location.href = "../views/index.php";}
@@ -50,7 +54,7 @@
 		formData.append("type", "new");
 	
 		$.ajax({
-			url: '../loaded/'+type+'Management.php',
+			url: '../loaded/'+type+'Manager.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -71,7 +75,7 @@
 		formData.append("type", "changeStatus");
 		formData.append(type+"_id", id);
 		$.ajax({
-			url: '../loaded/'+type+'Management.php',
+			url: '../loaded/'+type+'Manager.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -161,7 +165,7 @@
 				
 				// Ajax to insert new element
 				$.ajax({
-					url: '../loaded/'+type+'Management.php',
+					url: '../loaded/'+type+'Manager.php',
 					type: 'POST',
 					data: formData,
 					processData: false,
@@ -231,21 +235,21 @@ $(document).ready(function() {
 	$('#editBreakfastWeekdays').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
-		accountManagement(formData, "weekdays");
+		accountManager(formData, "weekdays");
 		event.preventDefault();
 	})
 	// Log in
 	$('#logInForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
-		accountManagement(formData, "login");
+		accountManager(formData, "login");
 		event.preventDefault();
 	})
 	// Register
 	$('#registerForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
-		accountManagement(formData, "register");
+		accountManager(formData, "register");
 		event.preventDefault();
 	})
 	
@@ -274,12 +278,12 @@ $(document).ready(function() {
 	/* Delete project */
 	$('.deleteAccount').click(function(event){
 		if(confirm("Are you sure?")){
-			accountManagement(new FormData(), "delete");	
+			accountManager(new FormData(), "delete");	
 		}
 	});
 	/* Log out */
 	$('.logOut').click(function(event){
-		accountManagement(new FormData(), "logout");	
+		accountManager(new FormData(), "logout");	
 	});
 	/* Toggle login and register view */
 	$('.adminShiftLink').click(function(event){

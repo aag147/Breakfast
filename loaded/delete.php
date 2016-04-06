@@ -30,7 +30,7 @@ try{
 			$participant_id = (isset($_POST['id']) ? $_POST['id'] : '');
 			
 			/*** DELETE ***/
-			$delete_participant = $conn->prepare("UPDATE breakfast_participants SET participant_removed = '1' WHERE participant_id = :participant_id");
+			$delete_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '1' WHERE participant_id = :participant_id");
 			$delete_participant->bindParam(':participant_id', $participant_id);
 			$delete_participant->execute();
 			

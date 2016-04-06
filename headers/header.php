@@ -23,9 +23,9 @@
 	<div id="contentOuterHeader">
 		<div id="contentHeader">
 			<?php /* PAGE HEADER */?>
-			<div class="div_title">
+			<div class="div_title"><a href="project.php">
 				Breakfast management
-			</div>
+			</a></div>
 			<?php if(!empty($cookie_project_id)){ ?>
 				<nav id="navigation">
 					<ul>

@@ -141,6 +141,9 @@ a.green:hover{
 	font-weight: bold;
 	border-bottom: 2px solid;}
 	
+.div_title a{
+	color: inherit;
+}
 	
 /* MENU */
 nav {
