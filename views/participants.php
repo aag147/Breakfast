@@ -15,7 +15,7 @@ try{
 ?>
 	<head>
 		<title>
-			Your breakfast participants
+			Alle deltagere
 		</title>		
 	</head>
 
@@ -25,19 +25,19 @@ try{
 				<?php echo $project_name; ?>
 			</li>
 			<li id="subtitle">
-				Your breakfast participants
+				Alle deltagere
 			</li>
 		</ul>
 	</div>
 	<div id="standardContent">
 		<?php 
 		if($participants_count==0){
-			echo "You have not added any participants yet.";
+			echo "Du har ikke tilføjet nogle deltagere endnu.";
 		}else{
 			?>	
 			<ul id="standardList">
 				<li class="listLegend">
-					<span class="name">Name</span><?php
+					<span class="name">Navn</span><?php
 					?><span class="status"></span><?php
 					?><span class="admin">Admin</span>
 				</li>
@@ -50,8 +50,8 @@ try{
 						echo "</span>";
 						echo "<span class='status'></span>";
 						echo "<span class='options'>";
-							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[save]</a>";
-							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[edit]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='deleteParticipant red'>[X]</a>";
 						echo "</span>";
 					echo "</li>";
@@ -70,10 +70,10 @@ try{
 			</li>
 			<li class="option">
 			<form id="newParticipantForm" action="" method="POST">
-				<span class="optionTitle">Add participant</span>
+				<span class="optionTitle">Tilføj deltager</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Enter participant name" autofocus/>
-					<input name="email" type="email" placeholder="Enter participant email"/>
+					<input name="name" type="text" placeholder="Indtast deltagers navn" />
+					<input name="email" type="email" placeholder="Indtast deltagers email"/>
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>
