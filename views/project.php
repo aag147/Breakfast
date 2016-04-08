@@ -14,7 +14,7 @@ try{
 ?>
 	<head>
 		<title>
-			Your breakfast plan
+			Din morgenmadsplan
 		</title>
 		<script>
 			window.onload = buildBreakfastPlan();
@@ -27,7 +27,7 @@ try{
 				<?php echo $project_name; ?>
 			</li>
 			<li id="subtitle">
-				Your breakfast plan
+				Din morgenmadsplan
 			</li>
 		</ul>
 	</div>
@@ -35,18 +35,18 @@ try{
 	<div id="standardContent">
 		<ul id="projectContent">
 			<li id="title">
-				Forthcoming breakfasts
+				Kommende arrangementer
 			</li>
 			<li id="breakfastPlan">
 				<?php /* jscript */ ?>
-				<span class="loadingText">Building breakfast plan... This may take a moment.</span>
+				<span class="loadingText">Bygger morgenmadsplanen... Dette kan tage et øjeblik.</span>
 			</li>
 		</ul>
 	</div><?php
 	?><div id="standardPanel">
 		<ul id="projectPanel" >
 			<li id="title">
-				What to buy
+				Hvad skal købes?
 			</li>
 			<?php
 			while($product = $products_db->fetch(PDO::FETCH_ASSOC)){

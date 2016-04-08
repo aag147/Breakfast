@@ -17,6 +17,8 @@ define('DB_USER', 'root');
 define('DB_PASSWORD', '123456');
 define('DB_NAME', 'breakfast');
 
+$weekdays_danish = array("Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag");
+
 try{ 
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	

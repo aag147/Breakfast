@@ -8,10 +8,7 @@
 <head> 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css" /> 	
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 	
 	<link rel="stylesheet" href="<?php echo "../stylesheets/breakfast.css"; ?>" type="text/css" >
 	<link rel="stylesheet" href="<?php echo "../stylesheets/breakfastphone.css"; ?>" type="text/css" >
@@ -24,19 +21,19 @@
 		<div id="contentHeader">
 			<?php /* PAGE HEADER */?>
 			<div class="div_title"><a href="project.php">
-				Breakfast management
+				Morgemmadsplanlægger
 			</a></div>
 			<?php if(!empty($cookie_project_id)){ ?>
 				<nav id="navigation">
 					<ul>
 					  <li class='<?php if($filename=="project"){echo "current";} ?>'>
-						<a href="project.php">Planner</a>
+						<a href="project.php">Plan</a>
 					  </li><li class='<?php if($filename=="products"){echo "current";} ?>'>
-						<a href="products.php">Products</a>
+						<a href="products.php">Produkter</a>
 					  </li><li class='<?php if($filename=="participants"){echo "current";} ?>'>
-						<a href="participants.php">Participants</a>
+						<a href="participants.php">Deltagere</a>
 					  </li><li class='<?php if($filename=="settings"){echo "current";} ?>'>
-						<a href="settings.php">Settings</a>
+						<a href="settings.php">Indstillinger</a>
 					  </li>
 					</ul>
 				</nav>

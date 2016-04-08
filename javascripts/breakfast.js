@@ -277,7 +277,7 @@ $(document).ready(function() {
 	});
 	/* Delete project */
 	$('.deleteAccount').click(function(event){
-		if(confirm("Are you sure?")){
+		if(confirm("Er du sikker?")){
 			accountManager(new FormData(), "delete");	
 		}
 	});

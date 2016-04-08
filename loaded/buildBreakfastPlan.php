@@ -181,7 +181,7 @@ try{
 
 	/******* PRINT PLAN *******/
 	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
-		echo "You need both participants and active weekdays to build breakfast plan.";
+		echo "Du behøver både deltagere og aktive ugedage for at bygge morgenmadsplanen.";
 	}else{
 		
 		$current_week = date("w");
@@ -199,9 +199,9 @@ try{
 			if($week >= $current_week){$year = date("Y");}
 			else{$year = date("Y", strtotime("+ 1 year"));}
 			// week title
-			if($i==0){$weekShow = "This week";}
-			elseif($i==1){$weekShow = "Next week";}
-			else{$weekShow = "Week ".$week;}
+			if($i==0){$weekShow = "Denne uge";}
+			elseif($i==1){$weekShow = "Næste uge";}
+			else{$weekShow = "Uge ".$week;}
 			
 			// WEEK VIEW
 			echo "<li class='week' id='week_".$week."'>";
@@ -289,11 +289,11 @@ try{
 					view: 
 					echo "<li class='weekday ".$doneClass."' id='weekday_".$week.$weekday."'>";
 						echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
-							echo "<span class='weekdayTitle'>".$weekday."</span>";
+							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
 							echo "<span class='weekdayToday'>";
-								if($breakfast_date == $current_date){echo "(TODAY)";}
-								if($breakfast_date == $tomorrow_date){echo "(TOMORROW)";}
+								if($breakfast_date == $current_date){echo "(I dag)";}
+								if($breakfast_date == $tomorrow_date){echo "(I morgen)";}
 							echo "</span>";
 							echo "<span class='theChef'>".$chef['participant_name']."</span>";
 						echo "</a>";
@@ -301,7 +301,7 @@ try{
 					echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
 					
 						echo "<span class='participantsCount'>".$registrations_count."</span>";
-						echo "<span class='participantsTitle'>is coming. But who (besides the host)?</span>";
+						echo "<span class='participantsTitle'>kommer. Men hvem (foruden værten)?</span>";
 					
 						echo "<ul>";
 						foreach($participants as $participant){

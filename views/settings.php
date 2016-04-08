@@ -10,7 +10,7 @@ try{
 ?>
 	<head>
 		<title>
-			Your breakfast settings
+			Indstillinger
 		</title>	
 	</head>
 
@@ -22,7 +22,7 @@ try{
 				</span>
 			</li>
 			<li id="subtitle">
-				Your breakfast settings
+				Indstillinger
 			</li>
 		</ul>
 	</div>
@@ -30,14 +30,14 @@ try{
 	<div id="standardContent">
 		<ul id="settingsContent">
 			<li id="title">
-				Advanced admin settings
+				Advancerede indstillinger
 			</li>
 			<li>
 				<span class="options">
-					<a href="javascript:;" class="saveAccount hide green">Save project name</a>
-					<a href="javascript:;" class="editAccount">Edit project name</a>
-					<a href="javascript:;" class="logOut">Log out</a>
-					<a href="javascript:;" class="deleteAccount">Delete project</a>
+					<a href="javascript:;" class="saveAccount hide green">Gem projektnavn</a>
+					<a href="javascript:;" class="editAccount">Ret projektnavn</a>
+					<a href="javascript:;" class="logOut">Log ud</a>
+					<a href="javascript:;" class="deleteAccount">Slet projekt</a>
 				</span>
 			</li>
 		</ul>
@@ -46,7 +46,7 @@ try{
 	?><div id="standardPanel">
 		<ul id="adminPanel">
 			<li id="title">
-				Edit breakfast days
+				Ret arrangement dage
 			</li>
 			<li class="option">
 			<form id="editBreakfastWeekdays" action="" method="POST">
@@ -57,8 +57,7 @@ try{
 						$weekday_checked = $project['project_'.strtolower($weekday)];
 						if($weekday_checked){$isChecked = "checked";}else{$isChecked = "";}
 						
-						echo "<span><input name='weekdays[]' value='".strtolower($weekday)."' type='checkbox' ".$isChecked."/> ".$weekday."</span>";
-						//echo "<span><input id='".strtolower($weekday)."' class='editWeekdaysStatus' type='checkbox' ".$isChecked."/> ".$weekday."</span>";
+						echo "<span><input name='weekdays[]' value='".strtolower($weekday)."' type='checkbox' ".$isChecked."/> ".$weekdays_danish[$i]."</span>";
 					}
 					?>
 				</span>
