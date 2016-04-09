@@ -40,8 +40,7 @@
 				if(type=='weekdays'){
 					sendNotifications(type);
 				}
-				
-				$("#"+type+"Errmsg").html(data);
+				$("#"+type+"Errmsg").html(data[1]);
 				if(data[0]==1){
 					if(type!="weekdays"){window.location.href = "../views/index.php";}
 				}
@@ -61,8 +60,8 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
-				$("#newErrmsg").html(data);
-				if(data==1){location.reload();}
+				$("#newErrmsg").html(data[1]);
+				if(data[0]==1){location.reload();}
 			}
 		});
 	}
@@ -114,22 +113,82 @@
 		});
 	}
 	
-	// Edit something (in-line)
+	/********* Edit something (in-line) ********/
+	// Making the actual edit with ajax call
+	function makeTheEdit($inputs, $span, $options, type, id){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);
+		
+		setTimeout(function (){
+			
+			// Creating formdata
+			formData = new FormData();
+			$inputs.children('input').each(function () {
+				formData.append($(this).attr('name'), $(this).val());
+			});
+			formData.append(type+"_id", id);
+			formData.append("type", "edit");
+			
+			// Ajax to insert new element
+			$.ajax({
+				url: '../loaded/'+type+'Manager.php',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(data) {
+					if(data[0] == 1){
+						$inputs.children('input').each(function () {
+							value = $(this).val();
+							if($(this).attr('name')=="email"){value = "Email: " + value;}
+							$span.children('.'+$(this).attr('name')).text(value);
+						});	
+						
+						// Return to span
+						backToSpan($inputs, $span, $options, type, id);
+					}else{
+						$("#"+id+"Errmsg").html(data[1]);
+					}
+				}
+			});	
+		}, 100);		
+	}
+	
+	// Returns the inputs to span
+	function backToSpan($inputs, $span, $options, type, id){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);
+		
+		// Changing input to span
+		$inputs.replaceWith($span);
+		$("a.edit"+typeUCF).removeClass('hide');
+		$options.children("a.save"+typeUCF).addClass('hide');
+		$options.children("a.annul"+typeUCF).addClass('hide');
+		
+		// Remove event handlers
+		$options.children("a.save"+typeUCF).off("click");
+		$options.children("a.annul"+typeUCF).off("click");
+		$('.editInput').off("keypress");
+		
+		// Clear error message
+		$("#"+id+"Errmsg").html("");
+	}
+		
+	// Main function for inline edit
 	function editInLine(id, type) {
 		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		
 		var $span = $('#'+type+'_'+id+' span.span2input');
-		var $options = $('#'+type+'_'+id+' span.options');
+		var $options = $('#'+type+'_'+id+' span.edit');
 		if(type=="account"){
 			$span = $('span.span2input');
 			$options = $('span.options');
 		}
 		
 		// Creating new span for inputs
-		inputs = $('<span />', {
+		$inputs = $('<span />', {
 			'class': 'span2input' 
 		});
-		
+
 		// Appending inputs to new span
 		$span.children('span').each(function () {
 			value = $(this).text();
@@ -139,55 +198,35 @@
 				'type':  'text',
 				'id': $(this).attr('id'),
 				'value': value,
-				'name': $(this).attr('class')
+				'name': $(this).attr('class'),
+				'class': 'editInput'
 			});			
-			inputs.append( input );
+			$inputs.append( input );
 		});
 		
 		// Visual change of span to input
-		$span.replaceWith(inputs);
+		$span.replaceWith($inputs);
 		
 		$("a.edit"+typeUCF).addClass('hide');
 		$options.children("a.save"+typeUCF).removeClass('hide');
-		inputs.children("input:first").focus();
+		$options.children("a.annul"+typeUCF).removeClass('hide');
+		$inputs.children("input:first").focus();
 		
 		// Save input and return to span
-		$options.children("a.save"+typeUCF).one("click", function(event){		
-			setTimeout(function (){
-				
-				// Creating formdata
-				formData = new FormData();
-				inputs.children('input').each(function () {
-					formData.append($(this).attr('name'), $(this).val());
-				});
-				formData.append(type+"_id", id);
-				formData.append("type", "edit");
-				
-				// Ajax to insert new element
-				$.ajax({
-					url: '../loaded/'+type+'Manager.php',
-					type: 'POST',
-					data: formData,
-					processData: false,
-					contentType: false,
-					dataType: "json",
-					success: function(data) {
-						if(data[0] == 1){
-							inputs.children('input').each(function () {
-								value = $(this).val();
-								if($(this).attr('name')=="email"){value = "Email: " + value;}
-								$span.children('.'+$(this).attr('name')).text(value);
-							});	
-						}
-					}
-				});	
-				
-				// Return to span
-				inputs.replaceWith($span);
-				$("a.edit"+typeUCF).removeClass('hide');
-				$options.children("a.save"+typeUCF).addClass('hide');
-			}, 100);
-		});		
+		$options.children("a.save"+typeUCF).on("click", function(event) {
+			makeTheEdit($inputs, $span, $options, type, id);
+		});
+		$('.editInput').keypress(function(event) {
+			if (event.keyCode == 13) {
+				makeTheEdit($inputs, $span, $options, type, id);
+			}
+		});
+		
+		// Annul input and return to span
+		$options.children("a.annul"+typeUCF).one("click", function(event){
+			// Return to span
+			backToSpan($inputs, $span, $options, type, id);
+		});
 	};
 	
 		
