@@ -55,7 +55,7 @@ try{
 						echo "<span class='status'><input id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
 						echo "<span class='edit'>";
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[gem]</a>";
-							echo "<a href='javascript:;' id='".$product['product_id']."' class='anulProduct blue hide'>[anul]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='annulProduct blue hide'>[annul]</a>";
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[ret]</a>";
 						echo "</span>";
 						echo "<span class='delete'>";						

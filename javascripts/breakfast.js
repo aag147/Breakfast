@@ -162,11 +162,11 @@
 		$inputs.replaceWith($span);
 		$("a.edit"+typeUCF).removeClass('hide');
 		$options.children("a.save"+typeUCF).addClass('hide');
-		$options.children("a.anul"+typeUCF).addClass('hide');
+		$options.children("a.annul"+typeUCF).addClass('hide');
 		
 		// Remove event handlers
 		$options.children("a.save"+typeUCF).off("click");
-		$options.children("a.anul"+typeUCF).off("click");
+		$options.children("a.annul"+typeUCF).off("click");
 		$('.editInput').off("keypress");
 		
 		// Clear error message
@@ -209,7 +209,7 @@
 		
 		$("a.edit"+typeUCF).addClass('hide');
 		$options.children("a.save"+typeUCF).removeClass('hide');
-		$options.children("a.anul"+typeUCF).removeClass('hide');
+		$options.children("a.annul"+typeUCF).removeClass('hide');
 		$inputs.children("input:first").focus();
 		
 		// Save input and return to span
@@ -222,8 +222,8 @@
 			}
 		});
 		
-		// Anull input and return to span
-		$options.children("a.anul"+typeUCF).one("click", function(event){
+		// Annul input and return to span
+		$options.children("a.annul"+typeUCF).one("click", function(event){
 			// Return to span
 			backToSpan($inputs, $span, $options, type, id);
 		});

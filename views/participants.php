@@ -54,7 +54,7 @@ try{
 						echo "<span class='status'></span>";
 						echo "<span class='edit'>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
-							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='anulParticipant blue hide'>[anul]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='annulParticipant blue hide'>[annul]</a>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
 						echo "</span>";
 						echo "<span class='delete'>";
