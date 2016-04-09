@@ -44,14 +44,20 @@ try{
 				<?php
 				while($participant = $participants_db->fetch(PDO::FETCH_ASSOC)){
 					echo "<li id='participant_".$participant['participant_id']."'>";
-						echo "<span class='span2input'>";
-							echo "<span class='name'>".$participant['participant_name']."</span>";
-							echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
+						echo "<span class='main'>";
+							echo "<span class='span2input'>";
+								echo "<span class='name'>".$participant['participant_name']."</span>";
+								echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
+							echo "</span>";
+							echo "<span class='participantErrmsg' id='".$participant['participant_id']."Errmsg'></span>";
 						echo "</span>";
 						echo "<span class='status'></span>";
-						echo "<span class='options'>";
+						echo "<span class='edit'>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='anulParticipant blue hide'>[anul]</a>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
+						echo "</span>";
+						echo "<span class='delete'>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='deleteParticipant red'>[X]</a>";
 						echo "</span>";
 					echo "</li>";

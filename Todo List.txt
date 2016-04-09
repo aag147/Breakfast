@@ -1,5 +1,5 @@
 Vigtigt:
-Brugbare fejlmeddelelser.
+Brugbare fejlmeddelelser. (done)
 Sende notifikationer (emails) (hvornår?). (done)
 Vise antallet af personer tilmeldt en morgenmad. (done)
 -> Dynamisk ændre det viste antal i takt med at man krydser af. (done)

@@ -502,31 +502,45 @@ padding: 5px 0px;
 		text-align: right;
 	}
 	/* THE LIST CONTENT */
-	#standardList li span.span2input{
+	#standardList li span.main{
 		width: calc(100% - 90px);
 	}
-		#standardList li span.span2input span.name{
+
+		#standardList li span.span2input{
 			width: 100%;
-			font-weight: bold;
 		}
-		#standardList li span.span2input span.email{
+			#standardList li span.span2input span.name{
+				width: 100%;
+				font-weight: bold;
+			}
+			#standardList li span.span2input span.email{
+				width: 100%;
+				font-size: 0.9em;
+			}
+			#standardList li span.span2input input{
+				width: 100%;
+				margin: 1px 0px;
+			}
+		#standardList li span.elementErrmsg{
 			width: 100%;
-			font-size: 0.9em;
-		}
-		#standardList li span.span2input input{
-			width: 100%;
-			margin: 1px 0px;
+			margin: 0px;
+			padding: 0px;
 		}
 	#standardList li span.status{
 	width: 20px;
 	text-align: right;
+	vertical-align: top;
 	}
-	#standardList li span.options{
-	width: 70px;
+	#standardList li span.edit{
+	width: 50px;
+	text-align: center;
+	vertical-align: top;
+	}
+	#standardList li span.edit a{
+		margin: 0px 2px
+	}
+	#standardList li span.delete{
+	width: 20px;
 	text-align: right;
 	vertical-align: top;
 	}
-	#standardList li span.options a{
-		margin: 0px 2px
-	}
-	

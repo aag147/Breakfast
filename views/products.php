@@ -46,13 +46,19 @@ try{
 				while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
 					if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
 					echo "<li id='product_".$product['product_id']."'>";
-						echo "<span class='span2input'>";
-							echo "<span class='name'>".$product['product_name']."</span>";
+						echo "<span class='main'>";
+							echo "<span class='span2input'>";
+								echo "<span class='name'>".$product['product_name']."</span>";
+							echo "</span>";
+							echo "<span class='elementErrmsg' id='".$product['product_id']."Errmsg'></span>";
 						echo "</span>";
 						echo "<span class='status'><input id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
-						echo "<span class='options'>";
+						echo "<span class='edit'>";
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[gem]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='anulProduct blue hide'>[anul]</a>";
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[ret]</a>";
+						echo "</span>";
+						echo "<span class='delete'>";						
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='deleteProduct red'>[X]</a>";
 						echo "</span>";
 					echo "</li>";

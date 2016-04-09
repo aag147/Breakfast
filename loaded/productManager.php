@@ -36,9 +36,9 @@ try{
 
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name)){$errmsg[0] = -1; goto newError;}		
+			if (empty($name)){$errmsg[0] = -1; break;}		
 			// Double name
-			if ($check_name > 0){$errmsg[0] = -2; goto newError;}	
+			if ($check_name > 0){$errmsg[0] = -2; break;}	
 
 			
 			/*** INSERT ***/
@@ -50,9 +50,8 @@ try{
 			$product_id = $conn->lastInsertId('breakfast_products');
 		
 			$errmsg[0] = 1;
-			newError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Produktet er tilføjet!";
+			break;
 			
 		case 'edit':
 			// Variables from form
@@ -68,9 +67,9 @@ try{
 
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($product_id)){$errmsg[0] = -1; goto editError;}		
+			if (empty($name) OR empty($product_id)){$errmsg[0] = -1; break;}		
 			// Double name
-			if ($check_name > 0){$errmsg[0] = -2; goto editError;}	
+			if ($check_name > 0){$errmsg[0] = -2; break;}	
 	
 			/*** UPDATE ***/
 			$new_product = $conn->prepare("UPDATE breakfast_products SET product_name = :name WHERE project_id = :project_id AND product_id = :product_id");
@@ -80,9 +79,8 @@ try{
 			$new_product->execute();
 					
 			$errmsg[0] = 1;
-			editError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Produktet er ændret!";
+			break;
 			
 		case 'changeStatus':
 			
@@ -93,7 +91,7 @@ try{
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($product_id)){$errmsg[0] = -1; goto changeStatusError;}		
+			if (empty($product_id)){$errmsg[0] = -1; break;}		
 	
 			/*** UPDATE ***/
 			$change_status = $conn->prepare("UPDATE breakfast_products SET product_status = :status WHERE project_id = :project_id AND product_id = :product_id");
@@ -103,10 +101,27 @@ try{
 			$change_status->execute();
 					
 			$errmsg[0] = 1;
-			changeStatusError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Status er ændret!";
+			break;
 	}
+	
+	
+	// Actual error message
+	if($errmsg[0] != 1){$errmsg[1] = "<p class='error'>";}
+	switch ($errmsg[0]){
+		case '-1':
+			$errmsg[1] .= "Navnet skal udfyldes!";
+			break;
+		case '-2':
+			$errmsg[1] .= "Produktet er allerede tilføjet!";
+			break;
+		default:
+			$errmsg[1] = "<p class='success'>".$errmsg[1];
+			break;
+	}
+	$errmsg[1] .= "</p>";
+	
+	echo json_encode($errmsg);
 	
 	$conn = null;
 } catch(PDOException $e) {

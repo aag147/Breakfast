@@ -21,6 +21,7 @@ try{
 					<span class="name"><?php echo $project_name; ?></span>
 				</span>
 			</li>
+			<span id="Errmsg"></span>
 			<li id="subtitle">
 				Indstillinger
 			</li>
