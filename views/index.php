@@ -6,7 +6,7 @@ include("../headers/header.php");
 ?>
 	<head>
 		<title>
-			Breakfast management
+			Morgenmadsplanlægger
 		</title>
 	</head>
 
@@ -15,41 +15,43 @@ include("../headers/header.php");
 			<li id="adminAllContent">
 				<ul id="logInView">
 					<li id="pageTitle">
-						LOG IN
+						LOG IND
 					</li>
 					<li id="adminContent">
 						<form id="logInForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Project name"/></span>
-							<span><input type="password" name="password" placeholder="Password"/></span>
+							<span><input type="text" name="name" placeholder="Projektnavn"/></span>
+							<span><input type="password" name="password" placeholder="Kodeord"/></span>
 							<span id="loginErrmsg"></span>
-							<span><input type="submit" value="Log in"/></span>
+							<span><input type="submit" value="Log ind"/></span>
 						</form>
 					</li>
 					<li id="adminShift">
-						<a href="javascript:;" class="adminShiftLink blue">Register?</a>
+						<a href="javascript:;" class="adminShiftLink blue">Opret nyt projekt?</a>
 					</li>
 				</ul>
 				<ul id="registerView" class="hide">
 					<li id="pageTitle">
-						REGISTER
+						Opret nyt projekt
 					</li>
 					<li id="adminContent">
 						<form id="registerForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Project name"/></span>
-							<span><input type="password" name="password" placeholder="Password"/></span>
+							<span><input type="text" name="name" placeholder="Projektnavn"/></span>
+							<span><input type="password" name="password" placeholder="Kodeord"/></span>
 							<span id="registerErrmsg"></span>
-							<span><input type="submit" value="Register"/></span>
+							<span><input type="submit" value="Opret projekt"/></span>
 						</form>
 					</li>
 					<li id="adminShift">
-						<a href="javascript:;" class="adminShiftLink blue">Already have an account?</a>
+						<a href="javascript:;" class="adminShiftLink blue">Log ind på et eksisterende projekt?</a>
 					</li>
 				</ul>
 			</li>
 			<li id="about">
-				<span class="title">About this webapp</span>
-				<span class="content">Here you can do all these smart things managing breakfasts at work/school/whatever.<br>
-				Just log in and you are good to go.</span>
+				<span class="title">Omkring denne webapp</span>
+				<span class="content">
+					Her kan du få hjælp til at planlægge morgenmadsarrangementer på din arbejdsplads, skole eller noget helt tredje.<br>
+					Bare opret et nyt projekt eller log ind på et allerede eksisterende projekt.
+				</span>
 			</li>
 		</ul>
 	</div>

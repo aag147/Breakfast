@@ -81,10 +81,10 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
-				if(data==1 && remove){
+				if(data[0]==1 && remove){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
-				}else if(data==1 && type=="participant"){
+				}else if(data[0]==1 && type=="participant"){
 					date = $("#"+id).data('id');
 					$count = $("#participants_"+date+" span.participantsCount");
 					if(checked){
@@ -349,7 +349,7 @@ $(document).ajaxStop(function () {
 		changeStatus(this.checked, this.id, "participant", false);
 	}); 	
 	// Toggle participants visibility for a weekday
-	$('.showParticipants').click(function(event){
+	$('.showParticipants').off('click').on('click', function(event){
 		toggleSingle('#participants_'+this.id);
 	});		
 });
