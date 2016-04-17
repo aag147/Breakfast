@@ -29,8 +29,8 @@ try{
 			$name = (isset($_POST['name']) ? $_POST['name'] : '');
 			$email = (isset($_POST['email']) ? $_POST['email'] : '');
 
-			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_name = :name AND project_id = :project_id LIMIT 1");
-			$participant_db->bindParam(':name', $name);		
+			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id LIMIT 1");
+			$participant_db->bindParam(':email', $email);		
 			$participant_db->bindParam(':project_id', $cookie_project_id);		
 			$participant_db->execute();
 			$participant_count = $participant_db->rowCount();
@@ -38,18 +38,18 @@ try{
 			if ($participant_count > 0){
 				$participant = $participant_db->fetch();
 				$participant_id = $participant['participant_id'];
-				$participant_asleep = $participant['participant_removed'];
+				$participant_asleep = $participant['participant_asleep'];
 			}
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($email)){$errmsg[0] = -1; goto newError;}		
-			// Double name
-			if ($participant_count > 0 AND $participant_asleep==0){$errmsg[0] = -2; goto newError;}	
+			if (empty($name) OR empty($email)){$errmsg[0] = -1; break;}		
+			// Double email
+			if ($participant_count > 0 AND $participant_asleep==0){$errmsg[0] = -2; break;}	
 
 			if($participant_asleep==1){
 				/*** Wake up ***/
-				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_removed = '0' WHERE project_id = :project_id AND participant_id = :participant_id");
+				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0' WHERE project_id = :project_id AND participant_id = :participant_id");
 				$wake_participant->bindParam(':project_id', $cookie_project_id);		
 				$wake_participant->bindParam(':participant_id', $participant_id);
 				$wake_participant->execute();			
@@ -65,9 +65,8 @@ try{
 			}
 		
 			$errmsg[0] = 1;
-			newError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Deltageren er tilføjet!";
+			break;
 			
 		case 'edit':
 			// Variables from form
@@ -75,18 +74,18 @@ try{
 			$email = (isset($_POST['email']) ? $_POST['email'] : '');
 			$participant_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 
-			$check_name_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants WHERE participant_name = :name AND project_id = :project_id AND participant_id <> :participant_id LIMIT 1");
-			$check_name_db->bindParam(':name', $name);		
-			$check_name_db->bindParam(':project_id', $cookie_project_id);		
-			$check_name_db->bindParam(':participant_id', $participant_id);		
-			$check_name_db->execute();
-			$check_name = $check_name_db->fetchColumn();
+			$check_email_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id AND participant_id <> :participant_id LIMIT 1");
+			$check_email_db->bindParam(':email', $email);		
+			$check_email_db->bindParam(':project_id', $cookie_project_id);		
+			$check_email_db->bindParam(':participant_id', $participant_id);		
+			$check_email_db->execute();
+			$check_email = $check_email_db->fetchColumn();
 
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($email) OR empty($participant_id)){$errmsg[0] = -1; goto editError;}		
-			// Double name
-			if ($check_name > 0){$errmsg[0] = -2; goto editError;}	
+			if (empty($name) OR empty($email) OR empty($participant_id)){$errmsg[0] = -1; break;}		
+			// Double email
+			if ($check_email > 0){$errmsg[0] = -2; break;}	
 	
 			/*** UPDATE ***/
 			$edit_participant = $conn->prepare("UPDATE breakfast_participants SET participant_name = :name, participant_email = :email WHERE project_id = :project_id AND participant_id = :participant_id");
@@ -97,9 +96,8 @@ try{
 			$edit_participant->execute();
 					
 			$errmsg[0] = 1;
-			editError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Deltageren er ændret!";
+			break;
 			
 		case 'changeStatus':		
 			// Variables from form
@@ -109,7 +107,7 @@ try{
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($registration_id)){$errmsg[0] = -1; goto changeStatusError;}		
+			if (empty($registration_id)){$errmsg[0] = -1; break;}		
 	
 			/*** UPDATE ***/
 			$change_status = $conn->prepare("UPDATE breakfast_registrations SET participant_attending = :status WHERE registration_id = :registration_id");
@@ -118,10 +116,27 @@ try{
 			$change_status->execute();
 					
 			$errmsg[0] = 1;
-			changeStatusError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Status er ændret!";
+			break;
 	}
+
+	
+	// Actual error message
+	if($errmsg[0] != 1){$errmsg[1] = "<p class='error'>";}
+	switch ($errmsg[0]){
+		case '-1':
+			$errmsg[1] .= "Alle felter skal udfyldes!";
+			break;
+		case '-2':
+			$errmsg[1] .= "En deltager med angivede email er allerede tilføjet!";
+			break;
+		default:
+			$errmsg[1] = "<p class='success'>".$errmsg[1];
+			break;
+	}
+	$errmsg[1] .= "</p>";
+	
+	echo json_encode($errmsg);
 	
 	$conn = null;
 } catch(PDOException $e) {

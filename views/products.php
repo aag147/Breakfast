@@ -15,7 +15,7 @@ try{
 ?>
 	<head>
 		<title>
-			Your breakfast products
+			Alle produkter
 		</title>	
 	</head>
 
@@ -25,7 +25,7 @@ try{
 				<?php echo $project_name; ?>
 			</li>
 			<li id="subtitle">
-				Your breakfast products
+				Alle produkter
 			</li>
 		</ul>
 	</div>
@@ -33,26 +33,32 @@ try{
 	<div id="standardContent">
 		<?php 
 		if($products_count==0){
-			echo "You have not added any products yet.";
+			echo "Du har ikke tilføjet nogle produkter endnu.";
 		}else{
 			?>
 			<ul id="standardList">
 				<li class="listLegend">
-					<span class="name">Name</span><?php
-					?><span class="status">In store</span><?php
+					<span class="name">Navn</span><?php
+					?><span class="status">På lager</span><?php
 					?><span class="admin">Admin</span>
 				</li>
 				<?php
 				while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
 					if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
 					echo "<li id='product_".$product['product_id']."'>";
-						echo "<span class='span2input'>";
-							echo "<span class='name'>".$product['product_name']."</span>";
+						echo "<span class='main'>";
+							echo "<span class='span2input'>";
+								echo "<span class='name'>".$product['product_name']."</span>";
+							echo "</span>";
+							echo "<span class='elementErrmsg' id='".$product['product_id']."Errmsg'></span>";
 						echo "</span>";
 						echo "<span class='status'><input id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
-						echo "<span class='options'>";
-							echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[save]</a>";
-							echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[edit]</a>";
+						echo "<span class='edit'>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='saveProduct green hide'>[gem]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='annulProduct blue hide'>[annul]</a>";
+							echo "<a href='javascript:;' id='".$product['product_id']."' class='editProduct blue'>[ret]</a>";
+						echo "</span>";
+						echo "<span class='delete'>";						
 							echo "<a href='javascript:;' id='".$product['product_id']."' class='deleteProduct red'>[X]</a>";
 						echo "</span>";
 					echo "</li>";
@@ -71,9 +77,9 @@ try{
 			</li>
 			<li class="option">
 			<form id="newProductForm" action="" method="POST">
-				<span class="optionTitle">Add product</span>
+				<span class="optionTitle">Tilføj produkt</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Enter product name"/>
+					<input name="name" type="text" placeholder="Indtast produktets navn" />
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>

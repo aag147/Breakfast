@@ -75,19 +75,19 @@ try{
 	
 	// YEARWEEK(breakfast_date, 1) >= YEARWEEK(CURDATE(), 1)
 	/***************** PDO PREPARATIONS FOR BREAKFAST PLAN *****************/
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0' ORDER BY participant_name ASC");
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
 	$participants_db->bindParam(':project_id', $cookie_project_id);		
 	$participants_db->execute();
 	$participants = $participants_db->fetchAll();
 		
 	$dynamic_chefs_db = $conn->prepare("SELECT P.*, (case when registration_id is null then 0 else 1 end) as veteran FROM
 											(SELECT *
-											 FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0') as P
+											 FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0') as P
 										LEFT JOIN
 											(SELECT * FROM breakfast_registrations) as R
 										ON P.participant_id = R.participant_id
 										GROUP BY P.participant_id
-										ORDER BY veteran ASC, participant_lastTime ASC, participant_created DESC
+										ORDER BY veteran ASC, participant_lastTime ASC, participant_created ASC
 										LIMIT 40");
 	$dynamic_chefs_db->bindParam(':project_id', $cookie_project_id);		
 	$dynamic_chefs_db->execute();
@@ -107,7 +107,7 @@ try{
 	$static_chefs = $static_chefs_db->fetchAll();
 	
 	/***************** DELETE GHOST BREAKFASTS *****************/
-	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_dead = '1'");
+	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_asleep = '1'");
 	$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
 	$delete_breakfasts->execute();
 	
@@ -181,11 +181,12 @@ try{
 
 	/******* PRINT PLAN *******/
 	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
-		echo "You need both participants and active weekdays to build breakfast plan.";
+		echo "Du behøver både deltagere og aktive ugedage for at bygge morgenmadsplanen.";
 	}else{
 		
 		$current_week = date("w");
 		$current_date = date("Y-m-d");
+		$tomorrow_date = date("Y-m-d", strtotime("+ 1 day"));
 		$dynamic_chefs_index = 0;
 		echo "<ul>";
 		for($i = 0; $i < 6; $i++){
@@ -198,9 +199,9 @@ try{
 			if($week >= $current_week){$year = date("Y");}
 			else{$year = date("Y", strtotime("+ 1 year"));}
 			// week title
-			if($i==0){$weekShow = "This week";}
-			elseif($i==1){$weekShow = "Next week";}
-			else{$weekShow = "Week ".$week;}
+			if($i==0){$weekShow = "Denne uge";}
+			elseif($i==1){$weekShow = "Næste uge";}
+			else{$weekShow = "Uge ".$week;}
 			
 			// WEEK VIEW
 			echo "<li class='week' id='week_".$week."'>";
@@ -249,7 +250,7 @@ try{
 							$participant_db->execute();
 							$chef = $participant_db->fetch();
 							// Only includes a potential removed participant for todays breakfast
-							if($i==0 OR $chef['participant_removed']==0){break;}
+							if($i==0 OR $chef['participant_asleep']==0){break;}
 							$dynamic_chefs_index++;
 						}
 						
@@ -288,15 +289,19 @@ try{
 					view: 
 					echo "<li class='weekday ".$doneClass."' id='weekday_".$week.$weekday."'>";
 						echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
-							echo "<span class='weekdayTitle'>".$weekday."</span>";
+							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
+							echo "<span class='weekdayToday'>";
+								if($breakfast_date == $current_date){echo "(I dag)";}
+								if($breakfast_date == $tomorrow_date){echo "(I morgen)";}
+							echo "</span>";
 							echo "<span class='theChef'>".$chef['participant_name']."</span>";
 						echo "</a>";
 					echo "</li>";
 					echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
 					
 						echo "<span class='participantsCount'>".$registrations_count."</span>";
-						echo "<span class='participantsTitle'>is coming. But who (besides the host)?</span>";
+						echo "<span class='participantsTitle'>kommer. Men hvem (foruden værten)?</span>";
 					
 						echo "<ul>";
 						foreach($participants as $participant){
@@ -337,9 +342,12 @@ try{
 	
 	
 	// Sending notifications
-	if(!empty($_COOKIE['cookie_project_id'])){
-		$tomorrow = jddayofweek(date("N") % 7, 1);
-		if($project['project_'.strtolower($tomorrow)] AND $project['project_lastNotified'] < date("Y-m-d")){
+	$breakfast_date = date("Y-m-d", strtotime("+ 1 day"));
+	$breakfast_db->execute();
+	$hasBreakfast = $breakfast_db->rowCount();
+	if($hasBreakfast){
+		$breakfast = $breakfast_db->fetch();
+		if($breakfast['breakfast_notified'] == 0){
 			// Send notification for tomorrows breakfasts only once
 			?>
 			<script>

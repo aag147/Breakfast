@@ -7,7 +7,7 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_removed = '0' ORDER BY participant_name ASC");
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
 	$participants_db->bindParam(':project_id', $cookie_project_id);		
 	$participants_db->execute();
 	$participants_count = $participants_db->rowCount();
@@ -15,7 +15,7 @@ try{
 ?>
 	<head>
 		<title>
-			Your breakfast participants
+			Alle deltagere
 		</title>		
 	</head>
 
@@ -25,33 +25,39 @@ try{
 				<?php echo $project_name; ?>
 			</li>
 			<li id="subtitle">
-				Your breakfast participants
+				Alle deltagere
 			</li>
 		</ul>
 	</div>
 	<div id="standardContent">
 		<?php 
 		if($participants_count==0){
-			echo "You have not added any participants yet.";
+			echo "Du har ikke tilføjet nogle deltagere endnu.";
 		}else{
 			?>	
 			<ul id="standardList">
 				<li class="listLegend">
-					<span class="name">Name</span><?php
+					<span class="name">Navn</span><?php
 					?><span class="status"></span><?php
 					?><span class="admin">Admin</span>
 				</li>
 				<?php
 				while($participant = $participants_db->fetch(PDO::FETCH_ASSOC)){
 					echo "<li id='participant_".$participant['participant_id']."'>";
-						echo "<span class='span2input'>";
-							echo "<span class='name'>".$participant['participant_name']."</span>";
-							echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
+						echo "<span class='main'>";
+							echo "<span class='span2input'>";
+								echo "<span class='name'>".$participant['participant_name']."</span>";
+								echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
+							echo "</span>";
+							echo "<span class='participantErrmsg' id='".$participant['participant_id']."Errmsg'></span>";
 						echo "</span>";
 						echo "<span class='status'></span>";
-						echo "<span class='options'>";
-							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[save]</a>";
-							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[edit]</a>";
+						echo "<span class='edit'>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='annulParticipant blue hide'>[annul]</a>";
+							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
+						echo "</span>";
+						echo "<span class='delete'>";
 							echo "<a href='javascript:;' id='".$participant['participant_id']."' class='deleteParticipant red'>[X]</a>";
 						echo "</span>";
 					echo "</li>";
@@ -70,10 +76,10 @@ try{
 			</li>
 			<li class="option">
 			<form id="newParticipantForm" action="" method="POST">
-				<span class="optionTitle">Add participant</span>
+				<span class="optionTitle">Tilføj deltager</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Enter participant name"/>
-					<input name="email" type="email" placeholder="Enter participant email"/>
+					<input name="name" type="text" placeholder="Indtast deltagers navn" />
+					<input name="email" type="email" placeholder="Indtast deltagers email"/>
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>

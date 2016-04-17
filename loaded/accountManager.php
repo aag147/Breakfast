@@ -34,9 +34,9 @@ try{
 			$project = $project_db->fetch();
 			
 			/*** ERROR CHECKING ***/
-			if (empty($name) || empty($password)){$errmsg[0] = -1; goto loginError;}
-			elseif($valid_project==0){$errmsg[0] = -2; goto loginError;}
-			elseif(strlen($password) > 30){$errmsg[0] = -4; goto loginError;}
+			if (empty($name) || empty($password)){$errmsg[0] = -1; break;}
+			elseif($valid_project==0){$errmsg[0] = -3; break;}
+			elseif(strlen($password) > 30){$errmsg[0] = -5; break;}
 			
 			// Getting database hash
 			$stored_hash = $project['project_password'];
@@ -45,7 +45,7 @@ try{
 			unset($hasher);
 			
 			// Error: No match between password and name
-			if (!$check){$errmsg[0] = -3; goto loginError;}
+			if (!$check){$errmsg[0] = -4; break;}
 						
 			// Creating cookie hash
 			$rand = rand(1, 1000);
@@ -55,7 +55,7 @@ try{
 			unset($hasher);
 			
 			// Error: Weird hash
-			if (strlen($project_hash) < 20) {$errmsg[0] = -5; goto loginError;}
+			if (strlen($project_hash) < 20) {$errmsg[0] = -6; break;}
 		
 			// Delete all outdated entries for all projects
 			$delete = $conn->prepare("DELETE FROM breakfast_projects_sessions WHERE session_date < CURRENT_TIMESTAMP");
@@ -72,10 +72,8 @@ try{
 			$insert->execute();	
 
 			$errmsg[0] = 1;
-			
-			loginError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Du er blevet logget ind!";
+			break;
 			
 		case 'register':
 			// Variables from form
@@ -89,11 +87,11 @@ try{
 
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($password)){$errmsg[0] = -1; goto registerError;}		
+			if (empty($name) OR empty($password)){$errmsg[0] = -1; break;}		
 			// Double name
-			if ($check_name > 0){$errmsg[0] = -2; goto registerError;}	
+			if ($check_name > 0){$errmsg[0] = -2; break;}	
 			// Too long password
-			if (strlen($password) > 30){$errmsg[0] = -3; goto registerError;}
+			if (strlen($password) > 30){$errmsg[0] = -5; break;}
 			
 			// hasher
 			$hasher = new PasswordHash(8, false);
@@ -101,7 +99,7 @@ try{
 			unset($hasher);
 			
 			// Error: Weird hash
-			if (strlen($hash) < 20) {$errmsg[0] = -5; goto registerError;}
+			if (strlen($hash) < 20) {$errmsg[0] = -6; break;}
 			
 			/*** INSERT ***/
 			$new_project = $conn->prepare("INSERT INTO breakfast_projects (project_name, project_password, project_friday) VALUES (:name, :hash, '1')");
@@ -129,10 +127,8 @@ try{
 			}
 			
 			$errmsg[0] = 1;
-			
-			registerError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Du er blevet registreret!";
+			break;
 			
 		case 'logout':
 			setcookie ("cookie_project_id", "", time() -36000000000, '/', 'localhost');
@@ -144,8 +140,8 @@ try{
 			$logout->execute();
 			
 			$errmsg[0] = 1;
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Du er blevet logget ud!";
+			break;
 			
 		case 'edit':
 			// Variables from form
@@ -159,9 +155,9 @@ try{
 
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name)){$errmsg[0] = -1; goto editError;}		
+			if (empty($name)){$errmsg[0] = -1; break;}	
 			// Double name
-			if ($check_name > 0){$errmsg[0] = -2; goto editError;}	
+			if ($check_name > 0){$errmsg[0] = -2; break;}	
 	
 			/*** UPDATE ***/
 			$edit_project = $conn->prepare("UPDATE breakfast_projects SET project_name = :name WHERE project_id = :project_id");
@@ -170,9 +166,8 @@ try{
 			$edit_project->execute();
 					
 			$errmsg[0] = 1;
-			editError:
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Navnet er ændret!";
+			break;
 			
 		case 'delete':
 			/*** DELETE ***/
@@ -204,8 +199,8 @@ try{
 			setcookie ("cookie_hash", "", time() -36000000000, '/', 'localhost');
 			
 			$errmsg[0] = 1;
-			echo json_encode($errmsg);
-			exit;
+			$errmsg[1] = "Projektet er slettet!";
+			break;
 			
 		case 'weekdays':
 			$weekdays = !empty($_POST['weekdays']) ? $_POST['weekdays'] : array();
@@ -222,7 +217,7 @@ try{
 				$params[$weekday] = $value;
 				
 				if($value==0){
-					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_dead = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
+					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_asleep = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
 					$kill_breakfasts->bindParam(':project_id', $cookie_project_id);
 					$kill_breakfasts->bindParam(':weekday', $weekday);
 					$kill_breakfasts->execute();
@@ -232,30 +227,37 @@ try{
 			$update_weekdays->execute($params);
 			
 			$errmsg[0] = 1;
-			echo json_encode($errmsg);
-			exit;
-			
-		case 'changeStatus':
-			// Variables from form
-			$weekday = (isset($_POST['account_id']) ? $_POST['account_id'] : '');
-			$value = (isset($_POST['value']) ? $_POST['value'] : '');
-			if($value=="true"){$value=1;}else{$value=0;}
-			
-			/*** ERROR CHECKING ***/	
-			// Empty inputs
-			if (empty($weekday)){$errmsg[0] = -1; goto changeStatusError;}		
-	
-			/*** UPDATE ***/
-			$change_status = $conn->prepare("UPDATE breakfast_projects SET project_".$weekday." = :status WHERE project_id = :project_id");
-			$change_status->bindParam(':status', $value);
-			$change_status->bindParam(':project_id', $cookie_project_id);		
-			$change_status->execute();
-					
-			$errmsg[0] = 1;
-			changeStatusError:
-			echo json_encode($weekday);
-			exit;
+			$errmsg[1] = "Arrangement dagene er ændret!";
+			break;
 	}
+	
+	
+	// Actual error message
+	if($errmsg[0] != 1){$errmsg[1] = "<p class='error'>";}
+	switch ($errmsg[0]){
+		case '-1':
+			$errmsg[1] .= "Alle felter skal udfyldes!";
+			break;
+		case '-2':
+			$errmsg[1] .= "Navnet er optaget!";
+			break;
+		case '-3':
+		case '-4':
+			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!";
+			break;
+		case '-5':
+			$errmsg[1] .= "Kodeordet må højst være 30 karakterer langt!";
+			break;
+		case '-6':
+			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";
+			break;
+		default:
+			$errmsg[1] = "<p class='success'>".$errmsg[1];
+			break;
+	}
+	$errmsg[1] .= "</p>";
+	
+	echo json_encode($errmsg);
 	
 	$conn = null;
 } catch(PDOException $e) {
