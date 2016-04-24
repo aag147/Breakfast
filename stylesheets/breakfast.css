@@ -130,7 +130,7 @@ a.green:hover{
 
 	
 /* TITLE */
-.div_title{
+#siteTitle{
 	display: block;
 	padding-top:0px;
 	padding-bottom:5px;
@@ -141,7 +141,7 @@ a.green:hover{
 	font-weight: bold;
 	border-bottom: 2px solid;}
 	
-.div_title a{
+#siteTitle a{
 	color: inherit;
 }
 	
@@ -428,6 +428,13 @@ nav {
 		box-shadow: 0 2px 1px #9c9c9c;
 	}
 
+	
+	
+/* STANDARD AMOUNT DISPLAY FOR PRODUCTS AND PARTICIPANTS */
+#showAmount{
+	font-size: 0.8em;
+}
+	
 	
 /* STANDARD ADMIN PANEL */
 #adminPanel li#title{

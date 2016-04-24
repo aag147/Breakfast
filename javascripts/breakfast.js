@@ -14,6 +14,18 @@
 		  });
 	}
 	
+	// Show products
+	function showContent(type){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);
+		 $.ajax({
+			   type: "POST",
+			   url: '../loaded/showAll'+typeUCF+'.php',
+			   success: function(data) {
+				  $("#showAll"+typeUCF).html(data);
+			   }
+		  });
+	}
+	
 	// Send notifications
 	function sendNotifications(type){
 		 $.ajax({
@@ -50,6 +62,7 @@
 	
 	// Add something
 	function addElement(formData, type){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		formData.append("type", "new");
 	
 		$.ajax({
@@ -61,7 +74,10 @@
 			dataType: 'json',
 			success: function(data) {
 				$("#newErrmsg").html(data[1]);
-				if(data[0]==1){location.reload();}
+				if(data[0]==1){
+					showContent(type);
+					$(':input','#new'+typeUCF+'Form').not(':button, :submit, :reset, :hidden').val('');
+				}
 			}
 		});
 	}
@@ -108,6 +124,9 @@
 				if(data==1){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
+					$count = $("#totalAmount");
+					$count.text(parseInt($count.text()) - 1);
+					if($count.text()==0){showContent(type);}
 				}
 			}
 		});
@@ -294,25 +313,9 @@ $(document).ready(function() {
 	
 	
 	/***** ADMIN LINK CLICKS *****/
-	/* Edit participant */
-	$('.editParticipant').click(function(event){
-		editInLine(this.id, "participant");	
-	});
-	/* Edit product */
-	$('.editProduct').click(function(event){
-		editInLine(this.id, "product");	
-	});
 	/* Edit project */
 	$('.editAccount').click(function(event){
 		editInLine(this.id, "account");	
-	});
-	/* Delete participant */
-	$('.deleteParticipant').click(function(event){
-		deleteElement(this.id, "participant");	
-	});
-	/* Delete product */
-	$('.deleteProduct').click(function(event){
-		deleteElement(this.id, "product");	
 	});
 	/* Delete project */
 	$('.deleteAccount').click(function(event){
@@ -331,10 +334,6 @@ $(document).ready(function() {
 	
 	
 	/***** ADMIN CHECK BOXES *****/
-	/* Edit product status */
-	$(':checkbox.editProductStatus').off('change').on('change', function() {
-		changeStatus(this.checked, this.id, "product", false);			
-	}); 
 	/* Edit product status and remove span */
 	$(':checkbox.removeProductStatus').off('change').on('change', function() {
 		changeStatus(this.checked, this.id, "product", true);	
@@ -344,6 +343,8 @@ $(document).ready(function() {
 
 $(document).ajaxStop(function () {
 	/***** FOR SPECIAL EVENTS WAITING FOR AJAX TO FINISH *****/
+	
+	/** PLAN **/
 	/* Edit participant status */
 	$(':checkbox.editParticipantStatus').off('change').on('change', function() {
 		changeStatus(this.checked, this.id, "participant", false);
@@ -352,4 +353,28 @@ $(document).ajaxStop(function () {
 	$('.showParticipants').off('click').on('click', function(event){
 		toggleSingle('#participants_'+this.id);
 	});		
+	
+	/** PRODUCTS **/
+	/* Edit product */
+	$('.editProduct').click(function(event){
+		editInLine(this.id, "product");	
+	});
+	/* Delete product */
+	$('.deleteProduct').off('click').on('click', function(){
+		deleteElement(this.id, "product");	
+	});
+	/* Edit product status */
+	$(':checkbox.editProductStatus').off('change').on('change', function() {
+		changeStatus(this.checked, this.id, "product", false);			
+	}); 
+	
+	/** PARTICIPANTS **/
+	/* Edit participant */
+	$('.editParticipant').click(function(event){
+		editInLine(this.id, "participant");	
+	});
+	/* Delete participant */
+	$('.deleteParticipant').off('click').on('click', function(){
+		deleteElement(this.id, "participant");	
+	});
 });
