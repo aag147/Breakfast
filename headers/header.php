@@ -20,8 +20,8 @@
 	<div id="contentOuterHeader">
 		<div id="contentHeader">
 			<?php /* PAGE HEADER */?>
-			<div class="div_title"><a href="project.php">
-				Morgemmadsplanlægger
+			<div id="siteTitle"><a href="project.php">
+				Morgenmadsplanlægger
 			</a></div>
 			<?php if(!empty($cookie_project_id)){ ?>
 				<nav id="navigation">
