@@ -26,8 +26,8 @@ try{
 	switch ($type){
 		case 'new':			
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
-			$email = (isset($_POST['email']) ? $_POST['email'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+			$email = filter_var(isset($_POST['email']) ? $_POST['email'] : '', FILTER_SANITIZE_STRING);
 
 			$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id LIMIT 1");
 			$participant_db->bindParam(':email', $email);		
@@ -70,8 +70,8 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
-			$email = (isset($_POST['email']) ? $_POST['email'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+			$email = filter_var(isset($_POST['email']) ? $_POST['email'] : '', FILTER_SANITIZE_STRING);
 			$participant_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 
 			$check_email_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id AND participant_id <> :participant_id LIMIT 1");

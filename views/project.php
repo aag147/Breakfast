@@ -10,7 +10,7 @@ try{
 	$products_db = $conn->prepare("SELECT * FROM breakfast_products WHERE project_id = :project_id AND product_status = 0 ORDER BY product_name ASC");
 	$products_db->bindParam(':project_id', $cookie_project_id);		
 	$products_db->execute();
-
+	
 ?>
 	<head>
 		<title>
