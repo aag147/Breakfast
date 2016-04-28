@@ -26,7 +26,7 @@ try{
 	switch ($type){
 		case 'new':			
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
 
 			$check_name_db = $conn->prepare("SELECT COUNT(product_id) as C FROM breakfast_products WHERE product_name = :name AND project_id = :project_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -55,7 +55,7 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
 			$product_id = (isset($_POST['product_id']) ? $_POST['product_id'] : '');
 
 			$check_name_db = $conn->prepare("SELECT COUNT(product_id) as C FROM breakfast_products WHERE product_name = :name AND project_id = :project_id AND product_id <> :product_id LIMIT 1");

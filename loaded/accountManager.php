@@ -23,8 +23,8 @@ try{
 	switch ($type){
 		case 'login':			
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
-			$password = (isset($_POST['password']) ? $_POST['password'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+			$password = filter_var(isset($_POST['password']) ? $_POST['password'] : '', FILTER_SANITIZE_STRING);
 			$checkbox = isset($_POST['checkbox']) ? $_POST['checkbox'] : '';
 
 			$project_db = $conn->prepare("SELECT * FROM breakfast_projects WHERE project_name = :name LIMIT 1");
@@ -38,24 +38,16 @@ try{
 			elseif($valid_project==0){$errmsg[0] = -3; break;}
 			elseif(strlen($password) > 30){$errmsg[0] = -5; break;}
 			
-			// Getting database hash
-			$stored_hash = $project['project_password'];
-			$hasher = new PasswordHash(8, false);
-			$check = $hasher->CheckPassword($password, $stored_hash);
-			unset($hasher);
-			
-			// Error: No match between password and name
-			if (!$check){$errmsg[0] = -4; break;}
+			// Error: No match between password and stored hash
+			if (!password_verify($password, $project['project_password'])){$errmsg[0] = -4; break;}
 						
 			// Creating cookie hash
 			$rand = rand(1, 1000);
 			$project_id = $project['project_id'];
-			$hasher = new PasswordHash(8, false);
-			$project_hash = $hasher->HashPassword($project_id.$rand);
-			unset($hasher);
+			$cookie_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
 			
-			// Error: Weird hash
-			if (strlen($project_hash) < 20) {$errmsg[0] = -6; break;}
+			// Error: Failed hash
+			if (!$cookie_hash) {$errmsg[0] = -6; break;}
 		
 			// Delete all outdated entries for all projects
 			$delete = $conn->prepare("DELETE FROM breakfast_projects_sessions WHERE session_date < CURRENT_TIMESTAMP");
@@ -65,9 +57,9 @@ try{
 			if($checkbox==1){$time = 31536000;}
 			else{$time = 43200;}
 			setcookie("cookie_project_id",$project_id,time()+$time, '/', 'localhost');
-			setcookie("cookie_hash",$project_hash,time()+$time, '/', 'localhost');					
+			setcookie("cookie_hash",$cookie_hash,time()+$time, '/', 'localhost');					
 			$insert = $conn->prepare("INSERT INTO breakfast_projects_sessions (session_hash, project_id, session_date) VALUES (:hash, :project_id, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL $time SECOND))");
-			$insert->bindParam(':hash', $project_hash);
+			$insert->bindParam(':hash', $cookie_hash);
 			$insert->bindParam(':project_id', $project_id);
 			$insert->execute();	
 
@@ -77,8 +69,8 @@ try{
 			
 		case 'register':
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
-			$password = (isset($_POST['password']) ? $_POST['password'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+			$password = filter_var(isset($_POST['password']) ? $_POST['password'] : '', FILTER_SANITIZE_STRING);
 
 			$check_name_db = $conn->prepare("SELECT COUNT(project_id) as C FROM breakfast_projects WHERE project_name = :name LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -94,12 +86,10 @@ try{
 			if (strlen($password) > 30){$errmsg[0] = -5; break;}
 			
 			// hasher
-			$hasher = new PasswordHash(8, false);
-			$hash = $hasher->HashPassword($_POST['password']);
-			unset($hasher);
+			$hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
 			
 			// Error: Weird hash
-			if (strlen($hash) < 20) {$errmsg[0] = -6; break;}
+			if (!$hash) {$errmsg[0] = -6; break;}
 			
 			/*** INSERT ***/
 			$new_project = $conn->prepare("INSERT INTO breakfast_projects (project_name, project_password, project_friday) VALUES (:name, :hash, '1')");
@@ -112,9 +102,8 @@ try{
 			/*** LOG IN ***/
 			//hash cookie
 			$rand = rand(1, 1000);
-			$hasher = new PasswordHash(8, false);
-			$project_hash = $hasher->HashPassword($project_id.$rand);
-			unset($hasher);
+			$project_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
+			
 			if (strlen($project_hash) >= 20) {			
 				// Set cookies
 				$time = 43200;
@@ -145,7 +134,7 @@ try{
 			
 		case 'edit':
 			// Variables from form
-			$name = (isset($_POST['name']) ? $_POST['name'] : '');
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
 
 			$check_name_db = $conn->prepare("SELECT COUNT(project_id) as C FROM breakfast_projects WHERE project_name = :name AND project_id <> :project_id LIMIT 1");
 			$check_name_db->bindParam(':name', $name);		
@@ -229,6 +218,10 @@ try{
 			$errmsg[0] = 1;
 			$errmsg[1] = "Arrangement dagene er ændret!";
 			break;
+			
+		default:
+			echo json_encode(array(-10));
+			exit;
 	}
 	
 	
