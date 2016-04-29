@@ -241,7 +241,10 @@ nav {
 			text-align: center;
 		}
 		#frontpage ul li#adminShift{
-			padding-top: 5px;
+			padding-bottom: 15px;
+		}
+		#frontpage ul li#adminShift a{
+		display: block;
 		}
 	#frontpage ul li#about{	
 	}
@@ -453,8 +456,11 @@ padding: 5px 0px;
 	#adminPanel li.option span.optionTitle{
 	text-decoration: none;
 	}
-	#adminPanel li.option span.optionInputs input:not(:check){
+	#adminPanel li.option span.optionInputs input:not([type="checkbox"]){
 	width: 100%;
+	}
+	#adminPanel li.option span.optionInputs input:not([type="checkbox"]):not(:last-child){
+	margin-bottom: 8px;
 	}
 	#adminPanel li.option span.optionInputs input:not(:last-child){
 	margin-bottom: 2px;
