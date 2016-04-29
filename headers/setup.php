@@ -1,10 +1,6 @@
 <?php
 define('ROOT', $_SERVER['DOCUMENT_ROOT']."/breakfast");
 
-//Loader passwordhash
-require_once(ROOT."/headers/PasswordHash.php");
- 
-
 // SET TIMEZONE
 date_default_timezone_set('Europe/Copenhagen');
 
@@ -82,6 +78,7 @@ try{
 			  `breakfast_weekday` varchar(100) CHARACTER SET utf8 NOT NULL,
 			  `breakfast_chef` int(11) NOT NULL,
 			  `breakfast_done` int(11) NOT NULL,
+			  `breakfast_notified` int(11) NOT NULL,
 			  `breakfast_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  `breakfast_asleep` int(11) NOT NULL,
 			  PRIMARY KEY (`breakfast_id`),
@@ -134,8 +131,8 @@ try{
 			$project = $project_db->fetch();
 			$project_name = str_replace ( "\"", "&quot;", $project['project_name']);
 		}else{
-			setcookie ("cookie_project_id", "", time() -36000000000, '/', 'localhost');
-			setcookie ("cookie_hash", "", time() -36000000000, '/', 'localhost');
+			setcookie ("cookie_project_id", "", -1, '/', 'localhost');
+			setcookie ("cookie_hash", "", -1, '/', 'localhost');
 			$cookie_project_id	= "";
 			$cookie_hash	= "";			
 		}

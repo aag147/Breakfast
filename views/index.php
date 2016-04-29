@@ -14,35 +14,36 @@ include("../headers/header.php");
 		<ul>
 			<li id="adminAllContent">
 				<ul id="logInView">
+					<li id="adminShift">
+						<a href="javascript:;" class="adminShiftLink blue">Opret nyt projekt?</a>
+						<a href="javascript:;" class="forgottonPassword blue">Glemt dit kodeord? (ikke implementeret)</a>
+					</li>
 					<li id="pageTitle">
 						LOG IND
 					</li>
 					<li id="adminContent">
 						<form id="logInForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Projektnavn"/></span>
-							<span><input type="password" name="password" placeholder="Kodeord"/></span>
+							<span><input type="text" name="name" placeholder="Dit projektnavn"/></span>
+							<span><input type="password" name="password" placeholder="Dit kodeord"/></span>
 							<span id="loginErrmsg"></span>
 							<span><input type="submit" value="Log ind"/></span>
 						</form>
 					</li>
-					<li id="adminShift">
-						<a href="javascript:;" class="adminShiftLink blue">Opret nyt projekt?</a>
-					</li>
 				</ul>
 				<ul id="registerView" class="hide">
+					<li id="adminShift">
+						<a href="javascript:;" class="adminShiftLink blue">Log ind på et eksisterende projekt?</a>
+					</li>
 					<li id="pageTitle">
 						Opret nyt projekt
 					</li>
 					<li id="adminContent">
 						<form id="registerForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Projektnavn"/></span>
-							<span><input type="password" name="password" placeholder="Kodeord"/></span>
+							<span><input type="text" name="name" placeholder="Nyt projektnavn"/></span>
+							<span><input type="password" name="password" placeholder="Nyt kodeord"/></span>
 							<span id="registerErrmsg"></span>
 							<span><input type="submit" value="Opret projekt"/></span>
 						</form>
-					</li>
-					<li id="adminShift">
-						<a href="javascript:;" class="adminShiftLink blue">Log ind på et eksisterende projekt?</a>
 					</li>
 				</ul>
 			</li>

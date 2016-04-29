@@ -19,14 +19,22 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$type = $_POST['type'];
+	$type = isset($_POST['type']) ? $_POST['type'] : '';
 	$errmsgArray = array(0);
 	
 	// Recipients
-	$participants = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id");
+	$participants = $conn->prepare("SELECT P.* FROM 
+										(SELECT breakfast_id FROM breakfast_breakfasts WHERE breakfast_date = CURDATE() + INTERVAL 1 DAY) B
+									JOIN
+										(SELECT breakfast_id, participant_id FROM breakfast_registrations WHERE participant_attending = 1) R
+									ON B.breakfast_id = R.breakfast_id
+									JOIN
+										(SELECT * FROM breakfast_participants WHERE project_id = :project_id) P
+									ON R.participant_id = P.participant_id
+									ORDER BY P.participant_name ASC");
 	$participants->bindParam(':project_id', $cookie_project_id);		
 	$participants->execute();
-	$errmsgArray[1] = $participants->rowCount();
+	$participants_count = $participants->rowCount();
 	
 	$emails = array();
 	while($row = $participants->fetch(PDO::FETCH_ASSOC)){
@@ -54,44 +62,57 @@ try{
 				body  {
 					font-size: 1.0em;
 				}
-				ul, li, ol{
+				ul, li{
 					list-style: none outside none;
 					padding: 0;
 					margin: 0;
+					display: block;
 				}
-				ul {display: block;}
-				li {display: block;}
-				span:first-child{display: inline-block; width: 90px; text-align: left;}
-				span:last-child{display: inline-block; width: 20px; text-align: right;}
+				#weekdays span:first-child{display: inline-block; width: 90px; text-align: left;}
+				#weekdays span:last-child{display: inline-block; width: 20px; text-align: right;}
+				
 			</style>
 		</head>
 		<body>';
 			
 	if($type=="tomorrow"){
 		// Subject
-		$subject = "Tomorrows breakfast | ".date('j-m-Y');
+		$subject = "I morgens morgenmad | ".date('j-m-Y');
 		
 		// Message CONTENT
+		$products_missing_db = $conn->prepare("SELECT * FROM breakfast_products WHERE project_id = :project_id AND product_status = 0 ORDER BY product_name ASC");
+		$products_missing_db->bindParam(':project_id', $cookie_project_id);		
+		$products_missing_db->execute();
+
+		$shoppinglist = "<ul id='products'>";
+		while($product = $products_missing_db->fetch(PDO::FETCH_ASSOC)){
+			$shoppinglist .= "<li>".$product['product_name']."</li>";
+		}
+		$shoppinglist .= "</ul>";
+		
 		$chef_db->execute();
 		$chef = $chef_db->fetch();	
 		
 		$message .= 
-		'Hello everyone!</br>
-		Remember we have breakfast together tomorrow.</br>
-		'.$chef['participant_name'].' is in charge.</br>
-		If you can\'t come, you should already have registered this.</br>
-		Have a good day.</br>';
+		'Hej allesammen!</br>
+		Husk at vi spiser morgenmad sammen i morgen.</br>
+		'.$chef['participant_name'].' skal sørge for at handle ind.</br>
+		Hvis du ikke kan komme, bør du allerede nu have meldt dig fra.</br></br>
+		Antal tilmeldte: '.$participants_count.'</br>
+		Indkøbsliste:</br>
+		'.$shoppinglist.'</br></br>
+		Ha\' en god dag.</br>';
 		
 	}elseif($type=="weekdays"){
 		// Subject
-		$subject = "Breakfast days have been changed | ".date('j-m-Y');
+		$subject = "Arrangementdagene er blevet ændret | ".date('j-m-Y');
 		
 		// Message CONTENT
 		$message .= 
-		'Hello everyone!</br>
-		Breakfast days have been changed today.</br>
-		The new days are as follows:</br>
-		<ul>';
+		'Hej allesammen!</br>
+		Arrangementdagene er blevet ændret.</br>
+		De nye dage er som følgende:</br>
+		<ul id="weekdays">';
 		
 		for($j = 0; $j < 7; $j++){
 			$weekday = jddayofweek($j, 1);
@@ -106,7 +127,7 @@ try{
 		
 		$message .= 
 		'</ul>
-		Have a good day.</br>';
+		Ha\' en god dag.</br>';
 		
 	}else{
 		exit;
@@ -132,6 +153,7 @@ try{
 	}
 	
 	echo json_encode($errmsgArray);
+	
  	$conn = null;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage();

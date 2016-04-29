@@ -7,9 +7,10 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	
-	$products_db = $conn->prepare("SELECT * FROM breakfast_products WHERE project_id = :project_id AND product_status = 0 ORDER BY product_name ASC");
-	$products_db->bindParam(':project_id', $cookie_project_id);		
-	$products_db->execute();
+	$products_missing_db = $conn->prepare("SELECT * FROM breakfast_products WHERE project_id = :project_id AND product_status = 0 ORDER BY product_name ASC");
+	$products_missing_db->bindParam(':project_id', $cookie_project_id);		
+	$products_missing_db->execute();
+
 	
 ?>
 	<head>
@@ -49,10 +50,10 @@ try{
 				Hvad skal købes?
 			</li>
 			<?php
-			while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
+			while($product = $products_missing_db->fetch(PDO::FETCH_ASSOC)){
 				if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
 				echo "<li id='product_".$product['product_id']."'>";
-					echo "<span class='status'><input id='".$product['product_id']."' class='removeProductStatus' type='checkbox' ".$inStore."/></span>";
+					echo "<span class='status'><input data-id='".$product['product_id']."' class='removeProductStatus' type='checkbox' ".$inStore."/></span>";
 					echo "<span class='name'>".$product['product_name']."</span>";
 				echo "</li>";
 			}

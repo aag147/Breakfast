@@ -315,11 +315,11 @@ $(document).ready(function() {
 	/***** ADMIN LINK CLICKS *****/
 	/* Edit project */
 	$('.editAccount').click(function(event){
-		editInLine(this.id, "account");	
+		editInLine('', "account");	
 	});
 	/* Delete project */
 	$('.deleteAccount').click(function(event){
-		if(confirm("Er du sikker?")){
+		if(confirm("Er du sikker på, at du vil slette hele projektet?")){
 			accountManager(new FormData(), "delete");	
 		}
 	});
@@ -333,10 +333,10 @@ $(document).ready(function() {
 	});
 	
 	
-	/***** ADMIN CHECK BOXES *****/
+	/***** PLAN *****/
 	/* Edit product status and remove span */
 	$(':checkbox.removeProductStatus').off('change').on('change', function() {
-		changeStatus(this.checked, this.id, "product", true);	
+		changeStatus(this.checked, $(this).data('id'), "product", true);	
 	});
 	
 });	
@@ -357,24 +357,27 @@ $(document).ajaxStop(function () {
 	/** PRODUCTS **/
 	/* Edit product */
 	$('.editProduct').click(function(event){
-		editInLine(this.id, "product");	
+		editInLine($(this).data('id'), "product");	
 	});
 	/* Delete product */
 	$('.deleteProduct').off('click').on('click', function(){
-		deleteElement(this.id, "product");	
+		deleteElement($(this).data('id'), "product");	
 	});
 	/* Edit product status */
 	$(':checkbox.editProductStatus').off('change').on('change', function() {
-		changeStatus(this.checked, this.id, "product", false);			
+		changeStatus(this.checked, $(this).data('id'), "product", false);			
 	}); 
 	
 	/** PARTICIPANTS **/
 	/* Edit participant */
 	$('.editParticipant').click(function(event){
-		editInLine(this.id, "participant");	
+		editInLine($(this).data('id'), "participant");	
 	});
 	/* Delete participant */
 	$('.deleteParticipant').off('click').on('click', function(){
-		deleteElement(this.id, "participant");	
+		var name = $(this).data('name');
+		if(confirm("Er du sikker på, at du vil fjerne "+name+"?")){
+			deleteElement($(this).data('id'), "participant");
+		}
 	});
 });

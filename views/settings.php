@@ -65,7 +65,7 @@ try{
 				<span class="optionErrmsg" id="weekdaysErrmsg">
 				</span>
 				<span class="optionSubmit">
-					<input type="submit" value="Send"/>
+					<input type="submit" value="Godkend"/>
 				</span>
 			</form>
 			</li>
