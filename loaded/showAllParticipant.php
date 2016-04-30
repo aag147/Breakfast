@@ -47,12 +47,12 @@ try{
 					echo "</span>";
 					echo "<span class='status'></span>";
 					echo "<span class='edit'>";
-						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
-						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='annulParticipant blue hide'>[annul]</a>";
-						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
+						echo "<a href='javascript:;' data-id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";
+						echo "<a href='javascript:;' data-id='".$participant['participant_id']."' class='annulParticipant blue hide'>[annul]</a>";
+						echo "<a href='javascript:;' data-id='".$participant['participant_id']."' class='editParticipant blue'>[ret]</a>";
 					echo "</span>";
 					echo "<span class='delete'>";
-						echo "<a href='javascript:;' id='".$participant['participant_id']."' class='deleteParticipant red'>[X]</a>";
+						echo "<a href='javascript:;' data-id='".$participant['participant_id']."' data-name='".$participant['participant_name']."' class='deleteParticipant red' >[X]</a>";
 					echo "</span>";
 				echo "</li>";
 			}

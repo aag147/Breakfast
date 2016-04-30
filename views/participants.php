@@ -35,7 +35,7 @@ include("../headers/header.php");
 			</li>
 			<li class="option">
 			<form id="newParticipantForm" action="" method="POST">
-				<span class="optionTitle">Tilføj deltager</span>
+				<span class="optionTitle">Tilføj en deltager (en af gangen)</span>
 				<span class="optionInputs">
 					<input name="name" type="text" placeholder="Indtast deltagers navn" />
 					<input name="email" type="email" placeholder="Indtast deltagers email"/>
@@ -43,7 +43,7 @@ include("../headers/header.php");
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>
 				<span class="optionSubmit">
-					<input type="submit" value="Send"/>
+					<input type="submit" value="Tilføj"/>
 				</span>
 			</form>
 			</li>

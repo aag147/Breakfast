@@ -120,8 +120,8 @@ try{
 			break;
 			
 		case 'logout':
-			setcookie ("cookie_project_id", "", time() -36000000000, '/', 'localhost');
-			setcookie ("cookie_hash", "", time() -36000000000, '/', 'localhost');
+			setcookie ("cookie_project_id", "", -1, '/', 'localhost');
+			setcookie ("cookie_hash", "", -1, '/', 'localhost');
 
 			$logout = $conn->prepare("DELETE FROM breakfast_projects_sessions WHERE session_hash = :hash AND project_id = :project_id");
 			$logout->bindParam(':hash', $cookie_hash);
@@ -184,8 +184,8 @@ try{
 			$delete_sessions->bindParam(':project_id', $cookie_project_id);
 			$delete_sessions->execute();
 			
-			setcookie ("cookie_project_id", "", time() -36000000000, '/', 'localhost');
-			setcookie ("cookie_hash", "", time() -36000000000, '/', 'localhost');
+			setcookie ("cookie_project_id", "", -1, '/', 'localhost');
+			setcookie ("cookie_hash", "", -1, '/', 'localhost');
 			
 			$errmsg[0] = 1;
 			$errmsg[1] = "Projektet er slettet!";

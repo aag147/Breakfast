@@ -49,9 +49,10 @@ try{
 
 			if($participant_asleep==1){
 				/*** Wake up ***/
-				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0' WHERE project_id = :project_id AND participant_id = :participant_id");
+				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0', participant_name = :participant_name WHERE project_id = :project_id AND participant_id = :participant_id");
 				$wake_participant->bindParam(':project_id', $cookie_project_id);		
 				$wake_participant->bindParam(':participant_id', $participant_id);
+				$wake_participant->bindParam(':participant_name', $name);
 				$wake_participant->execute();			
 			}else{
 				/*** New ***/
