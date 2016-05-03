@@ -27,13 +27,26 @@
 	}
 	
 	// Send notifications
-	function sendNotifications(type){
+	function sendNotifications(formData, type){
+		formData.append("type", type);
 		 $.ajax({
 			   type: "POST",
 			   url: '../loaded/sendNotifications.php',
-			   data: {type: type},
+			   data: formData,
+			   processData: false,
+			   contentType: false,
 			   dataType: 'json',
 			   success: function(data) {
+				   $("#"+type+"Errmsg").html(data[1]);
+				   if(data[0]==1){
+					   if(type=="forgotten"){
+							$("#forgottenForm span#emailSpan").addClass('hide');
+							$("#forgottenForm span:not(#emailSpan)").removeClass('hide');
+							var message = 'Indtast den tilsendte sikkerhedskode samt et nyt kodeord til projektet.' +
+									      'Det er dette kodeord du skal logge ind med fremover.';
+							$("#forgottenView #pageSubTitle").html(message);
+					   }
+					}
 			   }
 		  });
 	}
@@ -49,12 +62,28 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
-				if(type=='weekdays'){
-					sendNotifications(type);
+				$("#"+type+"Errmsg").html(data[1]);
+				if(data[0]==1){				
+					if(type=="login" || type=="register" || type=="logout" || type=="delete" || type=="forgotten"){
+						window.location.href = "../views/index.php";
+					}else if(type=='weekdays'){
+						sendNotifications(new FormData(), type);
+					}
 				}
+			}
+		});
+	}
+	
+	// Breakfast management
+	function breakfastManager(id, value, type){
+		$.ajax({
+			url: '../loaded/Manager.php',
+			type: 'POST',
+			data: {id: id, value: value, type: type},
+			dataType: 'json',
+			success: function(data) {
 				$("#"+type+"Errmsg").html(data[1]);
 				if(data[0]==1){
-					if(type!="weekdays"){window.location.href = "../views/index.php";}
 				}
 			}
 		});
@@ -85,12 +114,16 @@
 
 	// Change status of something
 	function changeStatus(checked, id, type, remove){
+		var url_type = type;
+		var admin_type = "changeStatus";
+		if(type=="chef"){url_type = "participant";admin_type = "changeChef";}
+		
 		var formData = new FormData();
 		formData.append("value", checked);
-		formData.append("type", "changeStatus");
-		formData.append(type+"_id", id);
+		formData.append("type", admin_type);
+		formData.append(url_type+"_id", id);
 		$.ajax({
-			url: '../loaded/'+type+'Manager.php',
+			url: '../loaded/'+url_type+'Manager.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -101,13 +134,32 @@
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
 				}else if(data[0]==1 && type=="participant"){
-					date = $("#"+id).data('id');
+					var date = $("#"+id).data('id');
 					$count = $("#participants_"+date+" span.participantsCount");
 					if(checked){
 						$count.text(parseInt($count.text()) + 1);
 					}else{
 						$count.text(parseInt($count.text()) - 1);
 					}
+				}else if(data[0]==1 && type=="chef"){
+					// Old chef cant come
+					var old_chef_input = $("#participants_"+id+" li#participant_"+data[3]+" input");
+					if(old_chef_input.is(":checked") && checked != 0){
+						changeStatus(false, old_chef_input.attr('id'), "participant", false);
+						old_chef_input.attr('checked', false);
+					}
+					
+					// New chef can come
+					var new_chef_input = $("#participants_"+id+" li#participant_"+data[4]+" input");
+					if(!new_chef_input.is(":checked")){
+						changeStatus(true, new_chef_input.attr('id'), "participant", false);
+						new_chef_input.attr('checked', true);
+					}
+					
+					// Change chef
+					$("#breakfast_"+id+" span.theChef").html(data[2]);
+					$("#participants_"+id+" li#participant_"+data[3]).removeClass('hide');
+					$("#participants_"+id+" li#participant_"+data[4]).addClass('hide');
 				}
 			}
 		});
@@ -258,15 +310,10 @@
 		}
 	}
 
-	// Toggle between showing one of two elements
-	function toggleTwo(first, second) {
-		if($(first).hasClass('hide')){
-			$(second).addClass("hide");
-			$(first).removeClass('hide');
-		}else{
-			$(first).addClass("hide");
-			$(second).removeClass('hide');
-		}
+	// Toggle between the index views
+	function toggleIndexView(view) {
+		$("#adminAllContent > ul:not(#"+view+"View)").addClass("hide");
+		$("#adminAllContent > ul#"+view+"View").removeClass('hide');
 	}	
 
 
@@ -310,6 +357,19 @@ $(document).ready(function() {
 		accountManager(formData, "register");
 		event.preventDefault();
 	})
+	// Forgotten password
+	$('#forgottenForm').submit(function(event) {
+		var id = event.target.id;
+		var formData = new FormData(document.getElementById(id));
+		if($("#forgottenForm span#emailSpan").hasClass('hide')){
+			// Final "forgotten" process creating new password
+			accountManager(formData, "forgotten");
+		}else{
+			// Initial "forgotten" process sending emails
+			sendNotifications(formData, "forgotten");
+		}
+		event.preventDefault();
+	})
 	
 	
 	/***** ADMIN LINK CLICKS *****/
@@ -329,7 +389,7 @@ $(document).ready(function() {
 	});
 	/* Toggle login and register view */
 	$('.adminShiftLink').click(function(event){
-		toggleTwo('#logInView', '#registerView');
+		toggleIndexView(this.id);
 	});
 	
 	
@@ -351,8 +411,12 @@ $(document).ajaxStop(function () {
 	}); 	
 	// Toggle participants visibility for a weekday
 	$('.showParticipants').off('click').on('click', function(event){
-		toggleSingle('#participants_'+this.id);
+		toggleSingle('#participants_'+$(this).data('id'));
 	});		
+	/* Edit chef */
+	$('select.newChefSelect').off('change').on('change', function() {
+		changeStatus(this.value, $(this).data('id'), "chef", false);
+	});
 	
 	/** PRODUCTS **/
 	/* Edit product */

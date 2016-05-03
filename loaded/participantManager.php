@@ -119,6 +119,49 @@ try{
 			$errmsg[0] = 1;
 			$errmsg[1] = "Status er ændret!";
 			break;
+			
+		case 'changeChef':		
+			// Variables from form
+			$breakfast_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
+			$chef_id = (isset($_POST['value']) ? $_POST['value'] : '');
+			
+			/*** ERROR CHECKING ***/	
+			// Empty inputs
+			if (empty($breakfast_id)){$errmsg[0] = -1; break;}		
+			
+			/*** EXTRACT INFO ***/
+			// Original chef id
+			$breakfast_db = $conn->prepare("SELECT breakfast_chef, breakfast_chef_replacement FROM breakfast_breakfasts WHERE breakfast_id = :breakfast_id AND project_id = :project_id");
+			$breakfast_db->bindParam(':project_id', $cookie_project_id);	
+			$breakfast_db->bindParam(':breakfast_id', $breakfast_id);
+			$breakfast_db->execute();
+			$breakfast = $breakfast_db->fetch();
+			if($breakfast['breakfast_chef_replacement'] == 0){$previous_chef_id = $breakfast['breakfast_chef'];}
+			else{$previous_chef_id = $breakfast['breakfast_chef_replacement'];}
+
+			// Replacement chef name
+			if($chef_id==0){$new_chef_id = $breakfast['breakfast_chef'];}else{$new_chef_id = $chef_id;}
+			$chef_db = $conn->prepare("SELECT participant_name FROM breakfast_participants WHERE participant_id = :participant_id AND project_id = :project_id LIMIT 1");
+			$chef_db->bindParam(':project_id', $cookie_project_id);	
+			$chef_db->bindParam(':participant_id', $new_chef_id);
+			$chef_db->execute();
+			$chef_name = $chef_db->fetchColumn();
+	
+			/*** UPDATE ***/
+			$change_chef = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef_replacement = :chef_id WHERE breakfast_id = :breakfast_id");
+			$change_chef->bindParam(':chef_id', $chef_id);
+			$change_chef->bindParam(':breakfast_id', $breakfast_id);
+			$change_chef->execute();
+					
+			$errmsg[0] = 1;
+			$errmsg[1] = "Vært er ændret!";
+			$errmsg[2] = $chef_name;
+			$errmsg[3] = $previous_chef_id;
+			$errmsg[4] = $new_chef_id;
+			break;
+			
+		default:
+			exit;
 	}
 
 	
