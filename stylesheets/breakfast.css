@@ -232,6 +232,12 @@ nav {
 			font-size: 1.5em;
 			font-weight: bold;
 		}
+		#frontpage ul li#pageSubTitle{
+			display: inline-block;
+			width: 40%;
+			font-size: 0.8em;
+			padding-bottom: 10px;
+		}
 		#frontpage ul li#adminContent span{
 			display: inline-block;
 			width: 100%;
@@ -368,6 +374,21 @@ nav {
 	border: 1px solid;
 	border-top: none;
 	margin-bottom: 10px;
+	}
+	
+	#projectContent li.participants span.newChefTitle{
+	display: inline-block;
+	padding: 0px 5px 5px 0px;
+	width: 100px;
+	font-weight: bold;
+	}
+	#projectContent li.participants span.newChef{
+	display: inline-block;
+	padding: 0px 5px 5px 0px;
+	width: calc(100% - 100px);
+	}
+	#projectContent li.participants span.newChef select{
+		width: 50%;
 	}
 	
 	#projectContent li.participants span.participantsCount,

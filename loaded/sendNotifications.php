@@ -9,9 +9,6 @@ if($pos===false)
 // FIRST HEADER		
 require('../headers/setup.php');
 
-// LOGGED IN CHECK
-if(empty($cookie_project_id)){exit;}
-
 Header('Content-Type:text/html; charset=utf-8');
 /*************** AJAX ***************/
 
@@ -22,25 +19,64 @@ try{
 	$type = isset($_POST['type']) ? $_POST['type'] : '';
 	$errmsgArray = array(0);
 	
-	// Recipients
-	$participants = $conn->prepare("SELECT P.* FROM 
-										(SELECT breakfast_id FROM breakfast_breakfasts WHERE breakfast_date = CURDATE() + INTERVAL 1 DAY) B
-									JOIN
-										(SELECT breakfast_id, participant_id FROM breakfast_registrations WHERE participant_attending = 1) R
-									ON B.breakfast_id = R.breakfast_id
-									JOIN
-										(SELECT * FROM breakfast_participants WHERE project_id = :project_id) P
-									ON R.participant_id = P.participant_id
-									ORDER BY P.participant_name ASC");
-	$participants->bindParam(':project_id', $cookie_project_id);		
-	$participants->execute();
-	$participants_count = $participants->rowCount();
 	
-	$emails = array();
-	while($row = $participants->fetch(PDO::FETCH_ASSOC)){
-		$emails[] = $row['participant_name']." <".$row['participant_email'].">";
-	}	
-	$recipients = implode(", ", $emails);
+	if(empty($cookie_project_id)){
+		$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+		$email = filter_var(isset($_POST['email']) ? $_POST['email'] : '', FILTER_SANITIZE_STRING);
+		
+		$project_db = $conn->prepare("SELECT P.* FROM
+										(SELECT project_id FROM breakfast_projects WHERE project_name = :project_name) Prj
+									  JOIN
+										(SELECT project_id, participant_id, participant_name FROM breakfast_participants WHERE participant_email = :participant_email AND participant_asleep = '0') P
+									  ON Prj.project_id = P.project_id");
+		$project_db->bindParam(':project_name', $name);		
+		$project_db->bindParam(':participant_email', $email);		
+		$project_db->execute();	
+		$project_count = $project_db->rowCount();
+		
+		if($project_count==0){
+			$errmsgArray[1] = "<p class='error'>Projektet kunne ikke findes.</p>";
+			echo json_encode($errmsgArray);
+			exit;
+		}
+		
+		$project = $project_db->fetch();
+		$cookie_project_id = $project['project_id'];
+		$participant_name = $project['participant_name'];
+		$participant_id = $project['participant_id'];
+	}
+	
+	
+	// Recipients
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
+	$participants_db->bindParam(':project_id', $cookie_project_id);		
+	$participants_db->execute();
+	$participants_count = $participants_db->rowCount();
+	
+	// Attendees
+	if($type=="forgotten"){
+		$recipients = $participant_name." <".$email.">";
+		
+	} else{
+		$attendees_db = $conn->prepare("SELECT P.* FROM 
+											(SELECT breakfast_id FROM breakfast_breakfasts WHERE breakfast_date = CURDATE() + INTERVAL 1 DAY) B
+										JOIN
+											(SELECT breakfast_id, participant_id FROM breakfast_registrations WHERE participant_attending = 1) R
+										ON B.breakfast_id = R.breakfast_id
+										JOIN
+											(SELECT * FROM breakfast_participants WHERE project_id = :project_id) P
+										ON R.participant_id = P.participant_id
+										ORDER BY P.participant_name ASC");
+		$attendees_db->bindParam(':project_id', $cookie_project_id);		
+		$attendees_db->execute();
+		$attendees_count = $attendees_db->rowCount();
+		
+		$emails = array();
+		while($row = $participants_db->fetch(PDO::FETCH_ASSOC)){
+			$emails[] = $row['participant_name']." <".$row['participant_email'].">";
+		}	
+		$recipients = implode(", ", $emails);
+	}
 	
 	// Headers
 	$headers  = "From: Breakfast Management <contactbreakfastmanagement@gmail.com>" . "\r\n";
@@ -74,7 +110,7 @@ try{
 			</style>
 		</head>
 		<body>';
-			
+
 	if($type=="tomorrow"){
 		// Subject
 		$subject = "I morgens morgenmad | ".date('j-m-Y');
@@ -98,7 +134,7 @@ try{
 		Husk at vi spiser morgenmad sammen i morgen.</br>
 		'.$chef['participant_name'].' skal sørge for at handle ind.</br>
 		Hvis du ikke kan komme, bør du allerede nu have meldt dig fra.</br></br>
-		Antal tilmeldte: '.$participants_count.'</br>
+		Antal tilmeldte: '.$attendees_count.'</br>
 		Indkøbsliste:</br>
 		'.$shoppinglist.'</br></br>
 		Ha\' en god dag.</br>';
@@ -128,6 +164,29 @@ try{
 		$message .= 
 		'</ul>
 		Ha\' en god dag.</br>';
+	
+	
+	}elseif($type=="forgotten"){
+		// Subject
+		$subject = "Sikkerhedskode til at rette kodeord | ".date('j-m-Y');
+		
+		// Message CONTENT
+		$keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$security_code = '';
+		$max = mb_strlen($keyspace, '8bit') - 1;		
+		for ($i = 0; $i < 16; ++$i) {
+			$security_code .= $keyspace[rand(0, $max)];
+		}
+		$errmsgArray[1] = "<p class='success'>Emailen er blevet sendt.</p>";
+		$errmsgArray[2] = $security_code;
+		
+		$message .= 
+		'Hej allesammen!</br>
+		Denne email indeholder en sikkerhedskode til at ændre dit kodeord.</br>
+		Hvis du ikke har bedt om at få tilsendt denne email, kan den bare ignores.</br>
+		Sikkehedskoden er:</br>
+		'.$security_code.'</br>
+		Ha\' en god dag.</br>';
 		
 	}else{
 		exit;
@@ -137,7 +196,7 @@ try{
 	$message .= 
 	'	</body>
 	</html>';	
-
+			
 	// Send emails
 	mail($recipients, $subject, $message, $headers);
 	$errmsgArray[0] = 1;
@@ -150,6 +209,10 @@ try{
 		$update->bindParam(':project_id', $cookie_project_id);		
 		$update->bindParam(':breakfast_date', $breakfast_date);		
 		$update->execute();
+	}elseif($type=="forgotten"){
+		// Insert security code hash
+		$security_code_hash = password_hash($cookie_project_id.$security_code, PASSWORD_BCRYPT);	
+		setcookie("security_code", $security_code_hash, time()+60*10, '/', 'localhost');	
 	}
 	
 	echo json_encode($errmsgArray);
