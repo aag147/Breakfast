@@ -36,7 +36,6 @@ try{
 			/*** ERROR CHECKING ***/
 			if (empty($name) || empty($password)){$errmsg[0] = -1; break;}
 			elseif($valid_project==0){$errmsg[0] = -3; break;}
-			elseif(strlen($password) > 30){$errmsg[0] = -5; break;}
 			
 			// Error: No match between password and stored hash
 			if (!password_verify($password, $project['project_password'])){$errmsg[0] = -4; break;}
@@ -47,7 +46,7 @@ try{
 			$cookie_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
 			
 			// Error: Failed hash
-			if (!$cookie_hash) {$errmsg[0] = -6; break;}
+			if (!$cookie_hash) {$errmsg[0] = -5; break;}
 		
 			// Delete all outdated entries for all projects
 			$delete = $conn->prepare("DELETE FROM breakfast_projects_sessions WHERE session_date < CURRENT_TIMESTAMP");
@@ -82,14 +81,12 @@ try{
 			if (empty($name) OR empty($password)){$errmsg[0] = -1; break;}		
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
-			// Too long password
-			if (strlen($password) > 30){$errmsg[0] = -5; break;}
 			
 			// hasher
 			$hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
 			
 			// Error: Weird hash
-			if (!$hash) {$errmsg[0] = -6; break;}
+			if (!$hash) {$errmsg[0] = -5; break;}
 			
 			/*** INSERT ***/
 			$new_project = $conn->prepare("INSERT INTO breakfast_projects (project_name, project_password, project_friday) VALUES (:name, :hash, '1')");
@@ -219,6 +216,60 @@ try{
 			$errmsg[1] = "Arrangement dagene er ændret!";
 			break;
 			
+			
+		case 'forgotten':
+			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
+			$security_code = filter_var(isset($_POST['security_code']) ? $_POST['security_code'] : '', FILTER_SANITIZE_STRING);
+			$password = filter_var(isset($_POST['password']) ? $_POST['password'] : '', FILTER_SANITIZE_STRING);
+			$security_code_hash = $_COOKIE['security_code'];
+			
+			$project_db = $conn->prepare("SELECT * FROM breakfast_projects WHERE project_name = :project_name");
+			$project_db->bindParam(':project_name', $name);		
+			$project_db->execute();	
+			$valid_project = $project_db->rowCount();
+			$project = $project_db->fetch();
+			
+			/*** ERROR CHECKING ***/
+			if (empty($name) || empty($password) || empty($security_code)){$errmsg[0] = -1; break;}
+			elseif($valid_project==0){$errmsg[0] = -6; break;}
+			
+			$project_id = $project['project_id'];
+			
+			// Error: No match between password and stored hash
+			if (!password_verify($project_id.$security_code, $security_code_hash)){$errmsg[0] = -6; break;}
+		
+			// Hasher
+			$hash = password_hash($password, PASSWORD_BCRYPT);
+			
+			// Error: Weird hash
+			if (!$hash) {$errmsg[0] = -5; break;}
+		
+			/*** UPDATE ***/
+			$edit_project = $conn->prepare("UPDATE breakfast_projects SET project_password = :hash WHERE project_id = :project_id");
+			$edit_project->bindParam(':hash', $hash);
+			$edit_project->bindParam(':project_id', $project_id);		
+			$edit_project->execute();
+		
+			/*** LOG IN ***/
+			//hash cookie
+			$rand = rand(1, 1000);
+			$project_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
+			
+			if (strlen($project_hash) >= 20) {			
+				// Set cookies
+				$time = 43200;
+				setcookie("cookie_project_id",$project_id,time()+$time, '/', 'localhost');
+				setcookie("cookie_hash",$project_hash,time()+$time, '/', 'localhost');					
+				$insert = $conn->prepare("INSERT INTO breakfast_projects_sessions (session_hash, project_id, session_date) VALUES (:hash, :project_id, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL $time SECOND))");
+				$insert->bindParam(':hash', $project_hash);
+				$insert->bindParam(':project_id', $project_id);
+				$insert->execute();
+			}		
+
+			$errmsg[0] = 1;
+			$errmsg[1] = "Kodeordet er blevet ændret!";
+			break;
+			
 		default:
 			echo json_encode(array(-10));
 			exit;
@@ -239,10 +290,10 @@ try{
 			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!";
 			break;
 		case '-5':
-			$errmsg[1] .= "Kodeordet må højst være 30 karakterer langt!";
+			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";
 			break;
 		case '-6':
-			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";
+			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];

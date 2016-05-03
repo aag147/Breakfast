@@ -60,8 +60,6 @@ try{
 	$current_breakfast = "";
 	while($participant = $participantsBehindCount_db->fetch(PDO::FETCH_ASSOC)){
 		$participant_id = $participant['participant_id'];
-		echo $participant['breakfast_id'];
-		echo $participant['breakfast_date'];
 		
 		// Updating attending participants
 		if($participant['participant_attending'] == 1 AND $participant['breakfast_chef'] == $participant_id){
@@ -240,7 +238,6 @@ try{
 					if(!$breakfast_done AND $breakfast_date < $current_date){
 						continue;
 					}
-
 					
 					/***** CHEF *****/
 					if(!$breakfast_done){
@@ -280,6 +277,18 @@ try{
 						$chef = $participant_db->fetch();
 					}
 					
+					// Replacement chef
+					$chef_replacement_id = (isset($breakfast['breakfast_chef_replacement']) ? $breakfast['breakfast_chef_replacement'] : 0);
+
+					if(!empty($chef_replacement_id)){
+						$participant_id = $chef_replacement_id;
+						$participant_db->execute();
+						$chef_replacement = $participant_db->fetch();
+					}else{
+						$chef_replacement_id = $chef_id;
+						$chef_replacement = $chef;
+					}
+					
 					/***** REGISTRATION COUNT *****/
 					$registrations_count_db->execute();
 					$registrations_count = $registrations_count_db->fetchColumn();
@@ -287,26 +296,38 @@ try{
 											
 					/***** VIEW *****/
 					view: 
-					echo "<li class='weekday ".$doneClass."' id='weekday_".$week.$weekday."'>";
-						echo "<a href='javascript:;' class='showParticipants' id='".$week.$weekday."'>";
+					echo "<li class='weekday ".$doneClass."' id='breakfast_".$breakfast_id."'>";
+						echo "<a href='javascript:;' class='showParticipants' data-id='".$breakfast_id."'>";
 							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
 							echo "<span class='weekdayToday'>";
 								if($breakfast_date == $current_date){echo "(I dag)";}
 								if($breakfast_date == $tomorrow_date){echo "(I morgen)";}
 							echo "</span>";
-							echo "<span class='theChef'>".$chef['participant_name']."</span>";
+							echo "<span class='theChef'>".$chef_replacement['participant_name']."</span>";
 						echo "</a>";
 					echo "</li>";
-					echo "<li class='participants hide' id='participants_".$week.$weekday."'>";
-					
+					echo "<li class='participants hide' id='participants_".$breakfast_id."'>";
+						echo "<span class='newChefTitle'>Skift vært:</span>";
+						echo "<span class='newChef'>";
+							echo "<select class='newChefSelect' data-id='".$breakfast_id."'>";
+								echo "<option value='0'>".$chef['participant_name']." (original)</option>";
+								foreach($participants as $participant){
+									if($participant['participant_id'] != $chef_id){
+										if($participant['participant_id'] == $chef_replacement_id){$selected = "selected";}
+										else{$selected = "";}
+										echo "<option value='".$participant['participant_id']."' ".$selected.">".$participant['participant_name']."</option>";
+									}
+								}
+							echo "</select>";
+						echo "</span>";
 						echo "<span class='participantsCount'>".$registrations_count."</span>";
 						echo "<span class='participantsTitle'>kommer. Men hvem (foruden værten)?</span>";
 					
 						echo "<ul>";
 						foreach($participants as $participant){
 							$participant_id = $participant['participant_id'];
-							if($participant['participant_name']==$chef['participant_name']){$isChef = 1;}else{$isChef = 0;}
+							if($participant['participant_name']==$chef_replacement['participant_name']){$isChef = 1;}else{$isChef = 0;}
 							
 							// Get registration info or insert new registration
 							$registration_db->execute();
@@ -323,11 +344,12 @@ try{
 							if($attending){$isComing = "checked";}else{$isComing = "";}
 							
 							// Continue for chef
-							if($isChef){continue;}
+							if($isChef){$hide = "class='hide'";}
+							else{$hide = "";}
 
 							// Write out participant
-							echo "<li id='participant_".$participant_id."'>";
-								echo "<span class='status'><input id='".$reg_id."' data-id='".$week.$weekday."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
+							echo "<li id='participant_".$participant_id."' ".$hide.">";
+								echo "<span class='status'><input id='".$reg_id."' data-id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
 								echo "<span class='name'>".$participant['participant_name']."</span>";
 							echo "</li>";					
 						}
@@ -351,7 +373,7 @@ try{
 			// Send notification for tomorrows breakfasts only once
 			?>
 			<script>
-				window.onload = sendNotifications('tomorrow');
+				window.onload = sendNotifications(new FormData(), 'tomorrow');
 			</script>
 			<?php
 		}
