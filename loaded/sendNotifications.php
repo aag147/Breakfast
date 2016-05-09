@@ -141,7 +141,7 @@ try{
 		
 	}elseif($type=="weekdays"){
 		// Subject
-		$subject = "Arrangementdagene er blevet ændret | ".date('j-m-Y');
+		$subject = "Arrangementdagene er blevet redigeret | ".date('j-m-Y');
 		
 		// Message CONTENT
 		$message .= 
