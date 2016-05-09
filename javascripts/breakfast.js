@@ -302,11 +302,16 @@
 	
 		
 	// Toggle between hide and show for single element
-	function toggleSingle(first) {
-		if($(first).hasClass('hide')){
-			$(first).removeClass('hide');
+	function toggleParticipantsWindow(id) {
+		if($('#participants_'+id).hasClass('hide')){
+			$('#participants_'+id).removeClass('hide');
 		}else{
-			$(first).addClass("hide");
+			$('#participants_'+id).addClass("hide");
+		}
+		if($('#breakfast_'+id).hasClass('open')){
+			$('#breakfast_'+id).removeClass('open');
+		}else{
+			$('#breakfast_'+id).addClass('open');
 		}
 	}
 
@@ -411,7 +416,7 @@ $(document).ajaxStop(function () {
 	}); 	
 	// Toggle participants visibility for a weekday
 	$('.showParticipants').off('click').on('click', function(event){
-		toggleSingle('#participants_'+$(this).data('id'));
+		toggleParticipantsWindow($(this).data('id'));
 	});		
 	/* Edit chef */
 	$('select.newChefSelect').off('change').on('change', function() {
