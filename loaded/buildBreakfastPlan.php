@@ -110,6 +110,32 @@ try{
 	$delete_breakfasts->execute();
 	
 	
+	/** INCASSO */
+	$incasso_db = $conn->prepare("SELECT chef_id, SUM(C) FROM
+								  (
+									SELECT breakfast_chef_replacement AS chef_id, '-1' AS C FROM breakfast_breakfasts
+									WHERE project_id = :project_id AND breakfast_chef = :participant_id AND breakfast_chef_replacement <> '0'
+									UNION
+									SELECT breakfast_chef AS chef_id, '1' AS C FROM breakfast_breakfasts
+									WHERE project_id = :project_id AND breakfast_chef_replacement = :participant_id
+								  ) AS Allll
+								  GROUP BY chef_id ORDER BY chef_id ASC");
+	$incasso_db->bindParam(':project_id', $cookie_project_id);
+	$incasso_db->bindParam(':participant_id', $participant_id);
+	
+	$incasso_db = $conn->prepare("SELECT SUM(C) FROM
+								  (
+									SELECT '-1' AS C FROM breakfast_breakfasts
+									WHERE project_id = :project_id AND YEARWEEK(breakfast_date, 1) < YEARWEEK(CURDATE(), 1) AND breakfast_chef = :chef_id AND breakfast_chef_replacement = :participant_id
+									UNION
+									SELECT '1' AS C FROM breakfast_breakfasts
+									WHERE project_id = :project_id AND YEARWEEK(breakfast_date, 1) < YEARWEEK(CURDATE(), 1) AND breakfast_chef = :participant_id AND breakfast_chef_replacement = :chef_id
+								  ) AS CC");
+	$incasso_db->bindParam(':project_id', $cookie_project_id);
+	$incasso_db->bindParam(':chef_id', $chef_id);
+	$incasso_db->bindParam(':participant_id', $participant_id);
+	
+	
 	// EXTRACT SINGLE ROW
 	$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_id = :participant_id LIMIT 1");
 	$participant_db->bindParam(':project_id', $cookie_project_id);
@@ -296,7 +322,7 @@ try{
 											
 					/***** VIEW *****/
 					view: 
-					echo "<li class='weekday ".$doneClass."' id='breakfast_".$breakfast_id."'>";
+					echo "<li class='weekday".$doneClass."' id='breakfast_".$breakfast_id."'>";
 						echo "<a href='javascript:;' class='showParticipants' data-id='".$breakfast_id."'>";
 							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
@@ -314,9 +340,13 @@ try{
 								echo "<option value='0'>".$chef['participant_name']." (original)</option>";
 								foreach($participants as $participant){
 									if($participant['participant_id'] != $chef_id){
+										$participant_id = $participant['participant_id'];
+										$incasso_db->execute();
+										$incasso = $incasso_db->fetchColumn();
+										if(empty($incasso)){$incasso = 0;}
 										if($participant['participant_id'] == $chef_replacement_id){$selected = "selected";}
 										else{$selected = "";}
-										echo "<option value='".$participant['participant_id']."' ".$selected.">".$participant['participant_name']."</option>";
+										echo "<option value='".$participant['participant_id']."' ".$selected.">".$participant['participant_name']." (".$incasso.")</option>";
 									}
 								}
 							echo "</select>";

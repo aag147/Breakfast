@@ -53,19 +53,12 @@ a{
 	color:#000;
 	text-decoration:none;
 }
-a:hover{
+
+
+a.blue{
 	color:#0186ba;
 }
-
-a.blue, .blueinput{
-	color:#0186ba;
-}
-
-a.black{
-	color:#000;
-}
-
-a:hover.blue, a:hover.black{
+a.blue:hover{
 	color:#00506f;
 }
 
@@ -303,7 +296,19 @@ nav {
 		width: 100%;
 		font-size: 0.9em;
 		margin-bottom: 2px;
-		
+	}
+	#projectContent li.weekdays li.weekday a{
+		display: inline-block;
+		height: 100%;
+		width: 100%;
+		padding: 4px 5px;
+		/*-moz-border-radius: 50px;
+		border-radius: 50px;*/
+		-moz-box-shadow: 0 2px 1px #9c9c9c;
+		-webkit-box-shadow: 0 2px 1px #9c9c9c;
+		box-shadow: 0 2px 1px #9c9c9c;
+	}
+	#projectContent li.weekdays li.weekday a{
 		background: #bbb;
 		background: -moz-linear-gradient(#eee, #bbb); 
 		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bbb),color-stop(1, #eee));	
@@ -311,13 +316,14 @@ nav {
 		background: -o-linear-gradient(#eee, #bbb);
 		background: -ms-linear-gradient(#eee, #bbb);
 		background: linear-gradient(#eee, #bbb);
-		/*-moz-border-radius: 50px;
-		border-radius: 50px;*/
-		-moz-box-shadow: 0 2px 1px #9c9c9c;
-		-webkit-box-shadow: 0 2px 1px #9c9c9c;
-		box-shadow: 0 2px 1px #9c9c9c;
 	}
-	#projectContent li.weekdays li.weekday.done{ /* DONE BREAKFAST */
+	#projectContent li.weekdays li.weekday.open a{
+		background: #eee;
+	}
+	#projectContent li.weekdays li.weekday a:hover{
+		background: #eee;
+	}
+	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
 		background: #ddd;
 		background: -moz-linear-gradient(#fff, #ddd); 
 		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ddd),color-stop(1, #fff));	
@@ -325,12 +331,6 @@ nav {
 		background: -o-linear-gradient(#fff, #ddd);
 		background: -ms-linear-gradient(#fff, #ddd);
 		background: linear-gradient(#fff, #ddd);
-	}
-	#projectContent li.weekdays li.weekday a{
-		display: inline-block;
-		height: 100%;
-		width: 100%;
-		padding: 4px 5px;
 	}
 	#projectContent li.weekdays li.weekday.done a:not(:hover){ /* DONE BREAKFAST */
 		color: grey;
@@ -450,6 +450,9 @@ nav {
 		-moz-box-shadow: 0 2px 1px #9c9c9c;
 		-webkit-box-shadow: 0 2px 1px #9c9c9c;
 		box-shadow: 0 2px 1px #9c9c9c;
+	}
+	#settingsContent li span.options a:not(.green):hover{
+		color: #0186ba;
 	}
 
 	
