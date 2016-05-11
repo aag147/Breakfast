@@ -349,15 +349,21 @@ nav {
 		color: #00506f;
 		font-weight: bold;
 	}
-	#projectContent li.weekdays li.weekday a span.theChef{
+	#projectContent li.weekdays li.weekday a span.theChefs{
 		display: inline-block;
 		width: calc(100% - 265px);
 		text-align: right;
 	}
+	#projectContent li.weekdays li.weekday a span.theChefs span.limbo{
+		font-weight: bold;
+	}
+	#projectContent li.weekdays li.weekday a span.theChefs span:not(:last-child):after{
+		content: " | ";
+	}
 	#projectContent li.weekdays li.weekday a:hover span.weekdayToday{
 		color: #00506f;
 	}
-	#projectContent li.weekdays li.weekday a:hover span.theChef{
+	#projectContent li.weekdays li.weekday a:hover span.theChefs{
 		color: #000;
 	}
 	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
@@ -366,7 +372,7 @@ nav {
 	#projectContent li.weekdays li.weekday.done a span.weekdayToday{ /* DONE BREAKFAST */
 		color: grey;
 	}
-	#projectContent li.weekdays li.weekday.done a:hover span.theChef{ /* DONE BREAKFAST */
+	#projectContent li.weekdays li.weekday.done a:hover span.theChefs{ /* DONE BREAKFAST */
 		color: grey;
 	}
 	
@@ -378,20 +384,25 @@ nav {
 	margin-bottom: 10px;
 	}
 	
-	#projectContent li.participants span.newChefTitle{
+	#projectContent li.participants li.newChefTitle{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
-	width: 100px;
+	width: 90px;
 	font-weight: bold;
 	}
-	#projectContent li.participants span.newChef{
+	#projectContent li.participants li.newChefs{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
-	width: calc(100% - 100px);
+	width: calc(33% - 30px);
 	}
-	#projectContent li.participants span.newChef select{
-		width: 50%;
+	#projectContent li.participants li.newChefs select{
+		width: 100%;
 	}
+	#projectContent li.participants li.newChefs select option#limbo{
+		font-weight: bold;
+		background: grey;
+	}
+	
 	
 	#projectContent li.participants span.participantsCount,
 	#projectContent li.participants span.participantsTitle{
@@ -456,6 +467,59 @@ nav {
 	#settingsContent li span.options a:not(.green):hover{
 		color: #0186ba;
 	}
+	
+/* SETTINGS PANEL */
+#settingsPanel li#title{
+font-size: 1.0em;
+font-weight: bold;
+border-bottom: 1px solid;
+}
+#settingsPanel li.option{
+padding: 5px 0px;
+}
+	#settingsPanel li.option span{
+	display: inline-block;
+	width: 100%;
+	padding: 2px 0px;
+	}
+	#settingsPanel li.option span.optionTitle{
+	text-decoration: none;
+	}
+	#settingsPanel li.option ul.optionLegend span{
+		display: inline-block;
+		width: 50%;
+	}
+	#settingsPanel li.option ul.optionLegend span:last-child{
+		text-align: right;
+	}
+	#settingsPanel li.option ul.optionInputs li{
+		width: 100%;
+	}
+	#settingsPanel li.option ul.optionInputs li:first-child{
+		border-bottom: 1px dotted;
+		border-top: 1px dotted;
+		margin: 2px 0px 2px 0px;
+		padding: 2px 0px 2px 0px;
+	}
+	#settingsPanel li.option ul.optionInputs li span:first-child{
+		display: inline-block;
+		width: calc(100% - 30px);
+	}
+	#settingsPanel li.option ul.optionInputs li span:last-child{
+		display: inline-block;
+		width: 30px;
+	}
+	#settingsPanel li.option ul.optionInputs li span:last-child input{
+		padding: 0px;
+		width: 30px;
+	}
+	#settingsPanel li.option span.optionErrmsg{
+	text-align: right;
+	}
+	#settingsPanel li.option span.optionSubmit{
+	text-align: right;
+	}
+	
 
 	
 	

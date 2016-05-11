@@ -64,6 +64,16 @@ try{
 				$participant_id = $conn->lastInsertId('breakfast_participants');
 				
 			}
+			
+			// Reset chef replacements
+			$reset_chef_placements = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
+													WHERE chef_replacement_id > 0
+													AND breakfast_id IN
+														(SELECT breakfast_id FROM breakfast_breakfasts
+														 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW()))");
+			$reset_chef_placements->bindParam(':project_id', $cookie_project_id);
+			$reset_chef_placements->execute();
+		
 		
 			$errmsg[0] = 1;
 			$errmsg[1] = "Deltageren er tilføjet!";
@@ -122,25 +132,28 @@ try{
 			
 		case 'changeChef':		
 			// Variables from form
-			$breakfast_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
-			$chef_id = (isset($_POST['value']) ? $_POST['value'] : '');
+			$breakfast_id = (isset($_POST['breakfast_id']) ? $_POST['breakfast_id'] : '');
+			$chef_id = (isset($_POST['chef_id']) ? $_POST['chef_id'] : '');
+			$original_id = (isset($_POST['original_id']) ? $_POST['original_id'] : '');
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
 			if (empty($breakfast_id)){$errmsg[0] = -1; break;}		
 			
 			/*** EXTRACT INFO ***/
-			// Original chef id
-			$breakfast_db = $conn->prepare("SELECT breakfast_chef, breakfast_chef_replacement FROM breakfast_breakfasts WHERE breakfast_id = :breakfast_id AND project_id = :project_id");
-			$breakfast_db->bindParam(':project_id', $cookie_project_id);	
-			$breakfast_db->bindParam(':breakfast_id', $breakfast_id);
-			$breakfast_db->execute();
-			$breakfast = $breakfast_db->fetch();
-			if($breakfast['breakfast_chef_replacement'] == 0){$previous_chef_id = $breakfast['breakfast_chef'];}
-			else{$previous_chef_id = $breakfast['breakfast_chef_replacement'];}
+			// Previous chef id
+			$chef_db = $conn->prepare("SELECT chef_id, chef_replacement_id FROM breakfast_chefs
+											WHERE breakfast_id = :breakfast_id AND project_id = :project_id AND chef_id = :original_id");
+			$chef_db->bindParam(':project_id', $cookie_project_id);	
+			$chef_db->bindParam(':breakfast_id', $breakfast_id);
+			$chef_db->bindParam(':original_id', $original_id);
+			$chef_db->execute();
+			$chef = $chef_db->fetch();
+			if($chef['chef_replacement_id'] == 0){$previous_chef_id = $original_id;}
+			else{$previous_chef_id = $chef['chef_replacement_id'];}
 
 			// Replacement chef name
-			if($chef_id==0){$new_chef_id = $breakfast['breakfast_chef'];}else{$new_chef_id = $chef_id;}
+			if($chef_id==0){$new_chef_id = $original_id;}else{$new_chef_id = $chef_id;}
 			$chef_db = $conn->prepare("SELECT participant_name FROM breakfast_participants WHERE participant_id = :participant_id AND project_id = :project_id LIMIT 1");
 			$chef_db->bindParam(':project_id', $cookie_project_id);	
 			$chef_db->bindParam(':participant_id', $new_chef_id);
@@ -148,9 +161,11 @@ try{
 			$chef_name = $chef_db->fetchColumn();
 	
 			/*** UPDATE ***/
-			$change_chef = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef_replacement = :chef_id WHERE breakfast_id = :breakfast_id");
-			$change_chef->bindParam(':chef_id', $chef_id);
+			$change_chef = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = :chef_id WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :original_id ");
+			$change_chef->bindParam(':project_id', $cookie_project_id);	
 			$change_chef->bindParam(':breakfast_id', $breakfast_id);
+			$change_chef->bindParam(':chef_id', $chef_id);
+			$change_chef->bindParam(':original_id', $original_id);
 			$change_chef->execute();
 					
 			$errmsg[0] = 1;
