@@ -317,12 +317,6 @@ nav {
 		background: -ms-linear-gradient(#eee, #bbb);
 		background: linear-gradient(#eee, #bbb);
 	}
-	#projectContent li.weekdays li.weekday.open a{
-		background: #eee;
-	}
-	#projectContent li.weekdays li.weekday a:hover{
-		background: #eee;
-	}
 	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
 		background: #ddd;
 		background: -moz-linear-gradient(#fff, #ddd); 
@@ -332,9 +326,14 @@ nav {
 		background: -ms-linear-gradient(#fff, #ddd);
 		background: linear-gradient(#fff, #ddd);
 	}
-	#projectContent li.weekdays li.weekday.done a:not(:hover){ /* DONE BREAKFAST */
-		color: grey;
+
+	#projectContent li.weekdays li.weekday.open a{
+		background: #eee;
 	}
+	#projectContent li.weekdays li.weekday a:hover{
+		background: #eee;
+	}
+
 	#projectContent li.weekdays li.weekday a span.weekdayTitle{
 		display: inline-block;
 		width: 80px;
@@ -361,8 +360,11 @@ nav {
 	#projectContent li.weekdays li.weekday a:hover span.theChef{
 		color: #000;
 	}
-	#projectContent li.weekdays li.weekday.done a:hover span.weekdayToday{ /* DONE BREAKFAST */
-		color: #00506f;
+	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
+		color: grey;
+	}
+	#projectContent li.weekdays li.weekday.done a span.weekdayToday{ /* DONE BREAKFAST */
+		color: grey;
 	}
 	#projectContent li.weekdays li.weekday.done a:hover span.theChef{ /* DONE BREAKFAST */
 		color: grey;
