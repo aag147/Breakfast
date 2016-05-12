@@ -63,17 +63,7 @@ try{
 				$new_participant->execute();			
 				$participant_id = $conn->lastInsertId('breakfast_participants');
 				
-			}
-			
-			// Reset chef replacements
-			$reset_chef_placements = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
-													WHERE chef_replacement_id > 0
-													AND breakfast_id IN
-														(SELECT breakfast_id FROM breakfast_breakfasts
-														 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW()))");
-			$reset_chef_placements->bindParam(':project_id', $cookie_project_id);
-			$reset_chef_placements->execute();
-		
+			}		
 		
 			$errmsg[0] = 1;
 			$errmsg[1] = "Deltageren er tilføjet!";

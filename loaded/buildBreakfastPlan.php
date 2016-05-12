@@ -103,8 +103,8 @@ try{
 										ON B.breakfast_id = C.breakfast_id
 										JOIN
 											breakfast_participants as P
-										ON B.breakfast_chef = P.participant_id
-										ORDER BY breakfast_date ASC");
+										ON C.chef_id = P.participant_id
+										ORDER BY breakfast_date ASC, C.rel_id ASC");
 	$static_chefs_db->bindParam(':project_id', $cookie_project_id);
 	$static_chefs_db->execute();
 	$static_chefs_count = $static_chefs_db->rowCount();
@@ -193,6 +193,13 @@ try{
 	$delete_chef->bindParam(':breakfast_id', $breakfast_id);
 	$delete_chef->bindParam(':chef_id', $chef_id);
 	
+	$limbo_replacement = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
+										 WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :chef_id");
+	$limbo_replacement->bindParam(':project_id', $cookie_project_id);
+	$limbo_replacement->bindParam(':breakfast_id', $breakfast_id);
+	$limbo_replacement->bindParam(':chef_id', $chef_id);
+	$limbo_replacement->execute();
+	
 	
 	/***** Counting amount of weekdays with breakfast *****/
 	$current_weekday = date("N");
@@ -223,7 +230,6 @@ try{
 	
 	// Final array of ordered chefs
 	$complete_chefs = array_merge($static_chefs_id, $dynamic_chefs_id);
-	
 
 	/******* PRINT PLAN *******/
 	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
@@ -360,14 +366,22 @@ try{
 					$breakfast_chef_replacements_id = array();
 					foreach($breakfast_chefs as $chef){
 						$chef_replacement_id = $chef['chef_replacement_id'];
-
-						if(!empty($chef_replacement_id)){
+						if(in_array($chef_replacement_id, $breakfast_chefs_id)){
+							// Remove dated replacement
+							$chef_id = $chef['participant_id'];
+							$limbo_replacement->execute();
+							$chef['chef_replacement_id'] = -1;
+							array_push($breakfast_chef_replacements, array());
+							array_push($breakfast_chef_replacements_id, -1);
+						}elseif(!empty($chef_replacement_id)){
+							// Add current replacement
 							$participant_id = $chef_replacement_id;
 							$participant_db->execute();
 							$chef_replacement = $participant_db->fetch();
 							array_push($breakfast_chef_replacements, $chef_replacement);
 							array_push($breakfast_chef_replacements_id, $chef_replacement_id);
 						}else{
+							// No current replacement
 							array_push($breakfast_chef_replacements, $chef);
 							array_push($breakfast_chef_replacements_id, $chef['participant_id']);
 						}
@@ -391,9 +405,8 @@ try{
 							echo "</span>";
 							echo "<span class='theChefs'>";
 								for($k = 0; $k < $weekday_chefs_count; $k++){
-									$chef_name = $breakfast_chef_replacements[$k]['participant_name'];
 									if($breakfast_chef_replacements_id[$k]==-1){$limboClass = "limbo"; $chef_name = "Limbo";}
-									else{$limboClass = "";}
+									else{$limboClass = ""; $chef_name = $breakfast_chef_replacements[$k]['participant_name'];}
 									echo "<span class='chef_".$breakfast_chefs_id[$k]." ".$limboClass."'>".$chef_name."</span>";
 								}
 							echo "</span>";

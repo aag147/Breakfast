@@ -41,24 +41,23 @@ try{
 			$delete_chefs = $conn->prepare("DELETE FROM breakfast_chefs
 											WHERE chef_id = :participant_id
 											AND breakfast_id IN
-												(SELECT C.breakfast_id FROM
-													(SELECT breakfast_id FROM breakfast_chefs WHERE chef_id = :participant_id) C
-												 JOIN
-													(SELECT breakfast_id FROM breakfast_breakfasts
-													 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW())) B
-												 ON C.breakfast_id = B.breakfast_id)");
+												(SELECT breakfast_id FROM breakfast_breakfasts
+												 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR 
+												 DATE(breakfast_created) = DATE(NOW()))");
 			$delete_chefs->bindParam(':project_id', $cookie_project_id);
 			$delete_chefs->bindParam(':participant_id', $participant_id);
 			$delete_chefs->execute();
 			
 			// Reset chef replacements
-			$reset_chef_placements = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
-														WHERE chef_replacement_id > 0
+			$reset_chef_replacements = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
+														WHERE chef_replacement_id = :participant_id
 														AND breakfast_id IN
 															(SELECT breakfast_id FROM breakfast_breakfasts
-															 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW()))");
-			$reset_chef_placements->bindParam(':project_id', $cookie_project_id);
-			$reset_chef_placements->execute();
+															 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR 
+															 DATE(breakfast_created) = DATE(NOW()))");
+			$reset_chef_replacements->bindParam(':project_id', $cookie_project_id);
+			$reset_chef_replacements->bindParam(':participant_id', $participant_id);
+			$reset_chef_replacements->execute();
 			
 			
 			// Reduce chefs pr day
