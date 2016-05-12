@@ -98,7 +98,7 @@ try{
 			
 			$project_id = $conn->lastInsertId('breakfast_projects');
 			
-			$new_options = $conn->prepare("INSERT INTO breakfast_projects (project_id, friday_checked) VALUES (:project_id, '1')");
+			$new_options = $conn->prepare("INSERT INTO breakfast_options (project_id, friday_checked) VALUES (:project_id, '1')");
 			$new_options->bindParam(':project_id', $project_id);
 			$new_options->execute();
 			
