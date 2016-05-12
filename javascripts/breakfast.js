@@ -445,21 +445,21 @@ $(document).ready(function() {
 	
 	/***** ADMIN LINK CLICKS *****/
 	/* Edit project */
-	$('.editAccount').click(function(event){
+	$('.editAccount').off('click').on('click', function(){
 		editInLine('', "account");	
 	});
 	/* Delete project */
-	$('.deleteAccount').click(function(event){
+	$('.deleteAccount').off('click').on('click', function(){
 		if(confirm("Er du sikker på, at du vil slette hele projektet?")){
 			accountManager(new FormData(), "delete");	
 		}
 	});
 	/* Log out */
-	$('.logOut').click(function(event){
+	$('.logOut').off('click').on('click', function(){
 		accountManager(new FormData(), "logout");	
 	});
 	/* Toggle login and register view */
-	$('.adminShiftLink').click(function(event){
+	$('.adminShiftLink').off('click').on('click', function(){
 		toggleIndexView(this.id);
 	});
 	/* Edit disablement for weekdays in settings */
@@ -503,7 +503,7 @@ $(document).ajaxStop(function () {
 	
 	/** PRODUCTS **/
 	/* Edit product */
-	$('.editProduct').click(function(event){
+	$('.editProduct').off('click').on('click', function(){
 		editInLine($(this).data('id'), "product");	
 	});
 	/* Delete product */
@@ -517,7 +517,7 @@ $(document).ajaxStop(function () {
 	
 	/** PARTICIPANTS **/
 	/* Edit participant */
-	$('.editParticipant').click(function(event){
+	$('.editParticipant').off('click').on('click', function(){
 		editInLine($(this).data('id'), "participant");	
 	});
 	/* Delete participant */

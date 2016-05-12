@@ -354,6 +354,9 @@ nav {
 		width: calc(100% - 265px);
 		text-align: right;
 	}
+	#projectContent li.weekdays li.weekday a span.theChefs span{
+		overflow: hidden;
+	}
 	#projectContent li.weekdays li.weekday a span.theChefs span.limbo{
 		font-weight: bold;
 	}
@@ -409,9 +412,11 @@ nav {
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
 	}
-	#projectContent li.participants li{
+	#projectContent li.participants ul.attending li{
 	display: inline-block;
 	width: 50%;
+	vertical-align: top;
+	overflow: hidden;
 	}
 	
 /* PROJECT PANEL */
@@ -615,10 +620,12 @@ padding: 5px 0px;
 			#standardList li span.span2input span.name{
 				width: 100%;
 				font-weight: bold;
+				overflow: hidden;
 			}
 			#standardList li span.span2input span.email{
 				width: 100%;
 				font-size: 0.9em;
+				overflow: hidden;
 			}
 			#standardList li span.span2input input{
 				width: 100%;

@@ -407,6 +407,7 @@ try{
 								for($k = 0; $k < $weekday_chefs_count; $k++){
 									if($breakfast_chef_replacements_id[$k]==-1){$limboClass = "limbo"; $chef_name = "Limbo";}
 									else{$limboClass = ""; $chef_name = $breakfast_chef_replacements[$k]['participant_name'];}
+									$chef_name = preg_replace('/([^\s]{30})(?=[^\s])/', '$1'.'<wbr>', $chef_name);
 									echo "<span class='chef_".$breakfast_chefs_id[$k]." ".$limboClass."'>".$chef_name."</span>";
 								}
 							echo "</span>";
@@ -427,15 +428,24 @@ try{
 											$participant_id = $participant['participant_id'];
 											if(in_array($participant_id, $breakfast_chefs_id)){continue;}
 											
+											// Get balance to chef
 											$incasso_db->execute();
 											$incasso = $incasso_db->fetchColumn();
 											if(empty($incasso)){$incasso = 0;}
+											
+											// Is replacement chef?
 											if($participant_id == $breakfast_chef_replacements_id[$k]){$selected = "selected";}
 											else{$selected = "";}
+											
+											// Is replacement chef for other chef?
 											if(in_array($participant_id, $breakfast_chef_replacements_id) AND $participant_id != $breakfast_chef_replacements_id[$k]){
 												$disabled = "disabled";
 											}else{$disabled = "";}
-											echo "<option class='option_".$participant_id."' value='".$participant_id."' ".$selected." ".$disabled.">".$participant['participant_name']." (".$incasso.")</option>";
+											
+											$participant_name = substr($participant['participant_name'], 0, 30);
+											if(strlen($participant['participant_name']) > 30){$participant_name .= "...";}
+											
+											echo "<option class='option_".$participant_id."' value='".$participant_id."' ".$selected." ".$disabled.">".$participant_name." (".$incasso.")</option>";
 										}
 									echo "</select>";
 								echo "</li>";
@@ -445,7 +455,7 @@ try{
 						echo "<span class='participantsCount'>".$registrations_count."</span>";
 						echo "<span class='participantsTitle'>kommer. Men hvem (foruden værten)?</span>";
 					
-						echo "<ul>";
+						echo "<ul class='attending'>";
 						foreach($participants as $participant){
 							$participant_id = $participant['participant_id'];
 							if(in_array($participant_id, $breakfast_chef_replacements_id)){$isChef = 1;}else{$isChef = 0;}
@@ -468,10 +478,12 @@ try{
 							if($isChef){$hide = "class='hide'";}
 							else{$hide = "";}
 
+							$participant_name = preg_replace('/([^\s]{20})(?=[^\s])/', '$1'.'<wbr>', $participant['participant_name']);
+							
 							// Write out participant
 							echo "<li id='participant_".$participant_id."' ".$hide.">";
 								echo "<span class='status'><input id='".$reg_id."' data-id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
-								echo "<span class='name'>".$participant['participant_name']."</span>";
+								echo "<span class='name'>".$participant_name."</span>";
 							echo "</li>";					
 						}
 						echo "</ul>";

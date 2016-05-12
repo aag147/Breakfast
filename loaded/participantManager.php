@@ -43,10 +43,12 @@ try{
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($email)){$errmsg[0] = -1; break;}		
+			if (empty($name) OR empty($email)){$errmsg[0] = -1; break;}	
 			// Double email
 			if ($participant_count > 0 AND $participant_asleep==0){$errmsg[0] = -2; break;}	
-
+			// Long inputs
+			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
+			
 			if($participant_asleep==1){
 				/*** Wake up ***/
 				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0', participant_name = :participant_name WHERE project_id = :project_id AND participant_id = :participant_id");
@@ -87,7 +89,9 @@ try{
 			if (empty($name) OR empty($email) OR empty($participant_id)){$errmsg[0] = -1; break;}		
 			// Double email
 			if ($check_email > 0){$errmsg[0] = -2; break;}	
-	
+			// Long inputs
+			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
+			
 			/*** UPDATE ***/
 			$edit_participant = $conn->prepare("UPDATE breakfast_participants SET participant_name = :name, participant_email = :email WHERE project_id = :project_id AND participant_id = :participant_id");
 			$edit_participant->bindParam(':name', $name);
@@ -178,6 +182,9 @@ try{
 			break;
 		case '-2':
 			$errmsg[1] .= "En deltager med angivede email er allerede tilføjet!";
+			break;
+		case '-3':
+			$errmsg[1] .= "Navnet eller emailen er for lang. Systemet accepterer desværre ikke mere end 60 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];
