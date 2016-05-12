@@ -186,7 +186,7 @@
 					$("#participants_"+breakfast+" li#participant_"+previous_chef_id).removeClass('hide');
 					$("#participants_"+breakfast+" li#participant_"+next_chef_id).addClass('hide');
 					
-					// Disable inputs
+					// Enable inputs
 					if(previous_chef_id != original && previous_chef_id != -1){
 						var $old_change_input = 
 							$("li#participants_"+breakfast+" li:not(#changeChef_"+breakfast+original+") option.option_"+previous_chef_id);	
@@ -212,7 +212,7 @@
 			data: {type: type, id: id},
 			dataType: 'json',
 			success: function(data) {
-				if(data==1){
+				if(data[0]==1){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
 					$count = $("#totalAmount");
@@ -344,14 +344,12 @@
 	function toggleParticipantsWindow(id) {
 		if($('#participants_'+id).hasClass('hide')){
 			$('#participants_'+id).removeClass('hide');
+            $('#breakfast_'+id).addClass('open');
 		}else{
 			$('#participants_'+id).addClass("hide");
+            $('#breakfast_'+id).removeClass('open');
 		}
-		if($('#breakfast_'+id).hasClass('open')){
-			$('#breakfast_'+id).removeClass('open');
-		}else{
-			$('#breakfast_'+id).addClass('open');
-		}
+
 	}
 
 	// Toggle between the index views
@@ -364,6 +362,9 @@
 	function toggleDisabled(value, id) {
 		if(value){
 			$('#'+id+'_disabled').prop('disabled', false);
+            if($('#'+id+'_disabled').val() == 0){
+                $('#'+id+'_disabled').val(1);
+            }
 		}else{
 			$('#'+id+'_disabled').prop('disabled', true);
 		}
@@ -376,6 +377,12 @@
 		if(value){
 			$checked.prop('checked', true);
 			$chefs.prop('disabled', false);
+            
+            $chefs.each(function () {
+                if($(this).val() == 0){
+                    $(this).val(1);
+                }
+            })
 		}else{
 			$checked.prop('checked', false);
 			$chefs.prop('disabled', true);
