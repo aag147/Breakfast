@@ -106,6 +106,7 @@
 				if(data[0]==1){
 					showContent(type);
 					$(':input','#new'+typeUCF+'Form').not(':button, :submit, :reset, :hidden').val('');
+					$(":input#name").focus();
 				}
 			}
 		});
