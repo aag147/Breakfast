@@ -322,13 +322,14 @@ try{
 											
 					/***** VIEW *****/
 					view: 
-					echo "<li class='weekday".$doneClass."' id='breakfast_".$breakfast_id."'>";
+					echo "<li class='weekday ".$doneClass."' id='breakfast_".$breakfast_id."'>";
 						echo "<a href='javascript:;' class='showParticipants' data-id='".$breakfast_id."'>";
 							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
 							echo "<span class='weekdayDate'>".$gendate->format('d/m/Y')."</span>";
 							echo "<span class='weekdayToday'>";
 								if($breakfast_date == $current_date){echo "(I dag)";}
 								if($breakfast_date == $tomorrow_date){echo "(I morgen)";}
+								if($breakfast_date < $current_date){echo "(Gennemført)";}
 							echo "</span>";
 							echo "<span class='theChef'>".$chef_replacement['participant_name']."</span>";
 						echo "</a>";
