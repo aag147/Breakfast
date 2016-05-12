@@ -229,7 +229,7 @@ try{
 	$dynamic_chefs_id = array_diff($dynamic_chefs_id, $static_chefs_id);	
 	
 	// Final array of ordered chefs
-	$complete_chefs = array_merge($static_chefs_id, $dynamic_chefs_id);
+	$complete_chefs = array_merge($static_chefs_id, $dynamic_chefs_id); 
 
 	/******* PRINT PLAN *******/
 	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
