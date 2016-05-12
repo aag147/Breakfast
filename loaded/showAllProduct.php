@@ -37,12 +37,11 @@ try{
 				echo "<span class='admin'>Admin</span>";
 			echo "</li>";
 			while($product = $products_db->fetch(PDO::FETCH_ASSOC)){
-				$product_name = preg_replace('/([^\s]{25})(?=[^\s])/', '$1'.'<wbr>', $product['product_name']);
 				if($product['product_status']){$inStore = "checked";}else{$inStore = "";}
 				echo "<li id='product_".$product['product_id']."'>";
 					echo "<span class='main'>";
 						echo "<span class='span2input'>";
-							echo "<span class='name'>".$product_name."</span>";
+							echo "<span class='name'>".$product['product_name']."</span>";
 						echo "</span>";
 						echo "<span class='elementErrmsg' id='".$product['product_id']."Errmsg'></span>";
 					echo "</span>";

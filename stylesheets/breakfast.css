@@ -160,15 +160,19 @@ nav {
 	padding: 10px 0px;
 	border-bottom: 1px solid rgb(34, 34, 34);
 	}
-	nav li.current a{
-	border-bottom: none;
+	
+	@media screen and (min-width: 766px) {
+		nav li.current a{
+		border-bottom: none;
+		}
+		nav li.current:not(:first-child) a{
+		border-left: 1px solid rgb(34, 34, 34);
+		}
+		nav li.current:not(:last-child) a{
+		border-right: 1px solid rgb(34, 34, 34);
+		}
 	}
-	nav li.current:not(:first-child) a{
-	border-left: 1px solid rgb(34, 34, 34);
-	}
-	nav li.current:not(:last-child) a{
-	border-right: 1px solid rgb(34, 34, 34);
-	}
+	
 	nav li a:hover {
 	background-color: #ccc;
 	color: #fff;
@@ -353,9 +357,8 @@ nav {
 		display: inline-block;
 		width: calc(100% - 265px);
 		text-align: right;
-	}
-	#projectContent li.weekdays li.weekday a span.theChefs span{
 		overflow: hidden;
+		word-wrap:break-word;
 	}
 	#projectContent li.weekdays li.weekday a span.theChefs span.limbo{
 		font-weight: bold;
@@ -411,12 +414,14 @@ nav {
 	#projectContent li.participants span.participantsTitle{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
+	font-weight: bold;
 	}
 	#projectContent li.participants ul.attending li{
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
 	overflow: hidden;
+	word-wrap:break-word;
 	}
 	
 /* PROJECT PANEL */
@@ -621,11 +626,13 @@ padding: 5px 0px;
 				width: 100%;
 				font-weight: bold;
 				overflow: hidden;
+				word-wrap:break-word;
 			}
 			#standardList li span.span2input span.email{
 				width: 100%;
 				font-size: 0.9em;
 				overflow: hidden;
+				word-wrap:break-word;
 			}
 			#standardList li span.span2input input{
 				width: 100%;

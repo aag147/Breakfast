@@ -407,7 +407,6 @@ try{
 								for($k = 0; $k < $weekday_chefs_count; $k++){
 									if($breakfast_chef_replacements_id[$k]==-1){$limboClass = "limbo"; $chef_name = "Limbo";}
 									else{$limboClass = ""; $chef_name = $breakfast_chef_replacements[$k]['participant_name'];}
-									$chef_name = preg_replace('/([^\s]{30})(?=[^\s])/', '$1'.'<wbr>', $chef_name);
 									echo "<span class='chef_".$breakfast_chefs_id[$k]." ".$limboClass."'>".$chef_name."</span>";
 								}
 							echo "</span>";
@@ -478,7 +477,7 @@ try{
 							if($isChef){$hide = "class='hide'";}
 							else{$hide = "";}
 
-							$participant_name = preg_replace('/([^\s]{20})(?=[^\s])/', '$1'.'<wbr>', $participant['participant_name']);
+							$participant_name = $participant['participant_name'];
 							
 							// Write out participant
 							echo "<li id='participant_".$participant_id."' ".$hide.">";

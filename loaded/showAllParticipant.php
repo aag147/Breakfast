@@ -37,13 +37,11 @@ try{
 				echo "<span class='admin'>Admin</span>";
 			echo "</li>";
 			while($participant = $participants_db->fetch(PDO::FETCH_ASSOC)){
-				$participant_name = preg_replace('/([^\s]{25})(?=[^\s])/', '$1'.'<wbr>', $participant['participant_name']);
-				$participant_email = preg_replace('/([^\s]{25})(?=[^\s])/', '$1'.'<wbr>', $participant['participant_email']);
 				echo "<li id='participant_".$participant['participant_id']."'>";
 					echo "<span class='main'>";
 						echo "<span class='span2input'>";
-							echo "<span class='name'>".$participant_name."</span>";
-							echo "<span class='email'>Email: ".$participant_email."</span>";
+							echo "<span class='name'>".$participant['participant_name']."</span>";
+							echo "<span class='email'>Email: ".$participant['participant_email']."</span>";
 						echo "</span>";
 						echo "<span class='participantErrmsg' id='".$participant['participant_id']."Errmsg'></span>";
 					echo "</span>";
