@@ -81,6 +81,8 @@ try{
 			if (empty($name) OR empty($password)){$errmsg[0] = -1; break;}		
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
+			// Long name
+			if (strlen($name) > 75){$errmsg[0] = -7; break;}	
 			
 			// hasher
 			$hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
@@ -148,6 +150,8 @@ try{
 			if (empty($name)){$errmsg[0] = -1; break;}	
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
+			// Long name
+			if (strlen($name) > 75){$errmsg[0] = -7; break;}
 	
 			/*** UPDATE ***/
 			$edit_project = $conn->prepare("UPDATE breakfast_projects SET project_name = :name WHERE project_id = :project_id");
@@ -312,6 +316,9 @@ try{
 			break;
 		case '-6':
 			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen!";
+			break;
+		case '-7':
+			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];
