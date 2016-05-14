@@ -310,7 +310,7 @@ try{
 		case '-3':
 		case '-4':
 			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!<br>".
-						  "<a href='javascript:;'>Ønsker du i stedet at oprette projektet?</a>";
+						  "<a href='javascript:;' class='adminShiftLinkDynamic blue'>Ønsker du i stedet at oprette projektet?</a>";
 			break;
 		case '-5':
 			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";

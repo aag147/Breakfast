@@ -26,7 +26,7 @@ include("../headers/header.php");
 	
 	<div id="standardContent">	
 		<?php /* jscript */ ?>
-		<div id="showAllProduct"></div>
+		<div id="showAllProduct">Indlæser produkter...</div>
 	</div><?php
 	
 	?><div id="standardPanel">

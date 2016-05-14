@@ -37,7 +37,19 @@
 					  </li>
 					</ul>
 				</nav>
-			<?php } ?>
+			<?php }else{ ?>
+				<nav id="navigation" class='frontpage'>
+					<ul>
+					  <li class='loginMenu current'>
+						<a href="javascript:;" id="login" class="adminShiftLink">Log ind på et projekt?</a>
+					  </li><li class='registerMenu'>
+						<a href="javascript:;" id="register" class="adminShiftLink">Opret nyt projekt?</a>
+					  </li><li class='forgottenMenu'>
+						<a href="javascript:;" id="forgotten" class="adminShiftLink">Glemt dit kodeord?</a>
+					  </li>
+					</ul>
+				</nav>			
+			<?php }?>
 		</div>
 
 		<!-- End Header -->

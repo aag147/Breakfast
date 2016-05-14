@@ -345,9 +345,16 @@
 	}
 
 	// Toggle between the index views
-	function toggleIndexView(view) {
+	function toggleIndexView(view, type = 'static') {
+		if(type == 'dynamic'){
+			var name = $('#loginView input#name').val();
+			$('#registerView input#name').val(name);
+		}
+		
 		$("#adminAllContent > ul:not(#"+view+"View)").addClass("hide");
 		$("#adminAllContent > ul#"+view+"View").removeClass('hide');
+		$("#navigation > ul > li:not(."+view+"Menu)").removeClass("current");
+		$("#navigation > ul > li."+view+"Menu").addClass("current");
 	}
 
 	// Toggle between disabled and not disabled
@@ -439,7 +446,7 @@ $(document).ready(function() {
 	/***** ADMIN LINK CLICKS *****/
 
 	/** FRONT PAGE **/
-	/* Toggle login and register view */
+	/* STATIC: Toggle login and register view */
 	$('.adminShiftLink').off('click').on('click', function(){
 		toggleIndexView(this.id);
 	});
@@ -476,6 +483,13 @@ $(document).ajaxStop(function () {
 	
 	
 	/***** FOR SPECIAL EVENTS WAITING FOR AJAX TO FINISH *****/
+	
+	/** FRONT PAGE **/
+	/* DYNAMIC: Toggle login and register view */
+	$('.adminShiftLinkDynamic').off('click').on('click', function(){
+		toggleIndexView('register', 'dynamic');
+	});
+	
 	
 	/** PLAN **/
 	/* Edit participant status */

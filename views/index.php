@@ -9,21 +9,16 @@ include("../headers/header.php");
 			Morgenmadsplanlægger
 		</title>
 	</head>
-
-	<div id="frontpage">
+		<div id="frontpage">
 		<ul>
 			<li id="adminAllContent">
 				<ul id="loginView">
-					<li id="adminShift">
-						<a href="javascript:;" id="register" class="adminShiftLink blue">Opret nyt projekt?</a>
-						<a href="javascript:;" id="forgotten" class="adminShiftLink blue">Glemt dit kodeord?</a>
-					</li>
 					<li id="pageTitle">
 						LOG IND
 					</li>
 					<li id="adminContent">
 						<form id="logInForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Dit projektnavn"/></span>
+							<span><input type="text" name="name" placeholder="Dit projektnavn" id="name"/></span>
 							<span><input type="password" name="password" placeholder="Dit kodeord"/></span>
 							<span id="loginErrmsg"></span>
 							<span><input type="submit" value="Log ind"/></span>
@@ -31,15 +26,12 @@ include("../headers/header.php");
 					</li>
 				</ul>
 				<ul id="registerView" class="hide">
-					<li id="adminShift">
-						<a href="javascript:;" id="login" class="adminShiftLink blue">Log ind på et eksisterende projekt?</a>
-					</li>
 					<li id="pageTitle">
 						Opret nyt projekt
 					</li>
 					<li id="adminContent">
 						<form id="registerForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Nyt projektnavn"/></span>
+							<span><input type="text" name="name" placeholder="Nyt projektnavn" id="name"/></span>
 							<span><input type="password" name="password" placeholder="Nyt kodeord"/></span>
 							<span id="registerErrmsg"></span>
 							<span><input type="submit" value="Opret projekt"/></span>
@@ -47,9 +39,6 @@ include("../headers/header.php");
 					</li>
 				</ul>
 				<ul id="forgottenView" class="hide">
-					<li id="adminShift">
-						<a href="javascript:;" id="login" class="adminShiftLink blue">Log ind på normal vis?</a>
-					</li>
 					<li id="pageTitle">
 						Glemt kodeord
 					</li>
