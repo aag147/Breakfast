@@ -6,12 +6,21 @@ include("../headers/header.php");
 try{ 
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
+	
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
+	$participants_db->bindParam(':project_id', $cookie_project_id);		
+	$participants_db->execute();
+	$participants_count = $participants_db->rowCount();
+
 
 ?>
 	<head>
 		<title>
 			Indstillinger
-		</title>	
+		</title>
+		<script>
+			window.onload = showContent("settings");
+		</script>	
 	</head>
 
 	<div id="standardTitle">
@@ -45,30 +54,12 @@ try{
 	</div><?php
 	
 	?><div id="standardPanel">
-		<ul id="adminPanel">
+		<ul id="settingsPanel">
 			<li id="title">
 				Ret arrangement dage
 			</li>
-			<li class="option">
-			<form id="editBreakfastWeekdays" action="" method="POST">
-				<span class="optionInputs">
-					<?php				
-					for($i = 0; $i < 7; $i++){
-						$weekday = jddayofweek($i, 1);
-						$weekday_checked = $project['project_'.strtolower($weekday)];
-						if($weekday_checked){$isChecked = "checked";}else{$isChecked = "";}
-						
-						echo "<span><input name='weekdays[]' value='".strtolower($weekday)."' type='checkbox' ".$isChecked."/> ".$weekdays_danish[$i]."</span>";
-					}
-					?>
-				</span>
-				<span class="optionErrmsg" id="weekdaysErrmsg">
-				</span>
-				<span class="optionSubmit">
-					<input type="submit" value="Godkend"/>
-				</span>
-			</form>
-			</li>
+			<?php /* jscript */ ?>
+			<li id="showAllSettings"></li>
 		</ul>
 	</div>
 <?php

@@ -39,7 +39,8 @@ try{
 			if (empty($name)){$errmsg[0] = -1; break;}		
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
-
+			// Long inputs
+			if (strlen($name) > 60){$errmsg[0] = -3; break;}
 			
 			/*** INSERT ***/
 			$new_product = $conn->prepare("INSERT INTO breakfast_products (product_name, project_id) VALUES (:name, :project_id)");
@@ -70,6 +71,8 @@ try{
 			if (empty($name) OR empty($product_id)){$errmsg[0] = -1; break;}		
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
+			// Long inputs
+			if (strlen($name) > 60){$errmsg[0] = -3; break;}
 	
 			/*** UPDATE ***/
 			$new_product = $conn->prepare("UPDATE breakfast_products SET product_name = :name WHERE project_id = :project_id AND product_id = :product_id");
@@ -114,6 +117,9 @@ try{
 			break;
 		case '-2':
 			$errmsg[1] .= "Produktet er allerede tilføjet!";
+			break;
+		case '-3':
+			$errmsg[1] .= "Navnet er for lang. Systemet accepterer desværre ikke mere end 60 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];

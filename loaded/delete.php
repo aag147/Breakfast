@@ -38,9 +38,45 @@ try{
 			$delete_registrations->bindParam(':participant_id', $participant_id);
 			$delete_registrations->execute();
 
-			$delete_chefs = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef = '0' WHERE breakfast_chef = :participant_id AND (breakfast_date > DATE(NOW()) OR DATE(breakfast_created) = DATE(NOW()))");
+			$delete_chefs = $conn->prepare("DELETE FROM breakfast_chefs
+											WHERE chef_id = :participant_id
+											AND breakfast_id IN
+												(SELECT breakfast_id FROM breakfast_breakfasts
+												 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR 
+												 DATE(breakfast_created) = DATE(NOW()))");
+			$delete_chefs->bindParam(':project_id', $cookie_project_id);
 			$delete_chefs->bindParam(':participant_id', $participant_id);
 			$delete_chefs->execute();
+			
+			// Reset chef replacements
+			$reset_chef_replacements = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
+														WHERE chef_replacement_id = :participant_id
+														AND breakfast_id IN
+															(SELECT breakfast_id FROM breakfast_breakfasts
+															 WHERE project_id = :project_id AND breakfast_date > DATE(NOW()) OR 
+															 DATE(breakfast_created) = DATE(NOW()))");
+			$reset_chef_replacements->bindParam(':project_id', $cookie_project_id);
+			$reset_chef_replacements->bindParam(':participant_id', $participant_id);
+			$reset_chef_replacements->execute();
+			
+			
+			// Reduce chefs pr day
+			$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
+			$participants_db->bindParam(':project_id', $cookie_project_id);		
+			$participants_db->execute();
+			$participants_count = $participants_db->rowCount();
+			
+			if(0 < $participants_count AND $participants_count < 3){
+				for($i = 0; $i < 7; $i++){
+					$weekday = strtolower(jddayofweek($i, 1));	
+					$update_weekdays = $conn->prepare("	UPDATE breakfast_options SET 
+														".$weekday."_chefs = :max											
+														WHERE project_id = :project_id AND ".$weekday."_chefs > :max");
+					$update_weekdays->bindParam(':project_id', $cookie_project_id);		
+					$update_weekdays->bindParam(':max', $participants_count);		
+					$update_weekdays->execute();
+				}
+			}
 			
 			$errmsg[0] = 1;
 			echo json_encode($errmsg);

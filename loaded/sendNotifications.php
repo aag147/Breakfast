@@ -205,9 +205,8 @@ try{
 	if($type=="tomorrow"){
 		// Update lastNotified
 		$breakfast_date = date("Y-m-d");
-		$update = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_notified = 1 WHERE project_id = :project_id AND breakfast_date = :breakfast_date");
-		$update->bindParam(':project_id', $cookie_project_id);		
-		$update->bindParam(':breakfast_date', $breakfast_date);		
+		$update = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_notified = 1 WHERE project_id = :project_id AND breakfast_date = DATE_ADD(DATE(NOW()), INTERVAL 1 DAY)");
+		$update->bindParam(':project_id', $cookie_project_id);			
 		$update->execute();
 	}elseif($type=="forgotten"){
 		// Insert security code hash

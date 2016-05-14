@@ -25,6 +25,7 @@ include("../headers/header.php");
 	</div>
 	
 	<div id="standardContent">	
+		<?php /* jscript */ ?>
 		<div id="showAllProduct"></div>
 	</div><?php
 	
@@ -37,7 +38,7 @@ include("../headers/header.php");
 			<form id="newProductForm" action="" method="POST">
 				<span class="optionTitle">Tilføj et produkt (et af gangen)</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Indtast produktets navn" />
+					<input id="name" name="name" type="text" placeholder="Indtast produktets navn" />
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
 				</span>

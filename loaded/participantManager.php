@@ -43,10 +43,12 @@ try{
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
-			if (empty($name) OR empty($email)){$errmsg[0] = -1; break;}		
+			if (empty($name) OR empty($email)){$errmsg[0] = -1; break;}	
 			// Double email
 			if ($participant_count > 0 AND $participant_asleep==0){$errmsg[0] = -2; break;}	
-
+			// Long inputs
+			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
+			
 			if($participant_asleep==1){
 				/*** Wake up ***/
 				$wake_participant = $conn->prepare("UPDATE breakfast_participants SET participant_asleep = '0', participant_name = :participant_name WHERE project_id = :project_id AND participant_id = :participant_id");
@@ -63,7 +65,7 @@ try{
 				$new_participant->execute();			
 				$participant_id = $conn->lastInsertId('breakfast_participants');
 				
-			}
+			}		
 		
 			$errmsg[0] = 1;
 			$errmsg[1] = "Deltageren er tilføjet!";
@@ -87,7 +89,9 @@ try{
 			if (empty($name) OR empty($email) OR empty($participant_id)){$errmsg[0] = -1; break;}		
 			// Double email
 			if ($check_email > 0){$errmsg[0] = -2; break;}	
-	
+			// Long inputs
+			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
+			
 			/*** UPDATE ***/
 			$edit_participant = $conn->prepare("UPDATE breakfast_participants SET participant_name = :name, participant_email = :email WHERE project_id = :project_id AND participant_id = :participant_id");
 			$edit_participant->bindParam(':name', $name);
@@ -122,25 +126,28 @@ try{
 			
 		case 'changeChef':		
 			// Variables from form
-			$breakfast_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
-			$chef_id = (isset($_POST['value']) ? $_POST['value'] : '');
+			$breakfast_id = (isset($_POST['breakfast_id']) ? $_POST['breakfast_id'] : '');
+			$chef_id = (isset($_POST['chef_id']) ? $_POST['chef_id'] : '');
+			$original_id = (isset($_POST['original_id']) ? $_POST['original_id'] : '');
 			
 			/*** ERROR CHECKING ***/	
 			// Empty inputs
 			if (empty($breakfast_id)){$errmsg[0] = -1; break;}		
 			
 			/*** EXTRACT INFO ***/
-			// Original chef id
-			$breakfast_db = $conn->prepare("SELECT breakfast_chef, breakfast_chef_replacement FROM breakfast_breakfasts WHERE breakfast_id = :breakfast_id AND project_id = :project_id");
-			$breakfast_db->bindParam(':project_id', $cookie_project_id);	
-			$breakfast_db->bindParam(':breakfast_id', $breakfast_id);
-			$breakfast_db->execute();
-			$breakfast = $breakfast_db->fetch();
-			if($breakfast['breakfast_chef_replacement'] == 0){$previous_chef_id = $breakfast['breakfast_chef'];}
-			else{$previous_chef_id = $breakfast['breakfast_chef_replacement'];}
+			// Previous chef id
+			$chef_db = $conn->prepare("SELECT chef_id, chef_replacement_id FROM breakfast_chefs
+											WHERE breakfast_id = :breakfast_id AND project_id = :project_id AND chef_id = :original_id");
+			$chef_db->bindParam(':project_id', $cookie_project_id);	
+			$chef_db->bindParam(':breakfast_id', $breakfast_id);
+			$chef_db->bindParam(':original_id', $original_id);
+			$chef_db->execute();
+			$chef = $chef_db->fetch();
+			if($chef['chef_replacement_id'] == 0){$previous_chef_id = $original_id;}
+			else{$previous_chef_id = $chef['chef_replacement_id'];}
 
 			// Replacement chef name
-			if($chef_id==0){$new_chef_id = $breakfast['breakfast_chef'];}else{$new_chef_id = $chef_id;}
+			if($chef_id==0){$new_chef_id = $original_id;}else{$new_chef_id = $chef_id;}
 			$chef_db = $conn->prepare("SELECT participant_name FROM breakfast_participants WHERE participant_id = :participant_id AND project_id = :project_id LIMIT 1");
 			$chef_db->bindParam(':project_id', $cookie_project_id);	
 			$chef_db->bindParam(':participant_id', $new_chef_id);
@@ -148,9 +155,11 @@ try{
 			$chef_name = $chef_db->fetchColumn();
 	
 			/*** UPDATE ***/
-			$change_chef = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_chef_replacement = :chef_id WHERE breakfast_id = :breakfast_id");
-			$change_chef->bindParam(':chef_id', $chef_id);
+			$change_chef = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = :chef_id WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :original_id ");
+			$change_chef->bindParam(':project_id', $cookie_project_id);	
 			$change_chef->bindParam(':breakfast_id', $breakfast_id);
+			$change_chef->bindParam(':chef_id', $chef_id);
+			$change_chef->bindParam(':original_id', $original_id);
 			$change_chef->execute();
 					
 			$errmsg[0] = 1;
@@ -173,6 +182,9 @@ try{
 			break;
 		case '-2':
 			$errmsg[1] .= "En deltager med angivede email er allerede tilføjet!";
+			break;
+		case '-3':
+			$errmsg[1] .= "Navnet eller emailen er for lang. Systemet accepterer desværre ikke mere end 60 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];

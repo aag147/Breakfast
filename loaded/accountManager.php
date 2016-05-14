@@ -81,6 +81,8 @@ try{
 			if (empty($name) OR empty($password)){$errmsg[0] = -1; break;}		
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
+			// Long name
+			if (strlen($name) > 75){$errmsg[0] = -7; break;}	
 			
 			// hasher
 			$hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
@@ -89,12 +91,16 @@ try{
 			if (!$hash) {$errmsg[0] = -5; break;}
 			
 			/*** INSERT ***/
-			$new_project = $conn->prepare("INSERT INTO breakfast_projects (project_name, project_password, project_friday) VALUES (:name, :hash, '1')");
+			$new_project = $conn->prepare("INSERT INTO breakfast_projects (project_name, project_password) VALUES (:name, :hash)");
 			$new_project->bindParam(':name', $name);
 			$new_project->bindParam(':hash', $hash);
 			$new_project->execute();
 			
 			$project_id = $conn->lastInsertId('breakfast_projects');
+			
+			$new_options = $conn->prepare("INSERT INTO breakfast_options (project_id, friday_checked) VALUES (:project_id, '1')");
+			$new_options->bindParam(':project_id', $project_id);
+			$new_options->execute();
 			
 			/*** LOG IN ***/
 			//hash cookie
@@ -144,6 +150,8 @@ try{
 			if (empty($name)){$errmsg[0] = -1; break;}	
 			// Double name
 			if ($check_name > 0){$errmsg[0] = -2; break;}	
+			// Long name
+			if (strlen($name) > 75){$errmsg[0] = -7; break;}
 	
 			/*** UPDATE ***/
 			$edit_project = $conn->prepare("UPDATE breakfast_projects SET project_name = :name WHERE project_id = :project_id");
@@ -160,6 +168,10 @@ try{
 			$delete_project = $conn->prepare("DELETE FROM breakfast_projects WHERE project_id = :project_id");
 			$delete_project->bindParam(':project_id', $cookie_project_id);
 			$delete_project->execute();
+			
+			$delete_options = $conn->prepare("DELETE FROM breakfast_options WHERE project_id = :project_id");
+			$delete_options->bindParam(':project_id', $cookie_project_id);
+			$delete_options->execute();
 			
 			$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE project_id = :project_id");
 			$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
@@ -191,18 +203,28 @@ try{
 		case 'weekdays':
 			$weekdays = !empty($_POST['weekdays']) ? $_POST['weekdays'] : array();
 						
-			$update_weekdays = $conn->prepare("	UPDATE breakfast_projects SET project_monday = :monday, project_tuesday = :tuesday, project_wednesday = :wednesday,
-										project_thursday = :thursday, project_friday = :friday, project_saturday = :saturday, project_sunday = :sunday
-										WHERE project_id = :project_id");
+			$update_weekdays = $conn->prepare("	UPDATE breakfast_options SET 
+												monday_checked = :monday_checked, monday_chefs = :monday_chefs,
+												tuesday_checked = :tuesday_checked, tuesday_chefs = :tuesday_chefs,
+												wednesday_checked = :wednesday_checked, wednesday_chefs = :wednesday_chefs,
+												thursday_checked = :thursday_checked, thursday_chefs = :thursday_chefs,
+												friday_checked = :friday_checked, friday_chefs = :friday_chefs,
+												saturday_checked = :saturday_checked, saturday_chefs = :saturday_chefs,
+												sunday_checked = :sunday_checked, sunday_chefs = :sunday_chefs												
+												WHERE project_id = :project_id");
 	
 			// Parameters for update
 			$params = array('project_id' => $cookie_project_id);
 			for($i = 0; $i < 7; $i++){
 				$weekday = strtolower(jddayofweek($i, 1));
-				if(in_array($weekday, $weekdays)){$value=1;}else{$value=0;}
-				$params[$weekday] = $value;
+				$chefs = !empty($_POST['chefs_'.$i]) ? $_POST['chefs_'.$i] : 0;
+				if(in_array($weekday, $weekdays)){$checked=1;}
+				else{$checked=0; $chefs = 0;}
 				
-				if($value==0){
+				$params[$weekday.'_checked'] = $checked;
+				$params[$weekday.'_chefs'] = $chefs;
+				
+				if($checked==0){
 					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_asleep = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
 					$kill_breakfasts->bindParam(':project_id', $cookie_project_id);
 					$kill_breakfasts->bindParam(':weekday', $weekday);
@@ -210,7 +232,7 @@ try{
 				}
 			}
 			
-			$update_weekdays->execute($params);
+			$update_weekdays->execute($params);		
 			
 			$errmsg[0] = 1;
 			$errmsg[1] = "Arrangement dagene er ændret!";
@@ -294,6 +316,9 @@ try{
 			break;
 		case '-6':
 			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen!";
+			break;
+		case '-7':
+			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];
