@@ -15,11 +15,12 @@
 	}
 	
 	// Show products
-	function showContent(type){
+	function showContent(type, visuals = 'full', db_filter = 'merge'){
 		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		 $.ajax({
 			   type: "POST",
 			   url: '../loaded/showAll'+typeUCF+'.php',
+			   data: {visuals: visuals, db_filter: db_filter},
 			   success: function(data) {
 				  $("#showAll"+typeUCF).html(data);
 			   }
@@ -127,9 +128,13 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(data) {
-				if(data[0]==1 && remove){
+				if(data[0]==1 && type=='product' && remove){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
+					$count = $("span#totalAmount");
+					$count.text(parseInt($count.text()) - 1);
+					if($count.text()==0){showContent(type, 'simple', 'buy');}
+					
 				}else if(data[0]==1 && type=="participant"){
 					var date = $("#"+id).data('id');
 					$count = $("#participants_"+date+" span.participantsCount");
@@ -415,13 +420,6 @@ $(document).ready(function() {
 		addElement(formData, "product");
 		event.preventDefault();
 	})
-	// Edit breakfast weekdays
-	$('#editBreakfastWeekdays').submit(function(event) {
-		var id = event.target.id;
-		var formData = new FormData(document.getElementById(id));
-		accountManager(formData, "weekdays");
-		event.preventDefault();
-	})
 	// Log in
 	$('#logInForm').submit(function(event) {
 		var id = event.target.id;
@@ -452,6 +450,19 @@ $(document).ready(function() {
 	
 	
 	/***** ADMIN LINK CLICKS *****/
+
+	/** FRONT PAGE **/
+	/* Toggle login and register view */
+	$('.adminShiftLink').off('click').on('click', function(){
+		toggleIndexView(this.id);
+	});
+	
+	
+	/** SETTINGS **/
+	/* Log out */
+	$('.logOut').off('click').on('click', function(){
+		accountManager(new FormData(), "logout");	
+	});
 	/* Edit project */
 	$('.editAccount').off('click').on('click', function(){
 		editInLine('', "account");	
@@ -461,38 +472,22 @@ $(document).ready(function() {
 		if(confirm("Er du sikker på, at du vil slette hele projektet?")){
 			accountManager(new FormData(), "delete");	
 		}
-	});
-	/* Log out */
-	$('.logOut').off('click').on('click', function(){
-		accountManager(new FormData(), "logout");	
-	});
-	/* Toggle login and register view */
-	$('.adminShiftLink').off('click').on('click', function(){
-		toggleIndexView(this.id);
-	});
-	/* Edit disablement for weekdays in settings */
-	$(':checkbox.weekdayChecked').off('change').on('change', function() {
-		toggleDisabled(this.checked, $(this).data('id'));	
-	});
-	/* Edit disablement and checkstatus for all weekdays in settings */
-	$(':checkbox.checkAll').off('change').on('change', function() {
-		toggleAllWeekdays(this.checked);	
 	});	
-	/* Edit chefs for all weekdays in settings */
-	$('input.chefsAll').off('change').on('change', function() {
-		toggleAllChefs(this.value);	
-	});	
-
-	
-	/***** PLAN *****/
-	/* Edit product status and remove span */
-	$(':checkbox.removeProductStatus').off('change').on('change', function() {
-		changeStatus(this.checked, $(this).data('id'), "product", true);	
-	});
-	
 });	
 
 $(document).ajaxStop(function () {
+	
+	
+	/***** FOR FORM SUBMITS WAITING FOR AJAX TO FINISH *****/
+	// Edit breakfast weekdays
+	$('#editBreakfastWeekdays').submit(function(event) {
+		var id = event.target.id;
+		var formData = new FormData(document.getElementById(id));
+		accountManager(formData, "weekdays");
+		event.preventDefault();
+	})
+	
+	
 	/***** FOR SPECIAL EVENTS WAITING FOR AJAX TO FINISH *****/
 	
 	/** PLAN **/
@@ -507,6 +502,10 @@ $(document).ajaxStop(function () {
 	/* Edit chef */
 	$('select.newChefSelect').off('change').on('change', function() {
 		changeChef(this.value, $(this).data('id'), $(this).data('original'));
+	});
+	/* Edit product status and remove span */
+	$(':checkbox.removeProductStatus').off('change').on('change', function() {
+		changeStatus(this.checked, $(this).data('id'), "product", true);	
 	});
 	
 	/** PRODUCTS **/
@@ -535,4 +534,18 @@ $(document).ajaxStop(function () {
 			deleteElement($(this).data('id'), "participant");
 		}
 	});
+	
+	/** SETTINGS **/
+	/* Edit disablement for weekdays in settings */
+	$(':checkbox.weekdayChecked').off('change').on('change', function() {
+		toggleDisabled(this.checked, $(this).data('id'));	
+	});
+	/* Edit disablement and checkstatus for all weekdays in settings */
+	$(':checkbox.checkAll').off('change').on('change', function() {
+		toggleAllWeekdays(this.checked);	
+	});	
+	/* Edit chefs for all weekdays in settings */
+	$('input.chefsAll').off('change').on('change', function() {
+		toggleAllChefs(this.value);	
+	});	
 });

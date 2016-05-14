@@ -17,7 +17,10 @@ try{
 	<head>
 		<title>
 			Indstillinger
-		</title>	
+		</title>
+		<script>
+			window.onload = showContent("settings");
+		</script>	
 	</head>
 
 	<div id="standardTitle">
@@ -55,44 +58,8 @@ try{
 			<li id="title">
 				Ret arrangement dage
 			</li>
-			<li class="option">
-			<form id="editBreakfastWeekdays" action="" method="POST">
-				<ul class="optionLegend">
-					<?php
-					echo "<li>";
-						echo "<span>Valgte dage</span>";
-						echo "<span>Antal værter</span>";
-					echo "</li>";
-					?>
-				</ul>
-				<ul class="optionInputs">	
-					<?php
-					$max_chefs = min(3, $participants_count);
-					echo "<li>";
-						echo "<span><input class='checkAll' value='0' type='checkbox' /> Alle dage</span>";
-						echo "<span><input class='chefsAll' type='number' min='1' max='".$max_chefs."'/></span>";
-					echo "</li>";
-					for($i = 0; $i < 7; $i++){
-						$weekday = jddayofweek($i, 1);
-						$weekday_checked = $options[strtolower($weekday).'_checked'];
-						$weekday_chefs = $options[strtolower($weekday).'_chefs'];
-						if($weekday_checked){$isChecked = "checked";}else{$isChecked = "";}
-						if($weekday_checked){$isDisabled = "";}else{$isDisabled = "disabled";}
-						
-						echo "<li>";
-							echo "<span><input class='weekdayChecked' data-id='".$weekday."' name='weekdays[]' value='".strtolower($weekday)."' type='checkbox' ".$isChecked."/> ".$weekdays_danish[$i]."</span>";
-							echo "<span><input class='weekdayChefs' id='".$weekday."_disabled' name='chefs_".$i."' type='number' min='1' max='".$max_chefs."' value='".$weekday_chefs."' ".$isDisabled."/></span>";
-						echo "</li>";
-					}
-					?>
-				</ul>
-				<span class="optionErrmsg" id="weekdaysErrmsg">
-				</span>
-				<span class="optionSubmit">
-					<input type="submit" value="Godkend"/>
-				</span>
-			</form>
-			</li>
+			<?php /* jscript */ ?>
+			<li id="showAllSettings"></li>
 		</ul>
 	</div>
 <?php
