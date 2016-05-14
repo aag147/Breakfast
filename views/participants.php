@@ -26,7 +26,7 @@ include("../headers/header.php");
 	
 	<div id="standardContent">	
 		<?php /* jscript */ ?>
-		<div id="showAllParticipant"></div>
+		<div id="showAllParticipant">Indlæser deltagere...</div>
 	</div><?php
 	
 	?><div id="standardPanel">

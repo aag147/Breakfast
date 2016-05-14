@@ -302,24 +302,26 @@ try{
 	if($errmsg[0] != 1){$errmsg[1] = "<p class='error'>";}
 	switch ($errmsg[0]){
 		case '-1':
-			$errmsg[1] .= "Alle felter skal udfyldes!";
+			$errmsg[1] .= "Alle felter skal udfyldes.";
 			break;
 		case '-2':
-			$errmsg[1] .= "Navnet er optaget!";
+			$errmsg[1] .= "Navnet er optaget.";
 			break;
 		case '-3':
 		case '-4':
-			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!<br>".
-						  "<a href='javascript:;'>Ønsker du i stedet at oprette projektet?</a>";
+			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes.<br>".
+						  "<a href='javascript:;' data-id='register' class='adminShiftLinkDynamic blue'>Ønsker du i stedet at oprette projektet?</a>";
 			break;
 		case '-5':
-			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";
+			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen.";
 			break;
 		case '-6':
-			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen!";
+			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen.<br>".
+						  "<a href='javascript:;' class='sendForgottenEmailAgain blue'>Klik her for at få tilsendt en ny email.</a><br>".
+						  "<a href='javascript:;' data-id='forgotten' class='adminShiftLinkDynamic blue'>Klik her for at prøve med en anden email.</a>";
 			break;
 		case '-7':
-			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn!";
+			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn.";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];

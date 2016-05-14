@@ -40,6 +40,7 @@ ul, li, ol{
 
 p.success{color: green;font-size: 0.8em;}
 p.error{color: red;font-size: 0.8em;}
+p.neutral{font-size: 0.8em;}
 
 .hide{display: none !important;}
 
@@ -144,7 +145,6 @@ nav {
 	nav > ul {
 	margin: 0;
 	padding-left:0px;
-	
 	min-height: 40px;
 	}
 	nav li {
@@ -159,6 +159,10 @@ nav {
 	height: 100%;
 	padding: 10px 0px;
 	border-bottom: 1px solid rgb(34, 34, 34);
+	}
+	
+	nav.frontpage li {
+		width: calc(100% / 3);
 	}
 	
 	@media screen and (min-width: 766px) {
@@ -228,6 +232,31 @@ nav {
 	#frontpage li#adminAllContent{
 		padding-bottom: 20px;
 	}
+		#frontpage ul#options{
+		padding-bottom: 20px;
+		}
+		
+		#frontpage ul#options li{
+		display: inline-block;
+		vertical-align: top;
+		width: calc(100% / 3);
+		}
+		#frontpage ul#options li a{
+		height: 100%;
+		display: block;
+		width: 100%;
+		padding: 10px 2px;
+		border: 1px solid;
+		background-color: #abcdef;
+		}
+		
+		#frontpage ul#options li.current a{
+			
+		}
+		#frontpage ul#options li a:hover{
+			
+		}
+	
 		#frontpage ul li#pageTitle{
 			font-size: 1.5em;
 			font-weight: bold;
@@ -255,15 +284,17 @@ nav {
 	#frontpage ul li#about{	
 	}
 		#frontpage ul li#about span{
-			display: inline-block;
-			width: 50%;
+		display: inline-block;
+		width: 50%;
+		overflow: hidden;
+		word-wrap:break-word;
 		}
 		#frontpage ul li#about span.title{
-			font-size: 1.0em;
-			text-decoration: underline;
+		font-size: 1.0em;
+		text-decoration: underline;
 		}
 		#frontpage ul li#about span.content{
-			font-size: 0.8em;
+		font-size: 0.8em;
 		}
 
 	

@@ -30,6 +30,9 @@
 	// Send notifications
 	function sendNotifications(formData, type){
 		formData.append("type", type);
+		
+		if(type == "forgotten"){$('#forgottenErrmsg').html("<p class='neutral'>Emailen sendes... Det kan tage et øjeblik.</p>");}
+		
 		 $.ajax({
 			   type: "POST",
 			   url: '../loaded/sendNotifications.php',
@@ -46,6 +49,7 @@
 							var message = 'Indtast den tilsendte sikkerhedskode samt et nyt kodeord til projektet.' +
 									      'Det er dette kodeord du skal logge ind med fremover.';
 							$("#forgottenView #pageSubTitle").html(message);
+							$('#forgottenErrmsg').html('');
 					   }
 					}
 			   }
@@ -54,7 +58,7 @@
 	
 	// Account management
 	function accountManager(formData, type){
-		formData.append("type", type);
+		formData.append("type", type);		
 		$.ajax({
 			url: '../loaded/manageAccount.php',
 			type: 'POST',
@@ -345,9 +349,21 @@
 	}
 
 	// Toggle between the index views
-	function toggleIndexView(view) {
+	function toggleIndexView(view, type = 'static') {
+		if(type == 'dynamic' && view == 'register'){
+			var name = $('#loginView input#name').val();
+			$('#registerView input#name').val(name);
+		}else if(type == 'dynamic' && view == 'forgotten'){
+			$(':input','#forgottenForm').not('#name, :button, :submit, :reset, :hidden').val('');
+			$("#forgottenForm span#emailSpan").removeClass('hide');
+			$("#forgottenForm span#securitySpan, #forgottenForm span#passwordSpan").addClass('hide');
+			$('#forgottenErrmsg').html('');
+		}
+		
 		$("#adminAllContent > ul:not(#"+view+"View)").addClass("hide");
 		$("#adminAllContent > ul#"+view+"View").removeClass('hide');
+		$("#navigation > ul > li:not(."+view+"Menu)").removeClass("current");
+		$("#navigation > ul > li."+view+"Menu").addClass("current");
 	}
 
 	// Toggle between disabled and not disabled
@@ -439,7 +455,7 @@ $(document).ready(function() {
 	/***** ADMIN LINK CLICKS *****/
 
 	/** FRONT PAGE **/
-	/* Toggle login and register view */
+	/* STATIC: Toggle login and register view */
 	$('.adminShiftLink').off('click').on('click', function(){
 		toggleIndexView(this.id);
 	});
@@ -476,6 +492,18 @@ $(document).ajaxStop(function () {
 	
 	
 	/***** FOR SPECIAL EVENTS WAITING FOR AJAX TO FINISH *****/
+	
+	/** FRONT PAGE **/
+	/* DYNAMIC: Toggle login and register view */
+	$('.adminShiftLinkDynamic').off('click').on('click', function(){
+		toggleIndexView($(this).data('id'), 'dynamic');
+	});
+	/* DYNAMIC: Send forgotten email again */
+	$('.sendForgottenEmailAgain').off('click').on('click', function(){
+		var formData = new FormData(document.getElementById('forgottenForm'));
+		// Initial "forgotten" process sending emails
+		sendNotifications(formData, "forgotten");
+	});	
 	
 	/** PLAN **/
 	/* Edit participant status */

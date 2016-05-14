@@ -11,17 +11,30 @@
 	nav li{
 		width: 50%;
 	}
+	nav.frontpage li{
+		width: 100%;
+	}
 	nav li:nth-of-type(odd) a {
 		border-right: 1px solid rgb(34, 34, 34);
 	}
-	nav li.current a{
-		background-color: #00506f;
-		color: #fff;
-	}	
+	nav li a{
+		padding: 5px 0px;	
+	}
+	nav.frontpage li a{
+		padding: 5px 0px;
+		border-right: 1px solid rgb(34, 34, 34);
+		border-left: 1px solid rgb(34, 34, 34);		
+	}
 	nav li a:hover {
 	background-color: #ccc;
 	color: #fff;
 	}
+
+	nav li.current a{
+		background-color: #00506f;
+		color: #fff;
+	}	
+
 
 	/* TITLE */
 	#siteTitle{
@@ -36,6 +49,14 @@
 	#standardPanel{
 		width: 100%;
 		padding-top: 20px;
+	}
+	
+	/* FRONTPAGE */
+	#frontpage ul li#pageSubTitle{
+		width: 100%;
+	}
+	#frontpage ul li#about span{
+		width: 100%;
 	}
 	
 	/* PLAN */
