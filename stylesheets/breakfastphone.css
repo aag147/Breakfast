@@ -47,6 +47,10 @@
 		width: 100%;
 	}
 	
+	#projectPanel{
+		display: none;
+	}
+	
 	/* SETTINGS */
 	#settingsContent li span.options{
 		width: 100%;

@@ -185,16 +185,10 @@ try{
 	$participants = $participants_db->fetchAll();
 	
 	// Extract all participants ordered by seniority creating a dynamic order of new chefs
-	$dynamic_chefs_db = $conn->prepare("SELECT participant_id FROM
-											(SELECT P.*, (case when registration_id is null then 0 else 1 end) as veteran FROM
-												(SELECT *
-												 FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0') as P
-											LEFT JOIN
-												(SELECT * FROM breakfast_registrations) as R
-											ON P.participant_id = R.participant_id
-											GROUP BY P.participant_id
-											ORDER BY veteran ASC, participant_lastTime ASC, participant_created ASC
-											LIMIT 130) as C");
+	$dynamic_chefs_db = $conn->prepare("SELECT participant_id FROM breakfast_participants
+										WHERE project_id = :project_id AND participant_asleep = '0'
+										ORDER BY participant_lastTime ASC, participant_created ASC
+										LIMIT 130");
 	$dynamic_chefs_db->bindParam(':project_id', $cookie_project_id);		
 	$dynamic_chefs_db->execute();
 	$dynamic_chefs_count = $dynamic_chefs_db->rowCount();
@@ -314,7 +308,7 @@ try{
 						$old_breakfast_chefs_id = array_column($old_breakfast_chefs, 'participant_id');	
 					}else{
 						// Skip new breakfast for old dates
-						if($breakfast_date <= $current_date){
+						if($breakfast_date < $current_date){
 							continue;
 						}						
 						// Creates new breakfast
