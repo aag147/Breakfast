@@ -32,6 +32,11 @@ try{
 			$project_db->execute();
 			$project = $project_db->fetch();
 			$project_name = str_replace ( "\"", "&quot;", $project['project_name']);
+			
+			$options_db = $conn->prepare("SELECT * FROM breakfast_options WHERE project_id = :project_id LIMIT 1");
+			$options_db->bindParam(':project_id', $cookie_project_id);		
+			$options_db->execute();
+			$options = $options_db->fetch();
 		}else{
 			setcookie ("cookie_project_id", "", -1, '/', 'localhost');
 			setcookie ("cookie_hash", "", -1, '/', 'localhost');

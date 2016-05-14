@@ -106,6 +106,7 @@
 				if(data[0]==1){
 					showContent(type);
 					$(':input','#new'+typeUCF+'Form').not(':button, :submit, :reset, :hidden').val('');
+					$(":input#name").focus();
 				}
 			}
 		});
@@ -113,17 +114,13 @@
 	
 
 	// Change status of something
-	function changeStatus(checked, id, type, remove){
-		var url_type = type;
-		var admin_type = "changeStatus";
-		if(type=="chef"){url_type = "participant";admin_type = "changeChef";}
-		
+	function changeStatus(checked, id, type, remove){		
 		var formData = new FormData();
 		formData.append("value", checked);
-		formData.append("type", admin_type);
-		formData.append(url_type+"_id", id);
+		formData.append("type", "changeStatus");
+		formData.append(type+"_id", id);
 		$.ajax({
-			url: '../loaded/'+url_type+'Manager.php',
+			url: '../loaded/'+type+'Manager.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -141,25 +138,67 @@
 					}else{
 						$count.text(parseInt($count.text()) - 1);
 					}
-				}else if(data[0]==1 && type=="chef"){
+				}
+			}
+		});
+	}
+	
+	// Advanced version of the above for chef changing
+	function changeChef(chef, breakfast, original){
+		var formData = new FormData();
+		formData.append("chef_id", chef);
+		formData.append("type", "changeChef");
+		formData.append("breakfast_id", breakfast);
+		formData.append("original_id", original);
+		$.ajax({
+			url: '../loaded/participantManager.php',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: function(data) {
+				if(data[0]==1){
+					var previous_chef_id = data[3];
+					var next_chef_id = data[4];
+					var next_chef_name = data[2];
+					if(chef==-1){next_chef_name = "Limbo";}
+					
 					// Old chef cant come
-					var old_chef_input = $("#participants_"+id+" li#participant_"+data[3]+" input");
-					if(old_chef_input.is(":checked") && checked != 0){
-						changeStatus(false, old_chef_input.attr('id'), "participant", false);
-						old_chef_input.attr('checked', false);
+					var old_chef_check = $("#participants_"+breakfast+" li#participant_"+previous_chef_id+" input");
+					if(old_chef_check.is(":checked") && chef != 0){
+						changeStatus(false, old_chef_check.attr('id'), "participant", false);
+						old_chef_check.attr('checked', false);
 					}
 					
 					// New chef can come
-					var new_chef_input = $("#participants_"+id+" li#participant_"+data[4]+" input");
-					if(!new_chef_input.is(":checked")){
-						changeStatus(true, new_chef_input.attr('id'), "participant", false);
-						new_chef_input.attr('checked', true);
+					var new_chef_check = $("#participants_"+breakfast+" li#participant_"+next_chef_id+" input");
+					if(!new_chef_check.is(":checked") && chef != -1){
+						changeStatus(true, new_chef_check.attr('id'), "participant", false);
+						new_chef_check.attr('checked', true);
 					}
 					
 					// Change chef
-					$("#breakfast_"+id+" span.theChef").html(data[2]);
-					$("#participants_"+id+" li#participant_"+data[3]).removeClass('hide');
-					$("#participants_"+id+" li#participant_"+data[4]).addClass('hide');
+					if(chef==-1){$("#breakfast_"+breakfast+" span.theChefs span.chef_"+original).addClass('limbo');}
+					else{$("#breakfast_"+breakfast+" span.theChefs span.chef_"+original).removeClass('limbo');}
+					
+					$("#breakfast_"+breakfast+" span.theChefs span.chef_"+original).html(next_chef_name);
+					$("#participants_"+breakfast+" li#participant_"+previous_chef_id).removeClass('hide');
+					$("#participants_"+breakfast+" li#participant_"+next_chef_id).addClass('hide');
+					
+					// Enable inputs
+					if(previous_chef_id != original && previous_chef_id != -1){
+						var $old_change_input = 
+							$("li#participants_"+breakfast+" li:not(#changeChef_"+breakfast+original+") option.option_"+previous_chef_id);	
+						$old_change_input.prop('disabled', false);
+					}
+					// Disable inputs
+					if(next_chef_id != original && next_chef_id != -1){
+						var $new_change_input = 
+							$("li#participants_"+breakfast+" li:not(#changeChef_"+breakfast+original+") option.option_"+next_chef_id);	
+						$new_change_input.prop('disabled', true);
+					}
+					
 				}
 			}
 		});
@@ -173,7 +212,7 @@
 			data: {type: type, id: id},
 			dataType: 'json',
 			success: function(data) {
-				if(data==1){
+				if(data[0]==1){
 					var row = document.getElementById(type+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
 					$count = $("#totalAmount");
@@ -305,20 +344,55 @@
 	function toggleParticipantsWindow(id) {
 		if($('#participants_'+id).hasClass('hide')){
 			$('#participants_'+id).removeClass('hide');
+            $('#breakfast_'+id).addClass('open');
 		}else{
 			$('#participants_'+id).addClass("hide");
+            $('#breakfast_'+id).removeClass('open');
 		}
-		if($('#breakfast_'+id).hasClass('open')){
-			$('#breakfast_'+id).removeClass('open');
-		}else{
-			$('#breakfast_'+id).addClass('open');
-		}
+
 	}
 
 	// Toggle between the index views
 	function toggleIndexView(view) {
 		$("#adminAllContent > ul:not(#"+view+"View)").addClass("hide");
 		$("#adminAllContent > ul#"+view+"View").removeClass('hide');
+	}
+
+	// Toggle between disabled and not disabled
+	function toggleDisabled(value, id) {
+		if(value){
+			$('#'+id+'_disabled').prop('disabled', false);
+            if($('#'+id+'_disabled').val() == 0){
+                $('#'+id+'_disabled').val(1);
+            }
+		}else{
+			$('#'+id+'_disabled').prop('disabled', true);
+		}
+	}	
+
+	// Toggle between all disabled and not disabled
+	function toggleAllWeekdays(value) {
+		$checked = $('input.weekdayChecked');
+		$chefs = $('input.weekdayChefs');
+		if(value){
+			$checked.prop('checked', true);
+			$chefs.prop('disabled', false);
+            
+            $chefs.each(function () {
+                if($(this).val() == 0){
+                    $(this).val(1);
+                }
+            })
+		}else{
+			$checked.prop('checked', false);
+			$chefs.prop('disabled', true);
+		}
+	}
+
+	// Toggle between all disabled and not disabled
+	function toggleAllChefs(value) {
+		$chefs = $('input.weekdayChefs');
+		$chefs.val(value);
 	}	
 
 
@@ -379,24 +453,36 @@ $(document).ready(function() {
 	
 	/***** ADMIN LINK CLICKS *****/
 	/* Edit project */
-	$('.editAccount').click(function(event){
+	$('.editAccount').off('click').on('click', function(){
 		editInLine('', "account");	
 	});
 	/* Delete project */
-	$('.deleteAccount').click(function(event){
+	$('.deleteAccount').off('click').on('click', function(){
 		if(confirm("Er du sikker på, at du vil slette hele projektet?")){
 			accountManager(new FormData(), "delete");	
 		}
 	});
 	/* Log out */
-	$('.logOut').click(function(event){
+	$('.logOut').off('click').on('click', function(){
 		accountManager(new FormData(), "logout");	
 	});
 	/* Toggle login and register view */
-	$('.adminShiftLink').click(function(event){
+	$('.adminShiftLink').off('click').on('click', function(){
 		toggleIndexView(this.id);
 	});
-	
+	/* Edit disablement for weekdays in settings */
+	$(':checkbox.weekdayChecked').off('change').on('change', function() {
+		toggleDisabled(this.checked, $(this).data('id'));	
+	});
+	/* Edit disablement and checkstatus for all weekdays in settings */
+	$(':checkbox.checkAll').off('change').on('change', function() {
+		toggleAllWeekdays(this.checked);	
+	});	
+	/* Edit chefs for all weekdays in settings */
+	$('input.chefsAll').off('change').on('change', function() {
+		toggleAllChefs(this.value);	
+	});	
+
 	
 	/***** PLAN *****/
 	/* Edit product status and remove span */
@@ -420,12 +506,12 @@ $(document).ajaxStop(function () {
 	});		
 	/* Edit chef */
 	$('select.newChefSelect').off('change').on('change', function() {
-		changeStatus(this.value, $(this).data('id'), "chef", false);
+		changeChef(this.value, $(this).data('id'), $(this).data('original'));
 	});
 	
 	/** PRODUCTS **/
 	/* Edit product */
-	$('.editProduct').click(function(event){
+	$('.editProduct').off('click').on('click', function(){
 		editInLine($(this).data('id'), "product");	
 	});
 	/* Delete product */
@@ -439,7 +525,7 @@ $(document).ajaxStop(function () {
 	
 	/** PARTICIPANTS **/
 	/* Edit participant */
-	$('.editParticipant').click(function(event){
+	$('.editParticipant').off('click').on('click', function(){
 		editInLine($(this).data('id'), "participant");	
 	});
 	/* Delete participant */

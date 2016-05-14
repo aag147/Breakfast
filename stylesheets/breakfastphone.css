@@ -6,12 +6,29 @@
 	#contentFooter{
 		width: 100%;
 	}
+	
+	/* MENU */
+	nav li{
+		width: 50%;
+	}
+	nav li:nth-of-type(odd) a {
+		border-right: 1px solid rgb(34, 34, 34);
+	}
+	nav li.current a{
+		background-color: #00506f;
+		color: #fff;
+	}	
+	nav li a:hover {
+	background-color: #ccc;
+	color: #fff;
+	}
 
 	/* TITLE */
 	#siteTitle{
 	font-size: 2.0em;
 	}
 	
+	/* STANDARD */
 	#standardContent{
 		width: 100%;
 		padding-right: 0px;
@@ -19,6 +36,20 @@
 	#standardPanel{
 		width: 100%;
 		padding-top: 20px;
+	}
+	
+	/* PLAN */
+	#projectContent li.weekdays li.weekday a span.theChefs{
+		width: 100%;
+	}
+	#projectContent li.participants li.newChefs,
+	#projectContent li.participants ul.attending li{
+		width: 100%;
+	}
+	
+	/* SETTINGS */
+	#settingsContent li span.options{
+		width: 100%;
 	}
 	
 }
