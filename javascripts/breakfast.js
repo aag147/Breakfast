@@ -158,7 +158,6 @@
 					// Old chef cant come
 					var old_chef_check = $("#participants_"+breakfast+" li#participant_"+previous_chef_id+" input");
 					if(old_chef_check.is(":checked") && chef != 0){
-						alert(breakfast + " | " + original + " | " + previous_chef_id);
 						changeStatus(false, previous_chef_id, "participant", false);
 						old_chef_check.attr('checked', false);
 					}
