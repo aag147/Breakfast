@@ -54,7 +54,7 @@ try{
 		echo "<span class='optionErrmsg' id='weekdaysErrmsg'>";
 		echo "</span>";
 		echo "<span class='optionSubmit'>";
-			echo "<input type='submit' value='Godkend'/>";
+			echo "<input type='submit' value='Gem'/>";
 		echo "</span>";
 	echo "</form>";
 	echo "</li></ul>";
