@@ -85,8 +85,7 @@ try{
 			$errmsg[1] = "Produktet er ændret!";
 			break;
 			
-		case 'changeStatus':
-			
+		case 'changeStatus':		
 			// Variables from form
 			$product_id = (isset($_POST['product_id']) ? $_POST['product_id'] : '');
 			$value = (isset($_POST['value']) ? $_POST['value'] : '');
@@ -106,6 +105,23 @@ try{
 			$errmsg[0] = 1;
 			$errmsg[1] = "Status er ændret!";
 			break;
+			
+		case 'delete':
+			// Variables from form
+			$product_id = (isset($_POST['id']) ? $_POST['id'] : '');
+			
+			/*** DELETE ***/
+			$delete_product = $conn->prepare("DELETE FROM breakfast_products WHERE product_id = :product_id");
+			$delete_product->bindParam(':product_id', $product_id);
+			$delete_product->execute();
+			
+			$errmsg[0] = 1;
+			$errmsg[1] = 'Produktet er blevet slettet.';
+			break;
+			
+		default:
+			echo json_encode(array(-10));
+			exit;
 	}
 	
 	

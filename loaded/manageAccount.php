@@ -225,7 +225,7 @@ try{
 				$params[$weekday.'_chefs'] = $chefs;
 				
 				if($checked==0){
-					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_asleep = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= DATE(NOW())");
+					$kill_breakfasts = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_asleep = '1' WHERE project_id = :project_id AND breakfast_weekday = :weekday AND breakfast_date >= CURDATE()");
 					$kill_breakfasts->bindParam(':project_id', $cookie_project_id);
 					$kill_breakfasts->bindParam(':weekday', $weekday);
 					$kill_breakfasts->execute();
@@ -309,7 +309,8 @@ try{
 			break;
 		case '-3':
 		case '-4':
-			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!";
+			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes!<br>".
+						  "<a href='javascript:;'>Ønsker du i stedet at oprette projektet?</a>";
 			break;
 		case '-5':
 			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen!";

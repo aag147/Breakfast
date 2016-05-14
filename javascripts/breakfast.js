@@ -56,7 +56,7 @@
 	function accountManager(formData, type){
 		formData.append("type", type);
 		$.ajax({
-			url: '../loaded/accountManager.php',
+			url: '../loaded/manageAccount.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -75,28 +75,13 @@
 		});
 	}
 	
-	// Breakfast management
-	function breakfastManager(id, value, type){
-		$.ajax({
-			url: '../loaded/Manager.php',
-			type: 'POST',
-			data: {id: id, value: value, type: type},
-			dataType: 'json',
-			success: function(data) {
-				$("#"+type+"Errmsg").html(data[1]);
-				if(data[0]==1){
-				}
-			}
-		});
-	}
-	
 	// Add something
 	function addElement(formData, type){
 		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		formData.append("type", "new");
 	
 		$.ajax({
-			url: '../loaded/'+type+'Manager.php',
+			url: '../loaded/manage'+typeUCF+'.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -115,13 +100,14 @@
 	
 
 	// Change status of something
-	function changeStatus(checked, id, type, remove){		
+	function changeStatus(checked, id, type, remove){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);		
 		var formData = new FormData();
 		formData.append("value", checked);
 		formData.append("type", "changeStatus");
 		formData.append(type+"_id", id);
 		$.ajax({
-			url: '../loaded/'+type+'Manager.php',
+			url: '../loaded/manage'+typeUCF+'.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -156,7 +142,7 @@
 		formData.append("breakfast_id", breakfast);
 		formData.append("original_id", original);
 		$.ajax({
-			url: '../loaded/participantManager.php',
+			url: '../loaded/manageParticipant.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -172,14 +158,15 @@
 					// Old chef cant come
 					var old_chef_check = $("#participants_"+breakfast+" li#participant_"+previous_chef_id+" input");
 					if(old_chef_check.is(":checked") && chef != 0){
-						changeStatus(false, old_chef_check.attr('id'), "participant", false);
+						alert(breakfast + " | " + original + " | " + previous_chef_id);
+						changeStatus(false, previous_chef_id, "participant", false);
 						old_chef_check.attr('checked', false);
 					}
 					
 					// New chef can come
 					var new_chef_check = $("#participants_"+breakfast+" li#participant_"+next_chef_id+" input");
 					if(!new_chef_check.is(":checked") && chef != -1){
-						changeStatus(true, new_chef_check.attr('id'), "participant", false);
+						changeStatus(true, next_chef_id, "participant", false);
 						new_chef_check.attr('checked', true);
 					}
 					
@@ -211,10 +198,11 @@
 	
 	// Delete something
 	function deleteElement(id, type){
+		var typeUCF = type[0].toUpperCase() + type.substring(1);		
 		$.ajax({
-			url: '../loaded/delete.php',
+			url: '../loaded/manage'+typeUCF+'.php',
 			type: 'POST',
-			data: {type: type, id: id},
+			data: {id: id, type: 'delete'},
 			dataType: 'json',
 			success: function(data) {
 				if(data[0]==1){
@@ -245,7 +233,7 @@
 			
 			// Ajax to insert new element
 			$.ajax({
-				url: '../loaded/'+type+'Manager.php',
+				url: '../loaded/manage'+typeUCF+'.php',
 				type: 'POST',
 				data: formData,
 				processData: false,

@@ -19,109 +19,14 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	
-	
-	/***************** UPDATE OLD BREAKFASTS *****************/	
-	$participantsBehindCount_db = $conn->prepare("SELECT * FROM 
-													(SELECT * FROM breakfast_breakfasts
-													 WHERE project_id = :project_id AND breakfast_date < DATE(NOW()) AND breakfast_done = '0') as B
-												LEFT JOIN
-													breakfast_registrations as R
-												ON B.breakfast_id = R.breakfast_id
-												LEFT JOIN
-													breakfast_participants as P
-												ON P.participant_id = R.participant_id
-												LEFT JOIN
-													breakfast_chefs as C
-												ON B.breakfast_id = C.breakfast_id
-												ORDER BY B.breakfast_id ASC");
-	$participantsBehindCount_db->bindParam(':project_id', $cookie_project_id);		
-	$participantsBehindCount_db->execute();
-	$participantsBehindCount_count = $participantsBehindCount_db->rowCount();
 
-
-	$update_breakfast = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_done = '1'
-										  WHERE project_id = :project_id AND breakfast_date < DATE(NOW()) AND breakfast_date >= DATE(breakfast_created) AND breakfast_done = '0'");
-	$update_breakfast->bindParam(':project_id', $cookie_project_id);
-	
-	
-	$update_participant_plus = $conn->prepare("	UPDATE breakfast_participants SET participant_attendance_count = participant_attendance_count + 1
-												WHERE project_id = :project_id AND participant_id = :participant_id");
-	$update_participant_plus->bindParam(':project_id', $cookie_project_id);
-	$update_participant_plus->bindParam(':participant_id', $participant_id);
-	
-	$update_chef_plus = $conn->prepare("UPDATE breakfast_participants SET participant_lastTime = CURRENT_TIMESTAMP,
-										participant_attendance_count = participant_attendance_count + 1, participant_chef_count = participant_chef_count + 1
-										WHERE project_id = :project_id AND participant_id = :participant_id");
-	$update_chef_plus->bindParam(':project_id', $cookie_project_id);
-	$update_chef_plus->bindParam(':participant_id', $participant_id);
-	
-
-	// Updating breakfasts
-	$update_breakfast->execute();
-	
-	// Updating participants and chefs
-	$current_breakfast = "";
-	while($participant = $participantsBehindCount_db->fetch(PDO::FETCH_ASSOC)){
-		$participant_id = $participant['participant_id'];
-		
-		// Updating attending participants
-		if($participant['participant_attending'] == 1 AND $participant['chef_id'] == $participant_id){
-			// The chef
-			$update_chef_plus->execute();	
-		}elseif($participant['participant_attending'] == 1){
-			// The rest
-			$update_participant_plus->execute();
-		}
-	}
-	
-	// YEARWEEK(breakfast_date, 1) >= YEARWEEK(CURDATE(), 1)
-	/***************** PDO PREPARATIONS FOR BREAKFAST PLAN *****************/
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
-	$participants_db->bindParam(':project_id', $cookie_project_id);		
-	$participants_db->execute();
-	$participants = $participants_db->fetchAll();
-		
-	$dynamic_chefs_db = $conn->prepare("SELECT P.*, (case when registration_id is null then 0 else 1 end) as veteran FROM
-											(SELECT *
-											 FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0') as P
-										LEFT JOIN
-											(SELECT * FROM breakfast_registrations) as R
-										ON P.participant_id = R.participant_id
-										GROUP BY P.participant_id
-										ORDER BY veteran ASC, participant_lastTime ASC, participant_created ASC
-										LIMIT 40");
-	$dynamic_chefs_db->bindParam(':project_id', $cookie_project_id);		
-	$dynamic_chefs_db->execute();
-	$dynamic_chefs_count = $dynamic_chefs_db->rowCount();
-	$dynamic_chefs = $dynamic_chefs_db->fetchAll();
-	
-	$static_chefs_db = $conn->prepare("	SELECT P.*, breakfast_date, '1' as veteran FROM
-											(SELECT * FROM breakfast_breakfasts
-											 WHERE project_id = :project_id AND breakfast_date >= DATE(NOW())) as B
-										JOIN
-											breakfast_chefs C
-										ON B.breakfast_id = C.breakfast_id
-										JOIN
-											breakfast_participants as P
-										ON C.chef_id = P.participant_id
-										ORDER BY breakfast_date ASC, C.rel_id ASC");
-	$static_chefs_db->bindParam(':project_id', $cookie_project_id);
-	$static_chefs_db->execute();
-	$static_chefs_count = $static_chefs_db->rowCount();
-	$static_chefs = $static_chefs_db->fetchAll();
-	
-	/***************** DELETE GHOST BREAKFASTS *****************/
-	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_asleep = '1'");
-	$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
-	$delete_breakfasts->execute();
-	
-	
-	/** INCASSO */	
+	/***************** "SELECT" PDO PREPARATIONS FOR THE GRAND LOOP *****************/
+	// Extract incasso balance between a specific chef and a participant
 	$incasso_db = $conn->prepare("SELECT SUM(C) FROM
 								  (
 									SELECT (CASE WHEN chef_id = :chef_id THEN -1 ELSE 1 END) C FROM
 										(SELECT breakfast_id FROM breakfast_breakfasts
-										 WHERE project_id = :project_id AND DATE(breakfast_date) < DATE(CURDATE())) B
+										 WHERE project_id = :project_id AND DATE(breakfast_date) < CURDATE()) B
 									JOIN
 										(SELECT breakfast_id, chef_id FROM breakfast_chefs
 										 WHERE chef_id = :chef_id AND chef_replacement_id = :participant_id OR 
@@ -133,7 +38,7 @@ try{
 	$incasso_db->bindParam(':participant_id', $participant_id);
 
 	
-	/** Breakfast chefs */
+	// Extract all chefs at a specific breakfast
 	$breakfast_chefs_db = $conn->prepare("SELECT participant_id, participant_name, chef_replacement_id FROM 
 											(SELECT * FROM breakfast_chefs WHERE project_id = :project_id AND breakfast_id = :breakfast_id) C
 										  JOIN
@@ -143,19 +48,22 @@ try{
 	$breakfast_chefs_db->bindParam(':breakfast_id', $breakfast_id);	
 	
 	
-	// EXTRACT SINGLE ROW
+	// Extract single participant
 	$participant_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_id = :participant_id LIMIT 1");
 	$participant_db->bindParam(':project_id', $cookie_project_id);
 	$participant_db->bindParam(':participant_id', $participant_id);
 	
+	// Extract single registration
 	$registration_db = $conn->prepare("SELECT * FROM breakfast_registrations WHERE participant_id = :participant_id AND breakfast_id = :breakfast_id LIMIT 1");
 	$registration_db->bindParam(':participant_id', $participant_id);
 	$registration_db->bindParam(':breakfast_id', $breakfast_id);
 	
+	// Extract single breakfast
 	$breakfast_db = $conn->prepare("SELECT * FROM breakfast_breakfasts WHERE breakfast_date = :breakfast_date AND project_id = :project_id LIMIT 1");
 	$breakfast_db->bindParam(':project_id', $cookie_project_id);
 	$breakfast_db->bindParam(':breakfast_date', $breakfast_date);
 	
+	// Extract single chef
 	$chef_db = $conn->prepare(" SELECT participant_id, participant_name, chef_replacement_id FROM
 									(SELECT * FROM breakfast_chefs WHERE project_id = :project_id AND chef_id = :chef_id) C
 								JOIN
@@ -164,44 +72,159 @@ try{
 	$chef_db->bindParam(':project_id', $cookie_project_id);
 	$chef_db->bindParam(':chef_id', $chef_id);
 	
-	//EXTRACT SINGLE BREAKFAST REGISTRATIONS
+	// Extract registration count for single breakfast
 	$registrations_count_db = $conn->prepare("SELECT COUNT(registration_id) C FROM breakfast_registrations WHERE breakfast_id = :breakfast_id AND participant_attending = '0'");
 	$registrations_count_db->bindParam(':breakfast_id', $breakfast_id);	
 	
-	// ADMINISTRE REGISTRATIONS AND BREAKFAST
+	
+	
+	/***************** "ADMIN" PDO PREPARATIONS FOR THE GRAND LOOP *****************/
+	// Insert new registration
 	$new_registration = $conn->prepare("INSERT INTO breakfast_registrations (participant_id, project_id, breakfast_id, participant_attending)
 									   VALUES (:participant_id, :project_id, :breakfast_id, '1')");
 	$new_registration->bindParam(':participant_id', $participant_id);
 	$new_registration->bindParam(':project_id', $cookie_project_id);
 	$new_registration->bindParam(':breakfast_id', $breakfast_id);
 	
+	// Insert new breakfast
 	$new_breakfast = $conn->prepare("INSERT INTO breakfast_breakfasts (project_id, breakfast_date, breakfast_weekday)
 									   VALUES (:project_id, :breakfast_date, :breakfast_weekday)");
 	$new_breakfast->bindParam(':project_id', $cookie_project_id);
 	$new_breakfast->bindParam(':breakfast_date', $breakfast_date);
 	$new_breakfast->bindParam(':breakfast_weekday', $breakfast_weekday);
 	
+	// Insert new chef
 	$new_chef = $conn->prepare("INSERT INTO breakfast_chefs (project_id, breakfast_id, chef_id)
 								   VALUES (:project_id, :breakfast_id, :chef_id)");
 	$new_chef->bindParam(':project_id', $cookie_project_id);
 	$new_chef->bindParam(':breakfast_id', $breakfast_id);
 	$new_chef->bindParam(':chef_id', $chef_id);
 	
+	// Delete new chef
 	$delete_chef = $conn->prepare("DELETE FROM breakfast_chefs
 								   WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :chef_id");
 	$delete_chef->bindParam(':project_id', $cookie_project_id);
 	$delete_chef->bindParam(':breakfast_id', $breakfast_id);
 	$delete_chef->bindParam(':chef_id', $chef_id);
 	
+	// Update single chef replacement to limbo
 	$limbo_replacement = $conn->prepare("UPDATE breakfast_chefs SET chef_replacement_id = '-1'
 										 WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :chef_id");
 	$limbo_replacement->bindParam(':project_id', $cookie_project_id);
 	$limbo_replacement->bindParam(':breakfast_id', $breakfast_id);
 	$limbo_replacement->bindParam(':chef_id', $chef_id);
-	$limbo_replacement->execute();
 	
 	
-	/***** Counting amount of weekdays with breakfast *****/
+	
+	/***************** UPDATE OLD BREAKFASTS *****************/	
+	// Extract registrations to completed breakfasts
+	$participantsBehindCount_db = $conn->prepare("SELECT B.breakfast_id, P.participant_id, R.participant_attending FROM 
+													(SELECT breakfast_id FROM breakfast_breakfasts
+													 WHERE project_id = :project_id AND breakfast_date < CURDATE() AND breakfast_done = '0') as B
+												LEFT JOIN
+													(SELECT * FROM breakfast_registrations
+													 WHERE participant_attending = '1') as R
+												ON B.breakfast_id = R.breakfast_id
+												LEFT JOIN
+													breakfast_participants as P
+												ON P.participant_id = R.participant_id
+												ORDER BY B.breakfast_id ASC");
+	$participantsBehindCount_db->bindParam(':project_id', $cookie_project_id);		
+	$participantsBehindCount_db->execute();
+	$participantsBehindCount_count = $participantsBehindCount_db->rowCount();
+	$participantsBehindCount = $participantsBehindCount_db->fetchAll();
+
+	// Update single breakfast as DONE
+	$update_breakfast = $conn->prepare("UPDATE breakfast_breakfasts SET breakfast_done = '1'
+										  WHERE project_id = :project_id AND breakfast_date < CURDATE() AND breakfast_date >= DATE(breakfast_created) AND breakfast_done = '0'");
+	$update_breakfast->bindParam(':project_id', $cookie_project_id);
+	
+	// Increment attendance count for single participant
+	$update_participant_plus = $conn->prepare("	UPDATE breakfast_participants SET participant_attendance_count = participant_attendance_count + 1
+												WHERE project_id = :project_id AND participant_id = :participant_id");
+	$update_participant_plus->bindParam(':project_id', $cookie_project_id);
+	$update_participant_plus->bindParam(':participant_id', $participant_id);
+	
+	// Increment attendance count and chef count for single participant
+	$update_chef_plus = $conn->prepare("UPDATE breakfast_participants SET participant_lastTime = CURDATE(),
+										participant_attendance_count = participant_attendance_count + 1, participant_chef_count = participant_chef_count + 1
+										WHERE project_id = :project_id AND participant_id = :participant_id");
+	$update_chef_plus->bindParam(':project_id', $cookie_project_id);
+	$update_chef_plus->bindParam(':participant_id', $participant_id);
+	
+
+	// Updating breakfasts
+	$update_breakfast->execute();
+	
+	// Updating participants and chefs
+	$breakfast_id = 0;
+	foreach($participantsBehindCount AS $participant){
+		$participant_id = $participant['participant_id'];
+		// Updates breakfast chefs
+		if($participant['breakfast_id'] != $breakfast_id){
+			$breakfast_id = $participant['breakfast_id'];
+			$breakfast_chefs_db->execute();
+			$breakfast_chefs = array_column($breakfast_chefs_db->fetchAll(), 'participant_id');
+		}
+		
+		// Updating attending participants
+		if(in_array($participant_id, $breakfast_chefs)){
+			// The chefs
+			$update_chef_plus->execute();
+		}else{
+			// The guests
+			$update_participant_plus->execute();
+		}
+	}
+	
+	/***************** PARTICIPANTS AND CHEFS *****************/
+	// Extract all participants
+	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
+	$participants_db->bindParam(':project_id', $cookie_project_id);		
+	$participants_db->execute();
+	$participants = $participants_db->fetchAll();
+	
+	// Extract all participants ordered by seniority creating a dynamic order of new chefs
+	$dynamic_chefs_db = $conn->prepare("SELECT participant_id FROM
+											(SELECT P.*, (case when registration_id is null then 0 else 1 end) as veteran FROM
+												(SELECT *
+												 FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0') as P
+											LEFT JOIN
+												(SELECT * FROM breakfast_registrations) as R
+											ON P.participant_id = R.participant_id
+											GROUP BY P.participant_id
+											ORDER BY veteran ASC, participant_lastTime ASC, participant_created ASC
+											LIMIT 130) as C");
+	$dynamic_chefs_db->bindParam(':project_id', $cookie_project_id);		
+	$dynamic_chefs_db->execute();
+	$dynamic_chefs_count = $dynamic_chefs_db->rowCount();
+	$dynamic_chefs = $dynamic_chefs_db->fetchAll();
+	
+	// Extract the ordered list of current chefs as static chefs
+	$static_chefs_db = $conn->prepare("	SELECT C.chef_id FROM
+											(SELECT * FROM breakfast_breakfasts
+											 WHERE project_id = :project_id AND breakfast_date >= CURDATE()) as B
+										JOIN
+											breakfast_chefs C
+										ON B.breakfast_id = C.breakfast_id
+										ORDER BY breakfast_date ASC, C.rel_id ASC
+										LIMIT 65");
+	$static_chefs_db->bindParam(':project_id', $cookie_project_id);
+	$static_chefs_db->execute();
+	$static_chefs_count = $static_chefs_db->rowCount();
+	$static_chefs = $static_chefs_db->fetchAll();
+	
+	
+	
+	/***************** DELETE GHOST BREAKFASTS *****************/
+	// This have to be done after extracting static chefs
+	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_asleep = '1'");
+	$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
+	$delete_breakfasts->execute();
+	
+	
+	/***************** BUILDING ARRAY OF ORDERED CHEFS *****************/
+	// Counting a single weeks total breakfasts and chefs
 	$current_weekday = date("N");
 	$weekdays_count = $chefs_count = $done_count = 0;
 	for($j = 0; $j < 7; $j++){
@@ -212,26 +235,24 @@ try{
 		$chefs_count += $chefs;
 		if($check AND $j+1 < $current_weekday){$done_count += $chefs;}
 	}
-	$static_chefs_max = ($chefs_count * 3) - $done_count; // Future breakfasts this week and the next two
 	
-	/***** Create array of ordered chefs *****/
-	if($static_chefs_count>$static_chefs_max){
-		$static_chefs_id = array_slice($static_chefs, 0, $static_chefs_max);
-	}else{
-		$static_chefs_id = $static_chefs;
-	}
+	// Amount of future chefs the first three weeks
+	$static_chefs_max = ($chefs_count * 3) - $done_count;
 	
-	// Extract id column
-	$static_chefs_id = array_unique(array_column($static_chefs_id, 'participant_id'));
-	$dynamic_chefs_id = array_column($dynamic_chefs, 'participant_id');	
+	// Computing / limiting static chefs
+	$static_chefs_count = min($static_chefs_count, $static_chefs_max);
+	$static_chefs_id = array_column($static_chefs, 'chef_id');
+	$static_chefs_id = array_unique(array_slice($static_chefs_id, 0, $static_chefs_count));	
 	
-	// Computing dynamics
-	$dynamic_chefs_id = array_diff($dynamic_chefs_id, $static_chefs_id);	
+	// Computing / limiting dynamic chefs
+	$dynamic_chefs_id = array_column($dynamic_chefs, 'participant_id');
+	$dynamic_chefs_id = array_diff($dynamic_chefs_id, $static_chefs_id);
 	
 	// Final array of ordered chefs
-	$complete_chefs = array_merge($static_chefs_id, $dynamic_chefs_id); 
-
-	/******* PRINT PLAN *******/
+	$complete_chefs = array_merge($static_chefs_id, $dynamic_chefs_id); 	
+	
+	
+	/****************** LOOP THROUGH WEEKS-WEEKDAYS IN PLAN ******************/
 	if(COUNT($complete_chefs)==0 OR $weekdays_count==0){
 		echo "Du behøver både deltagere og aktive ugedage for at bygge morgenmadsplanen.";
 	}else{
@@ -292,16 +313,14 @@ try{
 						$old_breakfast_chefs = $breakfast_chefs_db->fetchAll();
 						$old_breakfast_chefs_id = array_column($old_breakfast_chefs, 'participant_id');	
 					}else{
+						// Skip new breakfast for old dates
+						if($breakfast_date <= $current_date){
+							continue;
+						}						
 						// Creates new breakfast
 						$new_breakfast->execute();
 						$breakfast_id = $conn->lastInsertId('breakfast_breakfasts');						
 						$breakfast_done = 0;
-					}
-					if($breakfast_done){$doneClass = "done";}else{$doneClass = "";}
-					
-					// Skip new breakfast for old dates
-					if(!$breakfast_done AND $breakfast_date < $current_date){
-						continue;
 					}
 					
 					// Don't edit chef amount for older dates nor today
@@ -357,9 +376,6 @@ try{
 							$delete_chef->execute();
 						}
 					}
-					//print_r($old_breakfast_chefs);
-					//echo "<br>";
-					//print_r($breakfast_chefs);
 					
 					/***** REPLACEMENT CHEF *****/
 					$breakfast_chef_replacements = array();
@@ -391,9 +407,13 @@ try{
 					$registrations_count_db->execute();
 					$registrations_count = $registrations_count_db->fetchColumn();
 					$registrations_count = COUNT($participants) - $registrations_count;
-											
+								
+					/**** Specials for done breakfasts ****/
+					if($breakfast_done){$doneClass = "done"; $doneDisabled = "disabled";}
+					else{$doneClass = ""; $doneDisabled = "";}
+
+								
 					/***** VIEW *****/
-					view: 
 					echo "<li class='weekday ".$doneClass."' id='breakfast_".$breakfast_id."'>";
 						echo "<a href='javascript:;' class='showParticipants' data-id='".$breakfast_id."'>";
 							echo "<span class='weekdayTitle'>".$weekdays_danish[$j]."</span>";
@@ -417,7 +437,7 @@ try{
 							echo "<li class='newChefTitle'>Skift vært:</li>";						
 							for($k = 0; $k < $weekday_chefs_count; $k++){
 								echo "<li class='newChefs' id='changeChef_".$breakfast_id.$breakfast_chefs_id[$k]."'>";
-									echo "<select class='newChefSelect' data-id='".$breakfast_id."' data-original='".$breakfast_chefs_id[$k]."'>";
+									echo "<select class='newChefSelect' data-id='".$breakfast_id."' data-original='".$breakfast_chefs_id[$k]."' ".$doneDisabled.">";
 										if($breakfast_chef_replacements_id[$k] == -1){$selected = "selected";}
 										else{$selected = "";}
 										echo "<option value='0'>".$breakfast_chefs[$k]['participant_name']." (original)</option>";
@@ -481,7 +501,7 @@ try{
 							
 							// Write out participant
 							echo "<li id='participant_".$participant_id."' ".$hide.">";
-								echo "<span class='status'><input id='".$reg_id."' data-id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$isComing."/></span>";
+								echo "<span class='status'><input id='".$reg_id."' data-id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$doneDisabled." ".$isComing."/></span>";
 								echo "<span class='name'>".$participant_name."</span>";
 							echo "</li>";					
 						}
