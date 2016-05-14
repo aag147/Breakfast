@@ -14,7 +14,7 @@ include("../headers/header.php");
 			<li id="adminAllContent">
 				<ul id="loginView">
 					<li id="pageTitle">
-						LOG IND
+						Log ind
 					</li>
 					<li id="adminContent">
 						<form id="logInForm" action="" method="POST">
@@ -47,10 +47,10 @@ include("../headers/header.php");
 					</li>
 					<li id="adminContent">
 						<form id="forgottenForm" action="" method="POST">
-							<span><input type="text" name="name" placeholder="Dit projektnavn"/></span>
+							<span><input type="text" name="name" placeholder="Dit projektnavn" id="name"/></span>
 							<span id="emailSpan"><input type="email" name="email" placeholder="Din email"/></span>
 							<span class="hide" id="securitySpan"><input type="text" name="security_code" placeholder="Sikkerhedskode"/></span>
-							<span class="hide"><input type="password" name="password" placeholder="Nyt kodeord"/></span>
+							<span class="hide" id="passwordSpan"><input type="password" name="password" placeholder="Nyt kodeord"/></span>
 							<span id="forgottenErrmsg"></span>
 							<span><input type="submit" value="Send email"/></span>
 						</form>

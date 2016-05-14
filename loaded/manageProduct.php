@@ -135,7 +135,7 @@ try{
 			$errmsg[1] .= "Produktet er allerede tilføjet!";
 			break;
 		case '-3':
-			$errmsg[1] .= "Navnet er for lang. Systemet accepterer desværre ikke mere end 60 tegn!";
+			$errmsg[1] .= "Navnet er for langt. Systemet accepterer desværre ikke mere end 60 tegn!";
 			break;
 		default:
 			$errmsg[1] = "<p class='success'>".$errmsg[1];

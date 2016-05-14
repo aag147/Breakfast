@@ -40,6 +40,7 @@ ul, li, ol{
 
 p.success{color: green;font-size: 0.8em;}
 p.error{color: red;font-size: 0.8em;}
+p.neutral{font-size: 0.8em;}
 
 .hide{display: none !important;}
 
