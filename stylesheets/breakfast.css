@@ -486,49 +486,49 @@ font-size: 1.0em;
 font-weight: bold;
 border-bottom: 1px solid;
 }
-#settingsPanel li.option{
+#settingsPanelContent li{
 padding: 5px 0px;
 }
-	#settingsPanel li.option span{
+	#settingsPanelContent li span{
 	display: inline-block;
 	width: 100%;
 	padding: 2px 0px;
 	}
-	#settingsPanel li.option span.optionTitle{
+	#settingsPanelContent li span.optionTitle{
 	text-decoration: none;
 	}
-	#settingsPanel li.option ul.optionLegend span{
+	#settingsPanelContent li ul.optionLegend span{
 		display: inline-block;
 		width: 50%;
 	}
-	#settingsPanel li.option ul.optionLegend span:last-child{
+	#settingsPanelContent li ul.optionLegend span:last-child{
 		text-align: right;
 	}
-	#settingsPanel li.option ul.optionInputs li{
+	#settingsPanelContent li ul.optionInputs li{
 		width: 100%;
 	}
-	#settingsPanel li.option ul.optionInputs li:first-child{
+	#settingsPanelContent li ul.optionInputs li:first-child{
 		border-bottom: 1px dotted;
 		border-top: 1px dotted;
 		margin: 2px 0px 2px 0px;
 		padding: 2px 0px 2px 0px;
 	}
-	#settingsPanel li.option ul.optionInputs li span:first-child{
+	#settingsPanelContent li ul.optionInputs li span:first-child{
 		display: inline-block;
 		width: calc(100% - 30px);
 	}
-	#settingsPanel li.option ul.optionInputs li span:last-child{
+	#settingsPanelContent li ul.optionInputs li span:last-child{
 		display: inline-block;
 		width: 30px;
 	}
-	#settingsPanel li.option ul.optionInputs li span:last-child input{
+	#settingsPanelContent li ul.optionInputs li span:last-child input{
 		padding: 0px;
 		width: 30px;
 	}
-	#settingsPanel li.option span.optionErrmsg{
+	#settingsPanelContent li span.optionErrmsg{
 	text-align: right;
 	}
-	#settingsPanel li.option span.optionSubmit{
+	#settingsPanelContent li span.optionSubmit{
 	text-align: right;
 	}
 	
@@ -580,7 +580,11 @@ padding: 5px 0px;
 	text-align: left;
 	width: 100%;
 }
-	#standardList li:not(.listLegend){
+
+	#standardList li#showAmount{
+		
+	}
+	#standardList li:not(.listLegend):not(#showAmount){
 		padding: 5px 5px;
 		background: #ddd;
 		background: -moz-linear-gradient(#eee, #ddd); 

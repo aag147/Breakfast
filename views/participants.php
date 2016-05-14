@@ -25,6 +25,7 @@ include("../headers/header.php");
 	</div>
 	
 	<div id="standardContent">	
+		<?php /* jscript */ ?>
 		<div id="showAllParticipant"></div>
 	</div><?php
 	
