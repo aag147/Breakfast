@@ -19,17 +19,33 @@ try{
 			  `project_name` varchar(100) CHARACTER SET utf8 NOT NULL,
 			  `project_password` varchar(100) CHARACTER SET utf8 NOT NULL,
 			  `project_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  `project_monday` int(11) NOT NULL,
-			  `project_tuesday` int(11) NOT NULL,
-			  `project_wednesday` int(11) NOT NULL,
-			  `project_thursday` int(11) NOT NULL,
-			  `project_friday` int(11) NOT NULL,
-			  `project_saturday` int(11) NOT NULL,
-			  `project_sunday` int(11) NOT NULL,
 			  PRIMARY KEY (`project_id`),
 			  UNIQUE KEY (`project_name`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
 	$createProjectsTable->execute();	
+	// Options
+	$createOptionsTable = $conn->prepare("
+			CREATE TABLE IF NOT EXISTS `breakfast_options` (
+			  `option_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `project_id` int(11) NOT NULL,
+			  `monday_checked` int(11) NOT NULL,
+			  `monday_chefs` int(11) NOT NULL,
+			  `tuesday_checked` int(11) NOT NULL,
+			  `tuesday_chefs` int(11) NOT NULL,
+			  `wednesday_checked` int(11) NOT NULL,
+			  `wednesday_chefs` int(11) NOT NULL,
+			  `thirsday_checked` int(11) NOT NULL,
+			  `thirsday_chefs` int(11) NOT NULL,
+			  `friday_checked` int(11) NOT NULL,
+			  `friday_chefs` int(11) NOT NULL,
+			  `saturday_checked` int(11) NOT NULL,
+			  `saturday_chefs` int(11) NOT NULL,
+			  `sunday_checked` int(11) NOT NULL,
+			  `sunday_chefs` int(11) NOT NULL,
+			  PRIMARY KEY (`option_id`),
+			  UNIQUE KEY (`project_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
+	$createOptionsTable->execute();
 	// Participants
 	$createParticipantsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_participants` (
@@ -67,17 +83,30 @@ try{
 			  `project_id` int(11) NOT NULL,
 			  `breakfast_date` date NOT NULL,
 			  `breakfast_weekday` varchar(100) CHARACTER SET utf8 NOT NULL,
-			  `breakfast_chef` int(11) NOT NULL,
 			  `breakfast_done` int(11) NOT NULL,
 			  `breakfast_notified` int(11) NOT NULL,
 			  `breakfast_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  `breakfast_asleep` int(11) NOT NULL,
 			  PRIMARY KEY (`breakfast_id`),
-			  KEY (`breakfast_chef`),
 			  UNIQUE KEY (`project_id`,`breakfast_date`),
 			  FOREIGN KEY (`project_id`) REFERENCES breakfast_projects(`project_id`) ON DELETE CASCADE
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
 	$createBreakfastsTable->execute();
+	// Breakfasts
+	$createChefsTable = $conn->prepare("
+			CREATE TABLE IF NOT EXISTS `breakfast_chefs` (
+			  `rel_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `project_id` int(11) NOT NULL,
+			  `breakfast_id` int(11) NOT NULL,
+			  `chef_id` int(11) NOT NULL,
+			  `chef_replacement_id` int(11) NOT NULL,
+			  `chef_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  PRIMARY KEY (`rel_id`),
+			  UNIQUE KEY (`project_id`,`breakfast_id`, `chef_id`),
+			  FOREIGN KEY (`project_id`) REFERENCES breakfast_projects(`project_id`) ON DELETE CASCADE,
+			  FOREIGN KEY (`breakfast_id`) REFERENCES breakfast_breakfasts(`breakfast_id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci");
+	$createChefsTable->execute();
 	// Registrations
 	$createRegistrationsTable = $conn->prepare("
 			CREATE TABLE IF NOT EXISTS `breakfast_registrations` (

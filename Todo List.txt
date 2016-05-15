@@ -1,12 +1,3 @@
 Vigtigt:
-Brugbare fejlmeddelelser. (done)
-Sende notifikationer (emails) (hvornår?). (done)
-Vise antallet af personer tilmeldt en morgenmad. (done)
--> Dynamisk ændre det viste antal i takt med at man krydser af. (done)
-Lave hjemmesidetitlen til et link. (done)
-
-Knap så vigtigt:
-Implementere foreign-keys i datatabellerne. (done)
-
-Måske:
-Ved store arbejdspladser (mange personer) sætte 2+ personer til at sørge for morgenmad.
+What to buy - ajax implementation
+Antal værter = 1 ved afkrydsning (done)

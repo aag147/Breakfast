@@ -25,7 +25,8 @@ include("../headers/header.php");
 	</div>
 	
 	<div id="standardContent">	
-		<div id="showAllParticipant"></div>
+		<?php /* jscript */ ?>
+		<div id="showAllParticipant">Indlæser deltagere...</div>
 	</div><?php
 	
 	?><div id="standardPanel">
@@ -37,7 +38,7 @@ include("../headers/header.php");
 			<form id="newParticipantForm" action="" method="POST">
 				<span class="optionTitle">Tilføj en deltager (en af gangen)</span>
 				<span class="optionInputs">
-					<input name="name" type="text" placeholder="Indtast deltagers navn" />
+					<input id="name" name="name" type="text" placeholder="Indtast deltagers navn" />
 					<input name="email" type="email" placeholder="Indtast deltagers email"/>
 				</span>
 				<span class="optionErrmsg" id="newErrmsg">
