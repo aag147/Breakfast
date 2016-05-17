@@ -412,12 +412,9 @@ nav {
 	#projectContent li.weekdays li.weekday a:hover span.theChefs{
 		color: #000;
 	}
-	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
-		color: grey;
-	}
-	#projectContent li.weekdays li.weekday.done a span.weekdayToday{ /* DONE BREAKFAST */
-		color: grey;
-	}
+	#projectContent li.weekdays li.weekday.done a,
+	#projectContent li.weekdays li.weekday.done a span.weekdayDate,
+	#projectContent li.weekdays li.weekday.done a span.weekdayToday,
 	#projectContent li.weekdays li.weekday.done a:hover span.theChefs{ /* DONE BREAKFAST */
 		color: grey;
 	}
