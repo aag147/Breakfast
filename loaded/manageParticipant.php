@@ -77,7 +77,8 @@ try{
 			$email = filter_var(isset($_POST['email']) ? $_POST['email'] : '', FILTER_SANITIZE_STRING);
 			$participant_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 
-			$check_email_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants WHERE participant_email = :email AND project_id = :project_id AND participant_id <> :participant_id LIMIT 1");
+			$check_email_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants
+											  WHERE project_id = :project_id AND participant_email = :email AND participant_asleep = '0' AND participant_id <> :participant_id LIMIT 1");
 			$check_email_db->bindParam(':email', $email);		
 			$check_email_db->bindParam(':project_id', $cookie_project_id);		
 			$check_email_db->bindParam(':participant_id', $participant_id);		
@@ -91,15 +92,21 @@ try{
 			if ($check_email > 0){$errmsg[0] = -2; break;}	
 			// Long inputs
 			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
+						
+			/*** Delete asleep participant with same email ***/
+			$delete_old_participant = $conn->prepare("DELETE FROM breakfast_participants WHERE project_id = :project_id AND participant_email = :email");
+			$delete_old_participant->bindParam(':project_id', $cookie_project_id);		
+			$delete_old_participant->bindParam(':email', $email);
+			$delete_old_participant->execute();	
 			
 			/*** UPDATE ***/
 			$edit_participant = $conn->prepare("UPDATE breakfast_participants SET participant_name = :name, participant_email = :email WHERE project_id = :project_id AND participant_id = :participant_id");
+			$edit_participant->bindParam(':project_id', $cookie_project_id);		
 			$edit_participant->bindParam(':name', $name);
 			$edit_participant->bindParam(':email', $email);
-			$edit_participant->bindParam(':project_id', $cookie_project_id);		
 			$edit_participant->bindParam(':participant_id', $participant_id);
-			$edit_participant->execute();
-					
+			$edit_participant->execute();	
+			
 			$errmsg[0] = 1;
 			$errmsg[1] = "Deltageren er ændret!";
 			break;

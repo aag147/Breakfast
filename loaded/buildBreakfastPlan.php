@@ -209,7 +209,6 @@ try{
 	$static_chefs = $static_chefs_db->fetchAll();
 	
 	
-	
 	/***************** DELETE GHOST BREAKFASTS *****************/
 	// This have to be done after extracting static chefs
 	$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE breakfast_asleep = '1'");
@@ -339,6 +338,7 @@ try{
 								if($i==0 OR $chef['participant_asleep']==0){break;}
 								$dynamic_chefs_index++;
 							}
+							
 							// Check for existing chef
 							if($hasBreakfast AND in_array($chef_id, $old_breakfast_chefs_id)){
 								$index = array_search($chef_id, $old_breakfast_chefs_id);
@@ -431,7 +431,7 @@ try{
 							echo "<li class='newChefTitle'>Skift vært:</li>";						
 							for($k = 0; $k < $weekday_chefs_count; $k++){
 								echo "<li class='newChefs' id='changeChef_".$breakfast_id.$breakfast_chefs_id[$k]."'>";
-									echo "<select class='newChefSelect' data-id='".$breakfast_id."' data-original='".$breakfast_chefs_id[$k]."' ".$doneDisabled.">";
+									echo "<select class='newChefSelect' data-breakfast_id='".$breakfast_id."' data-original='".$breakfast_chefs_id[$k]."' ".$doneDisabled.">";
 										if($breakfast_chef_replacements_id[$k] == -1){$selected = "selected";}
 										else{$selected = "";}
 										echo "<option value='0'>".$breakfast_chefs[$k]['participant_name']." (original)</option>";
@@ -495,7 +495,7 @@ try{
 							
 							// Write out participant
 							echo "<li id='participant_".$participant_id."' ".$hide.">";
-								echo "<span class='status'><input id='".$reg_id."' data-id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$doneDisabled." ".$isComing."/></span>";
+								echo "<span class='status'><input id='".$reg_id."' data-breakfast_id='".$breakfast_id."' class='editParticipantStatus' type='checkbox' ".$doneDisabled." ".$isComing."/></span>";
 								echo "<span class='name'>".$participant_name."</span>";
 							echo "</li>";					
 						}
