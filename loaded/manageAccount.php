@@ -66,7 +66,7 @@ try{
 			$errmsg[1] = "Du er blevet logget ind!";
 			break;
 			
-		case 'register':
+		case 'new':
 			// Variables from form
 			$name = filter_var(isset($_POST['name']) ? $_POST['name'] : '', FILTER_SANITIZE_STRING);
 			$password = filter_var(isset($_POST['password']) ? $_POST['password'] : '', FILTER_SANITIZE_STRING);
@@ -98,25 +98,9 @@ try{
 			
 			$project_id = $conn->lastInsertId('breakfast_projects');
 			
-			$new_options = $conn->prepare("INSERT INTO breakfast_options (project_id, friday_checked) VALUES (:project_id, '1')");
+			$new_options = $conn->prepare("INSERT INTO breakfast_options (project_id, friday_checked, friday_chefs) VALUES (:project_id, '1', '1')");
 			$new_options->bindParam(':project_id', $project_id);
 			$new_options->execute();
-			
-			/*** LOG IN ***/
-			//hash cookie
-			$rand = rand(1, 1000);
-			$project_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
-			
-			if (strlen($project_hash) >= 20) {			
-				// Set cookies
-				$time = 43200;
-				setcookie("cookie_project_id",$project_id,time()+$time, '/', 'localhost');
-				setcookie("cookie_hash",$project_hash,time()+$time, '/', 'localhost');					
-				$insert = $conn->prepare("INSERT INTO breakfast_projects_sessions (session_hash, project_id, session_date) VALUES (:hash, :project_id, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL $time SECOND))");
-				$insert->bindParam(':hash', $project_hash);
-				$insert->bindParam(':project_id', $project_id);
-				$insert->execute();
-			}
 			
 			$errmsg[0] = 1;
 			$errmsg[1] = "Du er blevet registreret!";
@@ -168,33 +152,6 @@ try{
 			$delete_project = $conn->prepare("DELETE FROM breakfast_projects WHERE project_id = :project_id");
 			$delete_project->bindParam(':project_id', $cookie_project_id);
 			$delete_project->execute();
-			
-			$delete_options = $conn->prepare("DELETE FROM breakfast_options WHERE project_id = :project_id");
-			$delete_options->bindParam(':project_id', $cookie_project_id);
-			$delete_options->execute();
-			
-			$delete_breakfasts = $conn->prepare("DELETE FROM breakfast_breakfasts WHERE project_id = :project_id");
-			$delete_breakfasts->bindParam(':project_id', $cookie_project_id);
-			$delete_breakfasts->execute();
-			
-			$delete_participants = $conn->prepare("DELETE FROM breakfast_participants WHERE project_id = :project_id");
-			$delete_participants->bindParam(':project_id', $cookie_project_id);
-			$delete_participants->execute();
-			
-			$delete_registrations = $conn->prepare("DELETE FROM breakfast_registrations WHERE project_id = :project_id");
-			$delete_registrations->bindParam(':project_id', $cookie_project_id);
-			$delete_registrations->execute();
-
-			$delete_products = $conn->prepare("DELETE FROM breakfast_products WHERE project_id = :project_id");
-			$delete_products->bindParam(':project_id', $cookie_project_id);
-			$delete_products->execute();
-			
-			$delete_sessions = $conn->prepare("DELETE FROM breakfast_projects_sessions WHERE project_id = :project_id");
-			$delete_sessions->bindParam(':project_id', $cookie_project_id);
-			$delete_sessions->execute();
-			
-			setcookie ("cookie_project_id", "", -1, '/', 'localhost');
-			setcookie ("cookie_hash", "", -1, '/', 'localhost');
 			
 			$errmsg[0] = 1;
 			$errmsg[1] = "Projektet er slettet!";
@@ -259,7 +216,29 @@ try{
 			
 			// Error: No match between password and stored hash
 			if (!password_verify($project_id.$security_code, $security_code_hash)){$errmsg[0] = -6; break;}
-		
+
+			$errmsg[0] = 1;
+			$errmsg[1] = "Sikkerhedskoden er korrekt!";
+			$errmsg[2] = $project_id;
+			break;			
+			
+		case 'password':
+			$password = filter_var(isset($_POST['password']) ? $_POST['password'] : '', FILTER_SANITIZE_STRING);
+			if(empty($cookie_project_id)){
+				$project_id = filter_var(isset($_POST['project_id']) ? $_POST['project_id'] : '', FILTER_SANITIZE_STRING);
+			}else{
+				$project_id = $cookie_project_id;
+			}
+			
+			$project_db = $conn->prepare("SELECT * FROM breakfast_projects WHERE project_id = :project_id");
+			$project_db->bindParam(':project_id', $project_id);		
+			$project_db->execute();	
+			$valid_project = $project_db->rowCount();
+			
+			/*** ERROR CHECKING ***/
+			if (empty($project_id) || empty($password)){$errmsg[0] = -1; break;}
+			elseif($valid_project==0){$errmsg[0] = -5; break;}
+			
 			// Hasher
 			$hash = password_hash($password, PASSWORD_BCRYPT);
 			
@@ -271,22 +250,11 @@ try{
 			$edit_project->bindParam(':hash', $hash);
 			$edit_project->bindParam(':project_id', $project_id);		
 			$edit_project->execute();
-		
-			/*** LOG IN ***/
-			//hash cookie
-			$rand = rand(1, 1000);
-			$project_hash = password_hash($project_id.$rand, PASSWORD_BCRYPT);
 			
-			if (strlen($project_hash) >= 20) {			
-				// Set cookies
-				$time = 43200;
-				setcookie("cookie_project_id",$project_id,time()+$time, '/', 'localhost');
-				setcookie("cookie_hash",$project_hash,time()+$time, '/', 'localhost');					
-				$insert = $conn->prepare("INSERT INTO breakfast_projects_sessions (session_hash, project_id, session_date) VALUES (:hash, :project_id, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL $time SECOND))");
-				$insert->bindParam(':hash', $project_hash);
-				$insert->bindParam(':project_id', $project_id);
-				$insert->execute();
-			}		
+			/** Delete old sessions with old password **/
+			$delete_sessions = $conn->prepare("DELETE FROM breakfast_registrations WHERE project_id = :project_id");
+			$delete_sessions->bindParam(':project_id', $cookie_project_id);
+			$delete_sessions->execute();
 
 			$errmsg[0] = 1;
 			$errmsg[1] = "Kodeordet er blevet ændret!";
@@ -310,15 +278,15 @@ try{
 		case '-3':
 		case '-4':
 			$errmsg[1] .= "Et projekt med det angivede navn og kodeord kunne ikke findes.<br>".
-						  "<a href='javascript:;' data-id='register' class='adminShiftLinkDynamic blue'>Ønsker du i stedet at oprette projektet?</a>";
+						  "<a href='javascript:;' data-id='register' class='adminShiftLinkDynamic'>Klik her for i stedet at oprette projektet.</a>";
 			break;
 		case '-5':
 			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen.";
 			break;
 		case '-6':
 			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen.<br>".
-						  "<a href='javascript:;' class='sendForgottenEmailAgain blue'>Klik her for at få tilsendt en ny email.</a><br>".
-						  "<a href='javascript:;' data-id='forgotten' class='adminShiftLinkDynamic blue'>Klik her for at prøve med en anden email.</a>";
+						  "<a href='javascript:;' class='sendForgottenEmailAgain'>Klik her for at få tilsendt en ny email.</a><br>".
+						  "<a href='javascript:;' data-id='forgotten' class='adminShiftLinkDynamic'>Klik her for at prøve med en anden email.</a>";
 			break;
 		case '-7':
 			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn.";
