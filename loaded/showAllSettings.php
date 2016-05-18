@@ -34,6 +34,7 @@ try{
 		echo "</ul>";
 		echo "<ul class='optionInputs'>";
 			$max_chefs = min(3, $participants_count);
+			$max_chefs = max(1, $max_chefs);
 			echo "<li>";
 				echo "<span><input class='checkAll' value='0' type='checkbox' /> Alle dage</span>";
 				echo "<span><input class='chefsAll' type='number' min='1' max='".$max_chefs."'/></span>";
