@@ -31,7 +31,10 @@
 	function sendNotifications(formData, type){
 		formData.append("type", type);
 		
-		if(type == "forgotten"){$('#forgottenErrmsg').html("<p class='neutral'>Emailen sendes... Det kan tage et øjeblik.</p>");}
+		if(type == "forgotten"){
+			$('#forgottenErrmsg').html("<p class='neutral'>Emailen sendes... Det kan tage et øjeblik.</p>");
+			$('#forgottenView input[type=submit]').prop('disabled', true);
+		}
 		
 		 $.ajax({
 			   type: "POST",
@@ -53,13 +56,17 @@
 							$('#forgottenForm input[type=submit]').val('Log ind');
 					   }
 					}
+					if(type == "forgotten"){
+						$('#forgottenForm input[type=submit]').prop('disabled', false);
+					}
 			   }
 		  });
 	}
 	
 	// Account management
 	function manageAccount(formData, type){
-		formData.append("type", type);		
+		formData.append("type", type);
+		$('#'+type+'Form input[type=submit]').prop('disabled', true);
 		$.ajax({
 			url: '../loaded/manageAccount.php',
 			type: 'POST',
@@ -83,6 +90,9 @@
 						sendNotifications(new FormData(), type);
 					}
 				}
+				if(retval[0]!=1 || type=="login" || type=="logout" || type=="weekdays"){
+					$('#'+type+'Form input[type=submit]').prop('disabled', false);
+				}
 			}
 		});
 	}
@@ -91,6 +101,7 @@
 	function addElement(formData, type){
 		var typeUCF = type[0].toUpperCase() + type.substring(1);
 		formData.append("type", "new");
+		$('#new'+typeUCF+'Form input[type=submit]').prop('disabled', true);
 	
 		$.ajax({
 			url: '../loaded/manage'+typeUCF+'.php',
@@ -110,6 +121,7 @@
 						$(":input#name").focus();
 					}
 				}
+				$('#new'+typeUCF+'Form input[type=submit]').prop('disabled', false);
 			}
 		});
 	}
