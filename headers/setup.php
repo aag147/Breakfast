@@ -15,7 +15,7 @@ $filename = pathinfo(htmlentities($_SERVER['PHP_SELF']))['filename'];
 define('DB_SERVER', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PASSWORD', '123456');
-define('DB_NAME', 'breakfast');
+define('DB_NAME', 'breakfast1');
 
 $weekdays_danish = array("Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag");
 
@@ -82,6 +82,7 @@ try{
 			  `breakfast_weekday` varchar(100) CHARACTER SET utf8 NOT NULL,
 			  `breakfast_chef` int(11) NOT NULL,
 			  `breakfast_done` int(11) NOT NULL,
+			  `breakfast_notified` int(11) NOT NULL,
 			  `breakfast_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  `breakfast_asleep` int(11) NOT NULL,
 			  PRIMARY KEY (`breakfast_id`),
