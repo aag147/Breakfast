@@ -2,6 +2,19 @@
 //****** FUNCTIONS *******//
 //************************//
 
+	// Show error message
+	function showMessage(id, message, remove=true){		
+		
+		$('#'+id+'Errmsg').html(message);
+		if(remove){
+			setTimeout(function (){
+				alert("hej");
+				$('#'+id+'Errmsg').html('');
+			}, 5000);
+		}
+	}
+
+
 
 	// Build breakfast planner
 	function buildBreakfastPlan(){
@@ -44,13 +57,15 @@
 			   contentType: false,
 			   dataType: 'json',
 			   success: function(retval) {
-				   $("#"+type+"Errmsg").html(retval[1]);
+				   showMessage(type, retval[1], false);
 				   if(retval[0]==1){
 					   if(type=="forgotten"){
 							$("#forgottenForm span#emailSpan").addClass('hide');
 							$("#forgottenForm span:not(#emailSpan)").removeClass('hide');
-							var message = 'Indtast den tilsendte sikkerhedskode samt et nyt kodeord til projektet.' +
-									      'Det er dette kodeord du skal logge ind med fremover.';
+							var message = "Indtast den tilsendte sikkerhedskode samt et nyt kodeord til projektet. " +
+									      "Det er dette kodeord du skal logge ind med fremover.<br>" +
+										  "<a href='javascript:;' class='sendForgottenEmailAgain'>Klik her for at få tilsendt en ny email.</a><br>" +
+										  "<a href='javascript:;' data-id='forgotten' class='adminShiftLinkDynamic'>Klik her for at prøve med en anden email.</a>";
 							$("#forgottenView #pageSubTitle").html(message);
 							$('#forgottenErrmsg').html('');
 							$('#forgottenForm input[type=submit]').val('Log ind');
@@ -75,7 +90,7 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				$("#"+type+"Errmsg").html(retval[1]);
+				showMessage(type, retval[1], false);
 				if(retval[0]==1){
 					if(type=="forgotten"){
 						formData.append("project_id", retval[2]);
@@ -111,7 +126,7 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				$("#newErrmsg").html(retval[1]);
+				showMessage('new', retval[1]);
 				if(retval[0]==1){
 					if(type=="account"){
 						manageAccount(formData, "login");
@@ -147,7 +162,7 @@
 					if(row){row.parentNode.removeChild(row);}
 					$count = $("span#totalAmount");
 					$count.text(parseInt($count.text()) - 1);
-					if($count.text()==0){showContent(type, 'simple', 'buy');}
+					if($count.text()==0){showContent(type, visuals = 'simple', db_filter = 'buy');}
 					
 				}else if(retval[0]==1 && type=="participant"){
 					var breakfast = $("#"+id).data('breakfast_id');
@@ -301,7 +316,7 @@
 						// Return to span
 						backToSpan($inputs, $span, $options, type, id);
 					}else{
-						$("#"+id+"Errmsg").html(retval[1]);
+						showMessage(id, retval[1]);
 					}
 				}
 			});	
@@ -392,6 +407,7 @@
 			$(':input','#forgottenForm').not('#name, :button, :submit, :reset, :hidden').val('');
 			$("#forgottenForm span#emailSpan").removeClass('hide');
 			$("#forgottenForm span#securitySpan, #forgottenForm span#passwordSpan").addClass('hide');
+			$('#pageSubTitle').html('Indtast projektnavn og en email tilknyttet en af deltagerne.');
 			$('#forgottenErrmsg').html('');
 			$('#forgottenForm input[type=submit]').val('Send email');
 		}
