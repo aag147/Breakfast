@@ -19,14 +19,14 @@ try{
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	
-	$visuals = !empty($_POST['visuals']) ? $_POST['visuals'] : '';
-	$db_filter = !empty($_POST['db_filter']) ? $_POST['db_filter'] : '';
+	$visuals = !empty($_POST['visuals']) ? $_POST['visuals'] : 'full';
+	$db_filter = !empty($_POST['db_filter']) ? $_POST['db_filter'] : 'merge';
 
 	switch ($db_filter){
 		case 'buy':
 			$products_query = "SELECT * FROM breakfast_products WHERE project_id = :project_id AND product_status = 0 ORDER BY product_name ASC";
 			break;
-		default:
+		case 'merge':
 			$products_query = "SELECT * FROM breakfast_products WHERE project_id = :project_id ORDER BY product_name ASC";
 	}
 	
@@ -35,13 +35,12 @@ try{
 	$products_db->execute();
 	$products_count = $products_db->rowCount();
 	
-	
 	if($products_count==0){
 		switch ($db_filter){
 			case 'buy':
 				echo "Der mangler ikke at blive købt noget.";
 				break;
-			case 'full':
+			case 'merge':
 				echo "Du har ikke tilføjet nogle produkter endnu.";
 		}
 	}else{	

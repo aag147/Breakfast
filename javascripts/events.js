@@ -18,14 +18,14 @@ $(document).ready(function() {
 		event.preventDefault();
 	})
 	// Log in
-	$('#logInForm').submit(function(event) {
+	$('#loginForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
 		manageAccount(formData, "login");
 		event.preventDefault();
 	})
 	// Register
-	$('#registerForm').submit(function(event) {
+	$('#newAccountForm').submit(function(event) {
 		var id = event.target.id;
 		var formData = new FormData(document.getElementById(id));
 		addElement(formData, "account");
