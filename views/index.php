@@ -17,7 +17,7 @@ include("../headers/header.php");
 						Log ind
 					</li>
 					<li id="adminContent">
-						<form id="logInForm" action="" method="POST">
+						<form id="loginForm" action="" method="POST">
 							<span><input type="text" name="name" placeholder="Dit projektnavn" id="name"/></span>
 							<span><input type="password" name="password" placeholder="Dit kodeord"/></span>
 							<span id="loginErrmsg"></span>
@@ -30,10 +30,10 @@ include("../headers/header.php");
 						Opret nyt projekt
 					</li>
 					<li id="adminContent">
-						<form id="registerForm" action="" method="POST">
+						<form id="newAccountForm" action="" method="POST">
 							<span><input type="text" name="name" placeholder="Nyt projektnavn" id="name"/></span>
 							<span><input type="password" name="password" placeholder="Nyt kodeord"/></span>
-							<span id="registerErrmsg"></span>
+							<span id="newErrmsg"></span>
 							<span><input type="submit" value="Opret projekt"/></span>
 						</form>
 					</li>

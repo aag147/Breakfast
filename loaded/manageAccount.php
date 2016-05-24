@@ -284,9 +284,7 @@ try{
 			$errmsg[1] .= "Der opstod en intern fejl. Prøv igen.";
 			break;
 		case '-6':
-			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen.<br>".
-						  "<a href='javascript:;' class='sendForgottenEmailAgain'>Klik her for at få tilsendt en ny email.</a><br>".
-						  "<a href='javascript:;' data-id='forgotten' class='adminShiftLinkDynamic'>Klik her for at prøve med en anden email.</a>";
+			$errmsg[1] .= "Projektnavn og sikkerhedskode passer ikke sammen.";
 			break;
 		case '-7':
 			$errmsg[1] .= "Projektnavnet for langt. Systemet accepterer desværre ikke mere end 75 tegn.";
