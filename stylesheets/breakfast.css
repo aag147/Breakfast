@@ -396,6 +396,7 @@ nav {
 	}
 	#projectContent li.weekdays li.weekday a:hover span.theChefs{
 		color: #000;
+        font-weight: bold;
 	}
 	#projectContent li.weekdays li.weekday.done a,
 	#projectContent li.weekdays li.weekday.done a span.weekdayDate,

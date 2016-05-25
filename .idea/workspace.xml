@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a7c0ef31-5b68-491d-ba7d-f2b7776592e3" name="Default" comment="" />
+    <ignored path="breakfast.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="breakfast" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="buildBreakfastPlan.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loaded/buildBreakfastPlan.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="337">
+              <caret line="376" column="55" selection-start-line="376" selection-start-column="55" selection-end-line="376" selection-end-column="55" />
+              <folding>
+                <marker date="1463569737135" expanded="true" signature="859:1398" placeholder="SELECT SUM(C... chef_id" />
+                <marker date="1463569737135" expanded="true" signature="899:1380" placeholder="SELECT (CASE... breakfast_id" />
+                <marker date="1463569737135" expanded="true" signature="974:1098" placeholder="SELECT break... breakfast_breakfasts" />
+                <marker date="1463569737135" expanded="true" signature="1127:1333" placeholder="SELECT break... breakfast_chefs" />
+                <marker date="1463569737135" expanded="true" signature="1658:1924" placeholder="SELECT parti... *" />
+                <marker date="1463569737135" expanded="true" signature="1737:1830" placeholder="SELECT * FRO... breakfast_chefs" />
+                <marker date="1463569737135" expanded="true" signature="2132:2244" placeholder="SELECT * FRO... breakfast_participants" />
+                <marker date="1463569737135" expanded="true" signature="2447:2564" placeholder="SELECT * FRO... breakfast_registrations" />
+                <marker date="1463569737135" expanded="true" signature="2760:2870" placeholder="SELECT * FRO... breakfast_breakfasts" />
+                <marker date="1463569737135" expanded="true" signature="3054:3305" placeholder="SELECT parti... *" />
+                <marker date="1463569737135" expanded="true" signature="3130:3213" placeholder="SELECT * FRO... breakfast_chefs" />
+                <marker date="1463569737135" expanded="true" signature="3507:3634" placeholder="SELECT COUNT... breakfast_registrations" />
+                <marker date="1463569737135" expanded="true" signature="3862:4033" placeholder="INSERT INTO breakfast_registrations... " />
+                <marker date="1463569737135" expanded="true" signature="4294:4444" placeholder="INSERT INTO breakfast_breakfasts... " />
+                <marker date="1463569737135" expanded="true" signature="4696:4816" placeholder="INSERT INTO breakfast_chefs... " />
+                <marker date="1463569737135" expanded="true" signature="5032:5157" placeholder="DELETE FROM " />
+                <marker date="1463569737135" expanded="true" signature="5412:5563" placeholder="UPDATE break... " />
+                <marker date="1463569737135" expanded="true" signature="5917:6483" placeholder="SELECT B.bre... breakfast_id" />
+                <marker date="1463569737135" expanded="true" signature="6002:6148" placeholder="SELECT break... breakfast_breakfasts" />
+                <marker date="1463569737135" expanded="true" signature="6191:6276" placeholder="SELECT * FRO... breakfast_registrations" />
+                <marker date="1463569737135" expanded="true" signature="6824:7021" placeholder="UPDATE break... " />
+                <marker date="1463569737135" expanded="true" signature="7192:7369" placeholder="UPDATE break... " />
+                <marker date="1463569737135" expanded="true" signature="7628:7900" placeholder="UPDATE break... " />
+                <marker date="1463569737135" expanded="true" signature="8856:8982" placeholder="SELECT * FRO... breakfast_participants" />
+                <marker date="1463569737135" expanded="true" signature="9257:9465" placeholder="SELECT parti... breakfast_participants" />
+                <marker date="1463569737135" expanded="true" signature="9773:10082" placeholder="SELECT C.che... *" />
+                <marker date="1463569737135" expanded="true" signature="9807:9916" placeholder="SELECT * FRO... breakfast_breakfasts" />
+                <marker date="1463569737135" expanded="true" signature="10443:10504" placeholder="DELETE FROM " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="breakfast.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/javascripts/breakfast.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7072">
+              <caret line="563" column="21" selection-start-line="563" selection-start-column="17" selection-end-line="563" selection-end-column="21" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
+  <component name="JsBuildToolPackageJson" detection-done="true" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="219" />
+    <option name="y" value="37" />
+    <option name="width" value="1547" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="loaded" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="javascripts" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="breakfast" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="headers" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a7c0ef31-5b68-491d-ba7d-f2b7776592e3" name="Default" comment="" />
+      <created>1463569960650</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1463569960650</updated>
+      <workItem from="1463569963166" duration="1743000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1743000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="219" y="37" width="1547" height="1000" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24951012" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/views/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-456">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loaded/buildBreakfastPlan.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="376" column="55" selection-start-line="376" selection-start-column="55" selection-end-line="376" selection-end-column="55" />
+          <folding>
+            <marker date="1463569737135" expanded="true" signature="859:1398" placeholder="SELECT SUM(C... chef_id" />
+            <marker date="1463569737135" expanded="true" signature="899:1380" placeholder="SELECT (CASE... breakfast_id" />
+            <marker date="1463569737135" expanded="true" signature="974:1098" placeholder="SELECT break... breakfast_breakfasts" />
+            <marker date="1463569737135" expanded="true" signature="1127:1333" placeholder="SELECT break... breakfast_chefs" />
+            <marker date="1463569737135" expanded="true" signature="1658:1924" placeholder="SELECT parti... *" />
+            <marker date="1463569737135" expanded="true" signature="1737:1830" placeholder="SELECT * FRO... breakfast_chefs" />
+            <marker date="1463569737135" expanded="true" signature="2132:2244" placeholder="SELECT * FRO... breakfast_participants" />
+            <marker date="1463569737135" expanded="true" signature="2447:2564" placeholder="SELECT * FRO... breakfast_registrations" />
+            <marker date="1463569737135" expanded="true" signature="2760:2870" placeholder="SELECT * FRO... breakfast_breakfasts" />
+            <marker date="1463569737135" expanded="true" signature="3054:3305" placeholder="SELECT parti... *" />
+            <marker date="1463569737135" expanded="true" signature="3130:3213" placeholder="SELECT * FRO... breakfast_chefs" />
+            <marker date="1463569737135" expanded="true" signature="3507:3634" placeholder="SELECT COUNT... breakfast_registrations" />
+            <marker date="1463569737135" expanded="true" signature="3862:4033" placeholder="INSERT INTO breakfast_registrations... " />
+            <marker date="1463569737135" expanded="true" signature="4294:4444" placeholder="INSERT INTO breakfast_breakfasts... " />
+            <marker date="1463569737135" expanded="true" signature="4696:4816" placeholder="INSERT INTO breakfast_chefs... " />
+            <marker date="1463569737135" expanded="true" signature="5032:5157" placeholder="DELETE FROM " />
+            <marker date="1463569737135" expanded="true" signature="5412:5563" placeholder="UPDATE break... " />
+            <marker date="1463569737135" expanded="true" signature="5917:6483" placeholder="SELECT B.bre... breakfast_id" />
+            <marker date="1463569737135" expanded="true" signature="6002:6148" placeholder="SELECT break... breakfast_breakfasts" />
+            <marker date="1463569737135" expanded="true" signature="6191:6276" placeholder="SELECT * FRO... breakfast_registrations" />
+            <marker date="1463569737135" expanded="true" signature="6824:7021" placeholder="UPDATE break... " />
+            <marker date="1463569737135" expanded="true" signature="7192:7369" placeholder="UPDATE break... " />
+            <marker date="1463569737135" expanded="true" signature="7628:7900" placeholder="UPDATE break... " />
+            <marker date="1463569737135" expanded="true" signature="8856:8982" placeholder="SELECT * FRO... breakfast_participants" />
+            <marker date="1463569737135" expanded="true" signature="9257:9465" placeholder="SELECT parti... breakfast_participants" />
+            <marker date="1463569737135" expanded="true" signature="9773:10082" placeholder="SELECT C.che... *" />
+            <marker date="1463569737135" expanded="true" signature="9807:9916" placeholder="SELECT * FRO... breakfast_breakfasts" />
+            <marker date="1463569737135" expanded="true" signature="10443:10504" placeholder="DELETE FROM " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/javascripts/breakfast.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7072">
+          <caret line="563" column="21" selection-start-line="563" selection-start-column="17" selection-end-line="563" selection-end-column="21" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

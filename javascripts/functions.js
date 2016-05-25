@@ -8,7 +8,6 @@
 		$('#'+id+'Errmsg').html(message);
 		if(remove){
 			setTimeout(function (){
-				alert("hej");
 				$('#'+id+'Errmsg').html('');
 			}, 5000);
 		}
@@ -97,8 +96,6 @@
 						manageAccount(formData, "password");
 					}else if(type=="password"){
 						manageAccount(formData, "login");
-					}else if(type=="delete"){
-						manageAccount(formData, "logout");
 					}else if(type=="login" || type=="logout"){
 						window.location.href = "../views/index.php";
 					}else if(type=='weekdays'){
@@ -249,7 +246,7 @@
 			success: function(retval) {
 				if(retval[0]==1){
 					if(type=="account"){
-						manageAccount(formData, "logout");
+						manageAccount(new FormData(), "logout");
 					}else{
 						var row = document.getElementById(type+"_"+id);
 						if(row){row.parentNode.removeChild(row);}
