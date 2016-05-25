@@ -3,15 +3,6 @@ include("../headers/setup.php");
 if(empty($cookie_project_id)){header('Location: index.php'); exit;}
 include("../headers/header.php");
 
-try{ 
-	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
-	
-	$participants_db = $conn->prepare("SELECT * FROM breakfast_participants WHERE project_id = :project_id AND participant_asleep = '0' ORDER BY participant_name ASC");
-	$participants_db->bindParam(':project_id', $cookie_project_id);		
-	$participants_db->execute();
-	$participants_count = $participants_db->rowCount();
-
 
 ?>
 	<head>
@@ -63,9 +54,5 @@ try{
 		</ul>
 	</div>
 <?php
-
-} catch(PDOException $e) {
-	echo 'ERROR: ' . $e->getMessage();
-}
 include("../headers/footer.php");
 ?>

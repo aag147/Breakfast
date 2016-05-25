@@ -78,7 +78,7 @@ try{
 			$participant_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 
 			$check_email_db = $conn->prepare("SELECT COUNT(participant_id) as C FROM breakfast_participants
-											  WHERE project_id = :project_id AND participant_email = :email AND participant_asleep = '0' AND participant_id <> :participant_id LIMIT 1");
+											  WHERE project_id = :project_id AND participant_email = :email AND participant_id <> :participant_id LIMIT 1");
 			$check_email_db->bindParam(':email', $email);		
 			$check_email_db->bindParam(':project_id', $cookie_project_id);		
 			$check_email_db->bindParam(':participant_id', $participant_id);		
@@ -92,13 +92,7 @@ try{
 			if ($check_email > 0){$errmsg[0] = -2; break;}	
 			// Long inputs
 			if (strlen($name) > 60 OR strlen($email) > 60){$errmsg[0] = -3; break;}	
-						
-			/*** Delete asleep participant with same email ***/
-			$delete_old_participant = $conn->prepare("DELETE FROM breakfast_participants WHERE project_id = :project_id AND participant_email = :email");
-			$delete_old_participant->bindParam(':project_id', $cookie_project_id);		
-			$delete_old_participant->bindParam(':email', $email);
-			$delete_old_participant->execute();	
-			
+                
 			/*** UPDATE ***/
 			$edit_participant = $conn->prepare("UPDATE breakfast_participants SET participant_name = :name, participant_email = :email WHERE project_id = :project_id AND participant_id = :participant_id");
 			$edit_participant->bindParam(':project_id', $cookie_project_id);		
@@ -113,6 +107,7 @@ try{
 			
 		case 'changeStatus':		
 			// Variables from form
+            
 			$registration_id = (isset($_POST['participant_id']) ? $_POST['participant_id'] : '');
 			$value = (isset($_POST['value']) ? $_POST['value'] : '');
 			if($value=="true"){$value=1;}else{$value=0;}
@@ -246,7 +241,7 @@ try{
 			$errmsg[1] .= "Alle felter skal udfyldes!";
 			break;
 		case '-2':
-			$errmsg[1] .= "En deltager med angivede email er allerede tilføjet!";
+			$errmsg[1] .= "En deltager med angivede email er tidligere tilføjet!";
 			break;
 		case '-3':
 			$errmsg[1] .= "Navnet eller emailen er for lang. Systemet accepterer desværre ikke mere end 60 tegn!";
