@@ -3,13 +3,13 @@
 //************************//
 
 	// Show error message
-	function showMessage(id, message, remove=true){		
+	function showMessage(id, message, remove=true, count=5000){		
 		
-		$('#'+id+'Errmsg').html(message);
+		$('#'+id).html(message);
 		if(remove){
 			setTimeout(function (){
-				$('#'+id+'Errmsg').html('');
-			}, 5000);
+				$('#'+id).html('');
+			}, count);
 		}
 	}
 
@@ -56,7 +56,7 @@
 			   contentType: false,
 			   dataType: 'json',
 			   success: function(retval) {
-				   showMessage(type, retval[1], false);
+				   showMessage(type+"Errmsg", retval[1], false);
 				   if(retval[0]==1){
 					   if(type=="forgotten"){
 							$("#forgottenForm span#emailSpan").addClass('hide');
@@ -89,7 +89,7 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				showMessage(type, retval[1], false);
+				showMessage(type+"Errmsg", retval[1], false);
 				if(retval[0]==1){
 					if(type=="forgotten"){
 						formData.append("project_id", retval[2]);
@@ -123,7 +123,7 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				showMessage('new', retval[1]);
+				showMessage('newErrmsg', retval[1]);
 				if(retval[0]==1){
 					if(type=="account"){
 						manageAccount(formData, "login");
@@ -161,6 +161,8 @@
 					$count.text(parseInt($count.text()) - 1);
 					if($count.text()==0){showContent(type, visuals = 'simple', db_filter = 'buy');}
 					
+				}else if(retval[0]==1 && type=='product'){
+					showMessage(id+"Checked", "<span class='saveicon'></span>", true, 500);
 				}else if(retval[0]==1 && type=="participant"){
 					var breakfast = $("#"+id).data('breakfast_id');
 					$count = $("#participants_"+breakfast+" span.participantsCount");
@@ -234,7 +236,7 @@
 			}
 		});
 	}
-	
+
 	// Delete something
 	function deleteElement(id, type){
 		var typeUCF = type[0].toUpperCase() + type.substring(1);		
@@ -313,7 +315,7 @@
 						// Return to span
 						backToSpan($inputs, $span, $options, type, id);
 					}else{
-						showMessage(id, retval[1]);
+						showMessage(id+"Errmsg", retval[1]);
 					}
 				}
 			});	
@@ -383,7 +385,7 @@
 	
 	
 	/********* NO AJAX FUNCTIONS - ONLY VISUAL CHANGES ********/		
-	// Toggle between hide and show for single element
+	// Toggle between hide and show of participants window
 	function toggleParticipantsWindow(id) {
 		if($('#participants_'+id).hasClass('hide')){
 			$('#participants_'+id).removeClass('hide');
@@ -392,7 +394,14 @@
 			$('#participants_'+id).addClass("hide");
             $('#breakfast_'+id).removeClass('open');
 		}
+		
 
+	}
+	
+	// Close all participants windows
+	function closeAllParticipantsWindows() {
+		$("#breakfastPlan_inner li.participants").addClass('hide');
+		$("#breakfastPlan_inner li.weekday").removeClass('open');
 	}
 
 	// Toggle between the index views

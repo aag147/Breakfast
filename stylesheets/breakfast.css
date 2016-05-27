@@ -5,7 +5,7 @@ html{
 
 body  {
 	margin: 0px;	
-	background-color:#111;
+	background-color:#aaa;
 	font-size: 0.9em;
 	font-weight:400;
 	color:#191919;
@@ -38,10 +38,34 @@ ul, li, ol{
 	margin: 0;
 }
 
+input[type=text],
+input[type=password],
+input[type=email]{
+	text-align: left;
+	padding: 2px;
+}
+input[type=submit]{
+	cursor: pointer;
+	background: #abcdef;
+	background: -moz-linear-gradient(#eee, #abcdef); 
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #abcdef),color-stop(1, #eee));	
+	background: -webkit-linear-gradient(#eee, #abcdef);	
+	background: -o-linear-gradient(#eee, #abcdef);
+	background: -ms-linear-gradient(#eee, #abcdef);
+	background: linear-gradient(#eee, #abcdef);
+}
+
+input[type=submit]:hover{
+	background: #abcdef; 
+}
+
+
+/* Messages */
 p.success{color: green;font-size: 0.8em;}
 p.error{color: red;font-size: 0.8em;}
 p.neutral{font-size: 0.8em;}
 
+/* Hide */
 .hide{display: none !important;}
 
 
@@ -133,11 +157,15 @@ a.green:hover{
 	border-spacing:0px;
 	font-size: 3.0em;
 	font-weight: bold;
-	border-bottom: 2px solid;}
+	border-bottom: 0px solid;
+	color: #0186ba;
+}
 	
 #siteTitle a{
 	color: inherit;
 }
+	#siteTitle a span:last-child{
+	}
 	
 /* MENU */
 nav {
@@ -158,33 +186,37 @@ nav {
 	width: 100%;
 	height: 100%;
 	padding: 10px 0px;
-	border-bottom: 1px solid rgb(34, 34, 34);
+	border-bottom: 0px solid rgb(34, 34, 34);
+	background: #000;
+	color: #fff;
+	font-weight: bolder; 
+	font-size: 1.1em;
 	}
 	
 	nav.frontpage li {
 		width: calc(100% / 3);
 	}
 	nav.frontpage li a {
-		padding: 20px 0px;
-	}
-
-	
-	@media screen and (min-width: 766px) {
-		nav li.current a{
-		border-bottom: none;
-		}
-		nav li.current:not(:first-child) a{
-		border-left: 1px solid rgb(34, 34, 34);
-		}
-		nav li.current:not(:last-child) a{
-		border-right: 1px solid rgb(34, 34, 34);
-		}
+		padding: 10px 0px;
 	}
 	
 	nav li a:hover {
-	background-color: #ccc;
+	background-color: #0186ba;
 	color: #fff;
 	}
+
+	nav li.current a{
+	border-bottom: none;
+	background: #0186ba;
+	color: #fff;
+	}
+	nav li.current:not(:first-child) a{
+	border-left: 0px solid rgb(34, 34, 34);
+	}
+	nav li.current:not(:last-child) a{
+	border-right: 0px solid rgb(34, 34, 34);
+	}
+	
 
 
 /****************** BODY *******************/
@@ -251,9 +283,6 @@ nav {
 			width: 100%;
 			padding: 2px;
 		}
-		#frontpage ul li#adminContent span input{
-			text-align: center;
-		}
 		#frontpage ul li#adminShift{
 			padding-bottom: 15px;
 		}
@@ -284,43 +313,44 @@ nav {
 
 	
 	
-/* PROJECT CONTENT */
-#projectContent{
+/* PLAN CONTENT */
+#planContent{
 	
 }	
-	#projectContent li#title{
+	#planContent li#title{
 	font-size: 1.2em;
 	font-weight: bold;
+	color: #0186ba;
 	}
-	#projectContent li#breakfastPlan span.loadingText{
+	#planContent li#breakfastPlan span.loadingText{
 		padding: 50px 10px 0px;
 	}
-	#projectContent li.week{
+	#planContent li.week{
 		display: inline-block;
 		width: 100%;
 		font-size: 1.1em;
 		border-bottom: 1px solid;
 	}
-	#projectContent li.week a{
+	#planContent li.week a{
 		display: inline-block;
 		height: 100%;
 		width: 100%;
 		padding: 5px 5px;
 	}
-	#projectContent li.week a span.weekTitle{
+	#planContent li.week a span.weekTitle{
 		display: inline-block;
 		width: 100%;
 	}
-	#projectContent li.weekdays{
+	#planContent li.weekdays{
 		padding-bottom: 15px;
 	}
-	#projectContent li.weekdays li.weekday{
+	#planContent li.weekdays li.weekday{
 		display: inline-block;
 		width: 100%;
 		font-size: 0.9em;
 		margin-bottom: 2px;
 	}
-	#projectContent li.weekdays li.weekday a{
+	#planContent li.weekdays li.weekday a{
 		display: inline-block;
 		height: 100%;
 		width: 100%;
@@ -331,81 +361,84 @@ nav {
 		-webkit-box-shadow: 0 2px 1px #9c9c9c;
 		box-shadow: 0 2px 1px #9c9c9c;
 	}
-	#projectContent li.weekdays li.weekday a{
-		background: #bbb;
-		background: -moz-linear-gradient(#eee, #bbb); 
-		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bbb),color-stop(1, #eee));	
-		background: -webkit-linear-gradient(#eee, #bbb);	
-		background: -o-linear-gradient(#eee, #bbb);
-		background: -ms-linear-gradient(#eee, #bbb);
-		background: linear-gradient(#eee, #bbb);
+	#planContent li.weekdays li.weekday a{
+		background: #abcdef;
+		background: -moz-linear-gradient(#fff, #abcdef); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #abcdef),color-stop(1, #fff));	
+		background: -webkit-linear-gradient(#fff, #abcdef);	
+		background: -o-linear-gradient(#fff, #abcdef);
+		background: -ms-linear-gradient(#fff, #abcdef);
+		background: linear-gradient(#fff, #abcdef);
 	}
-	#projectContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
-		background: #ddd;
-		background: -moz-linear-gradient(#fff, #ddd); 
-		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ddd),color-stop(1, #fff));	
-		background: -webkit-linear-gradient(#fff, #ddd);	
-		background: -o-linear-gradient(#fff, #ddd);
-		background: -ms-linear-gradient(#fff, #ddd);
-		background: linear-gradient(#fff, #ddd);
+	#planContent li.weekdays li.weekday.done a{ /* DONE BREAKFAST */
+		background: #ebebe0;
+		background: -moz-linear-gradient(#fff, #ebebe0); 
+		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ebebe0),color-stop(1, #fff));	
+		background: -webkit-linear-gradient(#fff, #ebebe0);	
+		background: -o-linear-gradient(#fff, #ebebe0);
+		background: -ms-linear-gradient(#fff, #ebebe0);
+		background: linear-gradient(#fff, #ebebe0);
 	}
-
-	#projectContent li.weekdays li.weekday.open a{
-		background: #eee;
-	}
-	#projectContent li.weekdays li.weekday a:hover{
-		background: #eee;
-	}
-
-	#projectContent li.weekdays li.weekday a span{
+	#planContent li.weekdays li.weekday a span{
 		vertical-align: top;
 	}
 	
-	#projectContent li.weekdays li.weekday a span.weekdayTitle{
+	#planContent li.weekdays li.weekday a span.weekdayTitle{
 		display: inline-block;
 		width: 80px;
 	}
-	#projectContent li.weekdays li.weekday a span.weekdayDate{
+	#planContent li.weekdays li.weekday a span.weekdayDate{
 		display: inline-block;
 		width: 80px;
-		color: #00506f;
 		font-weight: bold;
 	}
-	#projectContent li.weekdays li.weekday a span.weekdayToday{
+	#planContent li.weekdays li.weekday a span.weekdayToday{
 		display: inline-block;
 		width: 105px;
 		text-align: center;
-		color: #00506f;
 		font-weight: bold;
 	}
-	#projectContent li.weekdays li.weekday a span.theChefs{
+	#planContent li.weekdays li.weekday a span.theChefs{
 		display: inline-block;
 		width: calc(100% - 265px);
 		text-align: right;
 		overflow: hidden;
 		word-wrap:break-word;
 	}
-	#projectContent li.weekdays li.weekday a span.theChefs span.limbo{
+	#planContent li.weekdays li.weekday a span.theChefs span.limbo{
 		font-weight: bold;
 	}
-	#projectContent li.weekdays li.weekday a span.theChefs span:not(:last-child):after{
+	#planContent li.weekdays li.weekday a span.theChefs span:not(:last-child):after{
 		content: " | ";
 	}
-	#projectContent li.weekdays li.weekday a:hover span.weekdayToday{
-		color: #00506f;
+	
+	/* OPEN */
+	#planContent li.weekdays li.weekday.open a{
+		background: #abcdef;
 	}
-	#projectContent li.weekdays li.weekday a:hover span.theChefs{
-		color: #000;
+	
+	/* HOVER */
+	#planContent li.weekdays li.weekday a:hover{
+		background: #abcdef;
+	}
+	#planContent li.weekdays li.weekday.done.open a,
+	#planContent li.weekdays li.weekday.done a:hover{
+		background: #ebebe0;
+	}
+	#planContent li.weekdays li.weekday.open a span.theChefs,
+	#planContent li.weekdays li.weekday a:hover span.theChefs{
+		color: #fff;
         font-weight: bold;
 	}
-	#projectContent li.weekdays li.weekday.done a,
-	#projectContent li.weekdays li.weekday.done a span.weekdayDate,
-	#projectContent li.weekdays li.weekday.done a span.weekdayToday,
-	#projectContent li.weekdays li.weekday.done a:hover span.theChefs{ /* DONE BREAKFAST */
+	#planContent li.weekdays li.weekday.done a,
+	#planContent li.weekdays li.weekday.done a span.weekdayDate,
+	#planContent li.weekdays li.weekday.done a span.weekdayToday,
+	#planContent li.weekdays li.weekday.done.open a span.theChefs,
+	#planContent li.weekdays li.weekday.done a:hover span.theChefs{ /* DONE BREAKFAST */
 		color: grey;
 	}
 	
-	#projectContent li.participants{
+	#planContent li.participants{
 	width: 100%;
 	padding: 5px;
 	border: 1px solid;
@@ -413,33 +446,33 @@ nav {
 	margin-bottom: 10px;
 	}
 	
-	#projectContent li.participants li.newChefTitle{
+	#planContent li.participants li.newChefTitle{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
 	width: 90px;
 	font-weight: bold;
 	}
-	#projectContent li.participants li.newChefs{
+	#planContent li.participants li.newChefs{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
 	width: calc(33% - 30px);
 	}
-	#projectContent li.participants li.newChefs select{
+	#planContent li.participants li.newChefs select{
 		width: 100%;
 	}
-	#projectContent li.participants li.newChefs select option#limbo{
+	#planContent li.participants li.newChefs select option#limbo{
 		font-weight: bold;
 		background: grey;
 	}
 	
 	
-	#projectContent li.participants span.participantsCount,
-	#projectContent li.participants span.participantsTitle{
+	#planContent li.participants span.participantsCount,
+	#planContent li.participants span.participantsTitle{
 	display: inline-block;
 	padding: 0px 5px 5px 0px;
 	font-weight: bold;
 	}
-	#projectContent li.participants ul.attending li{
+	#planContent li.participants ul.attending li{
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
@@ -448,18 +481,19 @@ nav {
 	}
 	
 /* PROJECT PANEL */
-#projectPanel{
+#planPanel{
 	padding-bottom: 20px;
 }	
-	#projectPanel li#title{
+	#planPanel li#title{
 	font-size: 1.0em;
 	font-weight: bold;
-	border-bottom: 1px solid;
+	color: #0186ba;
+	border-bottom: 1px solid #111;
 	}
-	#projectPanel li#title:not(:first-child){
+	#planPanel li#title:not(:first-child){
 	padding-top: 20px;
 	}
-    #projectPanel li span.name{
+    #planPanel li span.name{
     display: inline-block;
   	overflow: hidden;
 	word-wrap:break-word; 
@@ -475,7 +509,8 @@ nav {
 	#settingsContent li#title{
 	font-size: 1.0em;
 	font-weight: bold;
-	border-bottom: 1px solid;
+	color: #0186ba;
+	border-bottom: 1px solid #111;
 	}
 	#settingsContent li span.options{
 		display: inline-block;
@@ -511,7 +546,8 @@ nav {
 #settingsPanel li#title{
 font-size: 1.0em;
 font-weight: bold;
-border-bottom: 1px solid;
+color: #0186ba;
+border-bottom: 1px solid #111;
 }
 #settingsPanelContent li{
 }
@@ -526,6 +562,7 @@ border-bottom: 1px solid;
 	#settingsPanelContent li ul.optionLegend span{
 		display: inline-block;
 		width: 50%;
+		font-weight: bold;
 	}
 	#settingsPanelContent li ul.optionLegend span:last-child{
 		text-align: right;
@@ -571,7 +608,8 @@ border-bottom: 1px solid;
 #adminPanel li#title{
 font-size: 1.0em;
 font-weight: bold;
-border-bottom: 1px solid;
+color: #0186ba;
+border-bottom: 1px solid #111;
 }
 #adminPanel li.option{
 padding: 5px 0px;
@@ -608,17 +646,15 @@ padding: 5px 0px;
 }
 
 	#standardList li#showAmount{
-		
+	font-size: 1.2em;
+	font-weight: bold;		
+	color: #0186ba;
 	}
 	#standardList li:not(.listLegend):not(#showAmount){
 		padding: 5px 5px;
-		background: #ddd;
-		background: -moz-linear-gradient(#eee, #ddd); 
-		background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #ddd),color-stop(1, #eee));	
-		background: -webkit-linear-gradient(#eee, #ddd);	
-		background: -o-linear-gradient(#eee, #ddd);
-		background: -ms-linear-gradient(#eee, #ddd);
-		background: linear-gradient(#eee, #ddd);
+		background: #fff;
+		border: 1px solid #eee;
+		
 		/*-moz-border-radius: 50px;
 		border-radius: 50px;*/
 		-moz-box-shadow: 0 2px 1px #9c9c9c;
@@ -633,6 +669,7 @@ padding: 5px 0px;
 	#standardList li.listLegend span{
 		font-weight: bold;
 		text-decoration: underline;
+		
 	}
 	#standardList li.listLegend span.name{
 		width: calc(100% - 140px);
@@ -648,7 +685,7 @@ padding: 5px 0px;
 	}
 	/* THE LIST CONTENT */
 	#standardList li span.main{
-		width: calc(100% - 90px);
+		width: calc(100% - 100px);
 	}
 
 		#standardList li span.span2input{
@@ -674,6 +711,18 @@ padding: 5px 0px;
 			width: 100%;
 			margin: 0px;
 			padding: 0px;
+		}
+	#standardList li span.elementChecked{
+	width: 10px;
+	text-align: right;
+	vertical-align: top;
+	}
+		#standardList li span.elementChecked span.saveicon{
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		background-image: url("../images/saveicon.png");
+		background-size: 100% 100%;
 		}
 	#standardList li span.status{
 	width: 20px;
