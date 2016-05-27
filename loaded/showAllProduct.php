@@ -76,6 +76,7 @@ try{
 								echo "</span>";
 								echo "<span class='elementErrmsg' id='".$product['product_id']."Errmsg'></span>";
 							echo "</span>";
+							echo "<span class='elementChecked' id='".$product['product_id']."Checked'></span>";
 							echo "<span class='status'><input data-id='".$product['product_id']."' class='editProductStatus' type='checkbox' ".$inStore."/></span>";
 							echo "<span class='edit'>";
 								echo "<a href='javascript:;' data-id='".$product['product_id']."' class='saveProduct green hide'>[gem]</a>";

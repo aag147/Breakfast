@@ -27,10 +27,9 @@ try{
 	
 	if($participants_count==0){
 		echo "Du har ikke tilføjet nogle deltagere endnu.";
-	}else{
-		echo "<span id='showAmount'>Viser <span id='totalAmount'>".$participants_count."</span> deltager(e)...</span>";
-		
+	}else{		
 		echo "<ul id='standardList'>";
+			echo "<li id='showAmount'>Viser <span id='totalAmount'>".$participants_count."</span> deltager(e)...</li>";
 			echo "<li class='listLegend'>";
 				echo "<span class='name'>Navn</span>";
 				echo "<span class='status'></span>";
@@ -45,6 +44,7 @@ try{
 						echo "</span>";
 						echo "<span class='participantErrmsg' id='".$participant['participant_id']."Errmsg'></span>";
 					echo "</span>";
+					echo "<span class='elementChecked'></span>";
 					echo "<span class='status'></span>";
 					echo "<span class='edit'>";
 						echo "<a href='javascript:;' data-id='".$participant['participant_id']."' class='saveParticipant green hide'>[gem]</a>";

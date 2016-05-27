@@ -11,29 +11,16 @@
 	nav li{
 		width: 50%;
 	}
-	nav.frontpage li{
-		width: 100%;
-	}
-	nav li:nth-of-type(odd) a {
-		border-right: 1px solid rgb(34, 34, 34);
-	}
 	nav li a{
 		padding: 5px 0px;	
 	}
-	nav.frontpage li a{
-		padding: 5px 0px;
-		border-right: 1px solid rgb(34, 34, 34);
-		border-left: 1px solid rgb(34, 34, 34);		
+	nav.frontpage li{
+		width: 100%;
 	}
-	nav li a:hover {
-	background-color: #ccc;
-	color: #fff;
+	nav.frontpage li a {
+		padding: 5px 0px;
 	}
 
-	nav li.current a{
-		background-color: #00506f;
-		color: #fff;
-	}	
 
 
 	/* TITLE */
@@ -60,15 +47,15 @@
 	}
 	
 	/* PLAN */
-	#projectContent li.weekdays li.weekday a span.theChefs{
+	#planContent li.weekdays li.weekday a span.theChefs{
 		width: 100%;
 	}
-	#projectContent li.participants li.newChefs,
-	#projectContent li.participants ul.attending li{
+	#planContent li.participants li.newChefs,
+	#planContent li.participants ul.attending li{
 		width: 100%;
 	}
 	
-	#projectPanel{
+	#planPanel{
 		display: none;
 	}
 	

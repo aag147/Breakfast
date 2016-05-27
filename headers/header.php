@@ -21,14 +21,14 @@
 	<div id="contentOuterHeader">
 		<div id="contentHeader">
 			<?php /* PAGE HEADER */?>
-			<div id="siteTitle"><a href="project.php">
-				Morgenmadsplanlægger
+			<div id="siteTitle"><a href="plan.php">
+				<span>Morgenmads</span><span>planlægger</span>
 			</a></div>
 			<?php if(!empty($cookie_project_id)){ ?>
 				<nav id="navigation">
 					<ul>
-					  <li class='<?php if($filename=="project"){echo "current";} ?>'>
-						<a href="project.php">Plan</a>
+					  <li class='<?php if($filename=="plan"){echo "current";} ?>'>
+						<a href="plan.php">Plan</a>
 					  </li><li class='<?php if($filename=="products"){echo "current";} ?>'>
 						<a href="products.php">Produkter</a>
 					  </li><li class='<?php if($filename=="participants"){echo "current";} ?>'>

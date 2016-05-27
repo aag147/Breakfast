@@ -29,7 +29,7 @@ try{
 	</div>
 	
 	<div id="standardContent">
-		<ul id="projectContent">
+		<ul id="planContent">
 			<li id="title">
 				Kommende arrangementer
 			</li>
@@ -40,7 +40,7 @@ try{
 		</ul>
 	</div><?php
 	?><div id="standardPanel">
-		<ul id="projectPanel" >
+		<ul id="planPanel" >
 			<li id="title">
 				Hvad skal købes?
 			</li>
