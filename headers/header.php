@@ -8,12 +8,11 @@
 <head> 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	
-	<script type="text/javascript" src="../javascripts/jquery-1.12.3.min.js"></script>
-	<script type='text/javascript' src="../javascripts/functions.js"></script>	
-	<script type='text/javascript' src="../javascripts/events.js"></script>	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 	
-	<link rel="stylesheet" href="../stylesheets/breakfast.css" type="text/css" >
-	<link rel="stylesheet" href="../stylesheets/breakfastphone.css" type="text/css" >
+	<link rel="stylesheet" href="<?php echo "../stylesheets/breakfast.css"; ?>" type="text/css" >
+	<link rel="stylesheet" href="<?php echo "../stylesheets/breakfastphone.css"; ?>" type="text/css" >
+	<script src="<?php echo "../javascripts/breakfast.js"; ?>" type='text/javascript'></script>	
 </head>
 
 <body> 
