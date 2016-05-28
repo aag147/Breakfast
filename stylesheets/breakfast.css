@@ -472,6 +472,9 @@ nav {
 	padding: 0px 5px 5px 0px;
 	font-weight: bold;
 	}
+	#planContent li.participants span.participantsCount{
+	color: #0186ba;
+	}
 	#planContent li.participants ul.attending li{
 	display: inline-block;
 	width: 50%;

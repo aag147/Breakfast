@@ -1,3 +1,0 @@
-Vigtigt:
-What to buy - ajax implementation
-Antal værter = 1 ved afkrydsning (done)
