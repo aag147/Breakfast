@@ -41,11 +41,50 @@ try{
 	</div><?php
 	?><div id="standardPanel">
 		<ul id="planPanel" >
-			<li id="title">
-				Hvad skal købes?
+			<li class="title">
+			Guide til planen
 			</li>
-			<?php /* jscript */ ?>
-			<li id="showAllProduct"></li>
+			<li class="help">
+				<span>Bjælkerne til venstre fortæller dig:</span>
+				<ul>
+					<li>
+						Dato og dag for arrangementet
+					</li><li>
+						Hvem der er vært(er) ved arrangementet
+					</li>
+				</ul>
+				<span>Åbner du arrangementet kan du:</span>
+				<ul>
+					<li>
+						Give besked om du kan komme til et
+						arrangement eller ej.
+					</li><li>
+						Blive orienteret om hvor mange,
+						der kommer til et arrangement
+					</li><li>
+						Skifte vært / vælge afløser
+						<ul>
+							<li>
+								'Limbo' betyder ingen vært/afløser er valgt
+							</li>
+							<li>
+								Nummeret ud for potentielle afløsere beskriver
+								afløser-forholdet mellem værten og afløseren:
+								Hvis tallet er positivt skylder afløseren en afløsning,
+								hvis tallet er negativt skylder værten en afløsning.
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<span>For at gøre følgende skal du klikke ind på <a href='../views/settings.php' class='blue'>Indstillinger</a>:</span>
+				<ul>
+					<li>
+						Redigere arrangmentdage
+					</li><li>
+						Redigere antallet af værter
+					</li>
+				</ul>
+			</li>
 		</ul>
 	</div>
 <?php
