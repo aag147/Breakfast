@@ -487,13 +487,13 @@ nav {
 #planPanel{
 	padding-bottom: 20px;
 }	
-	#planPanel li#title{
+	#planPanel li.title{
 	font-size: 1.0em;
 	font-weight: bold;
 	color: #0186ba;
 	border-bottom: 1px solid #111;
 	}
-	#planPanel li#title:not(:first-child){
+	#planPanel li.title:not(:first-child){
 	padding-top: 20px;
 	}
     #planPanel li span.name{
@@ -502,6 +502,23 @@ nav {
 	word-wrap:break-word; 
     vertical-align: bottom;
     }
+	#planPanel li.help{
+	font-size: 0.9em;
+	}
+		#planPanel li.help > span{
+		font-weight: bold;
+		}
+		#planPanel li.help ul{
+		padding: 2px 0px 10px 20px;
+		}
+		#planPanel li.help > ul > li{
+		list-style: disc outside none;
+		padding: 2px 0px;
+		}
+		#planPanel li.help > ul ul > li{
+		list-style: circle outside none;
+		padding: 2px 0px;
+		}
 	
 /* SETTINGS CONTENT */	
 #settingsContent{
@@ -522,7 +539,7 @@ nav {
 	#settingsContent li span.options a{
 		display: inline-block;
 		width: 100%;
-		margin: 10px 0px 30px;
+		margin: 10px 0px 10px;
 		padding: 4px 2px;
 		border: 2px solid;
 		text-align: center;
@@ -546,7 +563,7 @@ nav {
 	}
 	
 /* SETTINGS PANEL */
-#settingsPanel li#title{
+#settingsPanel li.title{
 font-size: 1.0em;
 font-weight: bold;
 color: #0186ba;
@@ -608,7 +625,7 @@ border-bottom: 1px solid #111;
 	
 	
 /* STANDARD ADMIN PANEL */
-#adminPanel li#title{
+#adminPanel li.title{
 font-size: 1.0em;
 font-weight: bold;
 color: #0186ba;
@@ -654,7 +671,7 @@ padding: 5px 0px;
 	color: #0186ba;
 	}
 	#standardList li:not(.listLegend):not(#showAmount){
-		padding: 5px 5px;
+		padding: 1px 5px;
 		background: #fff;
 		border: 1px solid #eee;
 		
@@ -666,7 +683,7 @@ padding: 5px 0px;
 	}
 	#standardList li span{
 		display: inline-block;
-		padding: 1px 0px;
+		padding: 1px 0px 0px;
 	}
 	/* THE LIST LEGEND */
 	#standardList li.listLegend span{

@@ -31,7 +31,7 @@ include("../headers/header.php");
 	
 	?><div id="standardPanel">
 		<ul id="adminPanel">
-			<li id="title">
+			<li class="title">
 				Administration
 			</li>
 			<li class="option">

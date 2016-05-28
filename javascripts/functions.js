@@ -272,6 +272,8 @@
 		$options.children("a.annul"+typeUCF).addClass('hide');
 		$("a.edit"+typeUCF).removeClass('hide');
 		$("a.delete"+typeUCF).removeClass('hide');
+		$("a.logOut").removeClass('hide');
+		$("a.toggleHelp").removeClass('hide');
 		
 		// Remove event handlers
 		$options.children("a.save"+typeUCF).off("click");
@@ -359,6 +361,8 @@
 		
 		$("a.edit"+typeUCF).addClass('hide');
 		$("a.delete"+typeUCF).addClass('hide');
+		$("a.logOut").addClass('hide');
+		$("a.toggleHelp").addClass('hide');
 		$options.children("a.save"+typeUCF).removeClass('hide');
 		$options.children("a.annul"+typeUCF).removeClass('hide');
 		$inputs.children("input:first").focus();
