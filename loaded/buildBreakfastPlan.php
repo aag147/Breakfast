@@ -254,7 +254,7 @@ try{
 		$current_date = date("Y-m-d");
 		$tomorrow_date = date("Y-m-d", strtotime("+ 1 day"));
 		$dynamic_chefs_index = 0;
-		echo "<ul>";
+		echo "<ul id='breakfastPlan_inner'>";
 		for($i = 0; $i < 6; $i++){
 			// New week
 			
@@ -466,7 +466,7 @@ try{
 						echo "</ul>";
 						
 						echo "<span class='participantsCount'>".$registrations_count."</span>";
-						echo "<span class='participantsTitle'>kommer. Men hvem (foruden værten)?</span>";
+						echo "<span class='participantsTitle'>personer kommer. Skal du med?</span>";
 					
 						echo "<ul class='attending'>";
 						foreach($participants as $participant){

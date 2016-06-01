@@ -73,8 +73,7 @@ $(document).ready(function() {
 });	
 
 $(document).ajaxStop(function () {
-	
-	
+		
 	/***** FOR FORM SUBMITS WAITING FOR AJAX TO FINISH *****/
 	// Edit breakfast weekdays
 	$('#editBreakfastWeekdays').submit(function(event) {
@@ -108,6 +107,14 @@ $(document).ajaxStop(function () {
 	$('.showParticipants').off('click').on('click', function(event){
 		toggleParticipantsWindow($(this).data('id'));
 	});		
+	// Close all participant windows when upon click outside plan
+	$(document).mouseup(function (e){
+		var container = $("#breakfastPlan_inner");
+		if (!container.is(e.target)	&& container.has(e.target).length === 0){
+			// Not container nor child of container
+			closeAllParticipantsWindows();
+		}
+	});
 	/* Edit chef */
 	$('select.newChefSelect').off('change').on('change', function() {
 		changeChef(this.value, $(this).data('breakfast_id'), $(this).data('original'));
@@ -116,6 +123,7 @@ $(document).ajaxStop(function () {
 	$(':checkbox.removeProductStatus').off('change').on('change', function() {
 		changeStatus(this.checked, $(this).data('id'), "product", true);	
 	});
+	 
 	
 	/** PRODUCTS **/
 	/* Edit product */
