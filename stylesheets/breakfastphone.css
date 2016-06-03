@@ -14,8 +14,11 @@
 	nav li a{
 		padding: 5px 0px;	
 	}
-	nav.frontpage li{
+	nav.frontpage li:first-child{
 		width: 100%;
+	}
+	nav.frontpage li:not(:first-child){
+		width: 50%;
 	}
 	nav.frontpage li a {
 		padding: 5px 0px;
@@ -25,7 +28,7 @@
 
 	/* TITLE */
 	#siteTitle{
-	font-size: 2.0em;
+	font-size: 1.6em;
 	}
 	
 	/* STANDARD */
@@ -56,7 +59,7 @@
 	}
 	
 	#planPanel{
-		display: none;
+		
 	}
 	
 	/* SETTINGS */
