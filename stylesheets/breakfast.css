@@ -101,9 +101,6 @@ a.green:hover{
 	color:#248f24;
 }
 
-a.underline{
-	text-decoration:underline;
-}
 
 
 
@@ -524,6 +521,9 @@ nav {
 		#planPanel li.help > ul ul > li{
 		list-style: circle outside none;
 		padding: 2px 0px;
+		}
+		#planPanel li.help a{
+		text-decoration: underline;
 		}
 	
 /* SETTINGS CONTENT */	

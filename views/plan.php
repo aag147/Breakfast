@@ -76,7 +76,7 @@ try{
 						</ul>
 					</li>
 				</ul>
-				<span>For at gøre følgende skal du klikke ind på <a href='../views/settings.php' class='blue underline'>Indstillinger</a>:</span>
+				<span>For at gøre følgende skal du klikke ind på <a href='../views/settings.php' class='blue'>Indstillinger</a>:</span>
 				<ul>
 					<li>
 						Redigere arrangmentdage
