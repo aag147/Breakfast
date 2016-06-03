@@ -21,7 +21,7 @@
 	<div id="contentOuterHeader">
 		<div id="contentHeader">
 			<?php /* PAGE HEADER */?>
-			<div id="siteTitle"><a href="plan.php">
+			<div id="siteTitle"><a href="index.php">
 				<span>Morgenmads</span><span>planlægger</span>
 			</a></div>
 			<?php if(!empty($cookie_project_id)){ ?>

@@ -305,6 +305,7 @@ try{
 						$breakfast_chefs_count = $breakfast_chefs_db->rowCount();
 						$old_breakfast_chefs = $breakfast_chefs_db->fetchAll();
 						$old_breakfast_chefs_id = array_column($old_breakfast_chefs, 'participant_id');	
+						
 					}else{
 						// Skip new breakfast for old dates
 						if($breakfast_date < $current_date){
@@ -315,11 +316,17 @@ try{
 						$breakfast_id = $conn->lastInsertId('breakfast_breakfasts');						
 						$breakfast_done = 0;
 					}
+							
 					
-					// Don't edit chef amount for older dates nor today
+					// Today and earlier this week
 					if($hasBreakfast AND ($breakfast_done OR $breakfast_date == $current_date)){
+						// Skip older dates and today if no chefs is saved
+						if(COUNT($old_breakfast_chefs_id) == 0){
+							continue;
+						}		
+						// Don't edit chef amount for older dates nor today
 						$weekday_chefs_count = $breakfast_chefs_count;
-					}
+					}					
 
 
 					/***** ORIGINAL CHEFS *****/					

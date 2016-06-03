@@ -3,7 +3,9 @@
 //************************//
 
 	// Show error message
-	function showMessage(id, message, remove=true, count=5000){		
+	function showMessage(id, message, remove, count){		
+		remove = remove || true;
+		count = count || 5000;
 		
 		$('#'+id).html(message);
 		if(remove){
@@ -27,23 +29,26 @@
 	}
 	
 	// Show products
-	function showContent(type, visuals = 'full', db_filter = 'merge'){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);
+	function showContent(elementtype, visuals, db_filter){
+		visuals = visuals || "full";
+		db_filter = db_filter || "merge";
+		
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);
 		 $.ajax({
 			   type: "POST",
-			   url: '../loaded/showAll'+typeUCF+'.php',
+			   url: '../loaded/showAll'+elementtypeUCF+'.php',
 			   data: {visuals: visuals, db_filter: db_filter},
 			   success: function(retval) {
-				  $("#showAll"+typeUCF).html(retval);
+				  $("#showAll"+elementtypeUCF).html(retval);
 			   }
 		  });
 	}
 	
 	// Send notifications
-	function sendNotifications(formData, type){
-		formData.append("type", type);
+	function sendNotifications(formData, elementtype){
+		formData.append("type", elementtype);
 		
-		if(type == "forgotten"){
+		if(elementtype == "forgotten"){
 			$('#forgottenErrmsg').html("<p class='neutral'>Emailen sendes... Det kan tage et øjeblik.</p>");
 			$('#forgottenView input[type=submit]').prop('disabled', true);
 		}
@@ -56,9 +61,9 @@
 			   contentType: false,
 			   dataType: 'json',
 			   success: function(retval) {
-				   showMessage(type+"Errmsg", retval[1], false);
+				   showMessage(elementtype+"Errmsg", retval[1], false);
 				   if(retval[0]==1){
-					   if(type=="forgotten"){
+					   if(elementtype=="forgotten"){
 							$("#forgottenForm span#emailSpan").addClass('hide');
 							$("#forgottenForm span:not(#emailSpan)").removeClass('hide');
 							var message = "Indtast den tilsendte sikkerhedskode samt et nyt kodeord til projektet. " +
@@ -70,7 +75,7 @@
 							$('#forgottenForm input[type=submit]').val('Log ind');
 					   }
 					}
-					if(type == "forgotten"){
+					if(elementtype == "forgotten"){
 						$('#forgottenForm input[type=submit]').prop('disabled', false);
 					}
 			   }
@@ -78,9 +83,9 @@
 	}
 	
 	// Account management
-	function manageAccount(formData, type){
-		formData.append("type", type);
-		$('#'+type+'Form input[type=submit]').prop('disabled', true);
+	function manageAccount(formData, elementtype){
+		formData.append("type", elementtype);
+		$('#'+elementtype+'Form input[type=submit]').prop('disabled', true);
 		$.ajax({
 			url: '../loaded/manageAccount.php',
 			type: 'POST',
@@ -89,34 +94,34 @@
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				showMessage(type+"Errmsg", retval[1], false);
+				showMessage(elementtype+"Errmsg", retval[1], false);
 				if(retval[0]==1){
-					if(type=="forgotten"){
+					if(elementtype=="forgotten"){
 						formData.append("project_id", retval[2]);
 						manageAccount(formData, "password");
-					}else if(type=="password"){
+					}else if(elementtype=="password"){
 						manageAccount(formData, "login");
-					}else if(type=="login" || type=="logout"){
+					}else if(elementtype=="login" || elementtype=="logout"){
 						window.location.href = "../views/index.php";
-					}else if(type=='weekdays'){
-						sendNotifications(new FormData(), type);
+					}else if(elementtype=='weekdays'){
+						sendNotifications(new FormData(), elementtype);
 					}
 				}
-				if(retval[0]!=1 || type=="login" || type=="logout" || type=="weekdays"){
-					$('#'+type+'Form input[type=submit]').prop('disabled', false);
+				if(retval[0]!=1 || elementtype=="login" || elementtype=="logout" || elementtype=="weekdays"){
+					$('#'+elementtype+'Form input[type=submit]').prop('disabled', false);
 				}
 			}
 		});
 	}
 	
 	// Add something
-	function addElement(formData, type){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);
+	function addElement(formData, elementtype){
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);
 		formData.append("type", "new");
-		$('#new'+typeUCF+'Form input[type=submit]').prop('disabled', true);
+		$('#new'+elementtypeUCF+'Form input[type=submit]').prop('disabled', true);
 	
 		$.ajax({
-			url: '../loaded/manage'+typeUCF+'.php',
+			url: '../loaded/manage'+elementtypeUCF+'.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -125,45 +130,45 @@
 			success: function(retval) {
 				showMessage('newErrmsg', retval[1]);
 				if(retval[0]==1){
-					if(type=="account"){
+					if(elementtype=="account"){
 						manageAccount(formData, "login");
 					}else{
-						showContent(type);
-						$(':input','#new'+typeUCF+'Form').not(':button, :submit, :reset, :hidden').val('');
+						showContent(elementtype);
+						$(':input','#new'+elementtypeUCF+'Form').not(':button, :submit, :reset, :hidden').val('');
 						$(":input#name").focus();
 					}
 				}
-				$('#new'+typeUCF+'Form input[type=submit]').prop('disabled', false);
+				$('#new'+elementtypeUCF+'Form input[type=submit]').prop('disabled', false);
 			}
 		});
 	}
 	
 
 	// Change status of something
-	function changeStatus(checked, id, type, remove){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);		
+	function changeStatus(checked, id, elementtype, remove){
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);		
 		var formData = new FormData();
 		formData.append("value", checked);
 		formData.append("type", "changeStatus");
-		formData.append(type+"_id", id);
+		formData.append(elementtype+"_id", id);
 		$.ajax({
-			url: '../loaded/manage'+typeUCF+'.php',
+			url: '../loaded/manage'+elementtypeUCF+'.php',
 			type: 'POST',
 			data: formData,
 			processData: false,
 			contentType: false,
 			dataType: 'json',
 			success: function(retval) {
-				if(retval[0]==1 && type=='product' && remove){
-					var row = document.getElementById(type+"_"+id);
+				if(retval[0]==1 && elementtype=='product' && remove){
+					var row = document.getElementById(elementtype+"_"+id);
 					if(row){row.parentNode.removeChild(row);}
 					$count = $("span#totalAmount");
 					$count.text(parseInt($count.text()) - 1);
-					if($count.text()==0){showContent(type, visuals = 'simple', db_filter = 'buy');}
+					if($count.text()==0){showContent(elementtype, visuals = 'simple', db_filter = 'buy');}
 					
-				}else if(retval[0]==1 && type=='product'){
+				}else if(retval[0]==1 && elementtype=='product'){
 					showMessage(id+"Checked", "<span class='saveicon'></span>", true, 500);
-				}else if(retval[0]==1 && type=="participant"){
+				}else if(retval[0]==1 && elementtype=="participant"){
 					var breakfast = $("#"+id).data('breakfast_id');
 					$count = $("#participants_"+breakfast+" span.participantsCount");
 					if(checked){
@@ -238,23 +243,23 @@
 	}
 
 	// Delete something
-	function deleteElement(id, type){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);		
+	function deleteElement(id, elementtype){
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);		
 		$.ajax({
-			url: '../loaded/manage'+typeUCF+'.php',
+			url: '../loaded/manage'+elementtypeUCF+'.php',
 			type: 'POST',
 			data: {id: id, type: 'delete'},
 			dataType: 'json',
 			success: function(retval) {
 				if(retval[0]==1){
-					if(type=="account"){
+					if(elementtype=="account"){
 						manageAccount(new FormData(), "logout");
 					}else{
-						var row = document.getElementById(type+"_"+id);
+						var row = document.getElementById(elementtype+"_"+id);
 						if(row){row.parentNode.removeChild(row);}
 						$count = $("#totalAmount");
 						$count.text(parseInt($count.text()) - 1);
-						if($count.text()==0){showContent(type);}
+						if($count.text()==0){showContent(elementtype);}
 					}
 				}
 			}
@@ -263,21 +268,21 @@
 	
 	/********* Edit something (in-line) ********/
 	// Returns the inputs to span
-	function backToSpan($inputs, $span, $options, type, id){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);
+	function backToSpan($inputs, $span, $options, elementtype, id){
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);
 		
 		// Changing input to span
 		$inputs.replaceWith($span);
-		$options.children("a.save"+typeUCF).addClass('hide');
-		$options.children("a.annul"+typeUCF).addClass('hide');
-		$("a.edit"+typeUCF).removeClass('hide');
-		$("a.delete"+typeUCF).removeClass('hide');
+		$options.children("a.save"+elementtypeUCF).addClass('hide');
+		$options.children("a.annul"+elementtypeUCF).addClass('hide');
+		$("a.edit"+elementtypeUCF).removeClass('hide');
+		$("a.delete"+elementtypeUCF).removeClass('hide');
 		$("a.logOut").removeClass('hide');
 		$("a.toggleHelp").removeClass('hide');
 		
 		// Remove event handlers
-		$options.children("a.save"+typeUCF).off("click");
-		$options.children("a.annul"+typeUCF).off("click");
+		$options.children("a.save"+elementtypeUCF).off("click");
+		$options.children("a.annul"+elementtypeUCF).off("click");
 		$('.editInput').off("keypress");
 		
 		// Clear error message
@@ -285,8 +290,8 @@
 	}
 
 	// Making the actual edit with ajax call
-	function makeTheEdit($inputs, $span, $options, type, id){
-		var typeUCF = type[0].toUpperCase() + type.substring(1);
+	function makeTheEdit($inputs, $span, $options, elementtype, id){
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);
 		
 		setTimeout(function (){
 			
@@ -295,12 +300,12 @@
 			$inputs.children('input').each(function () {
 				formData.append($(this).attr('name'), $(this).val());
 			});
-			formData.append(type+"_id", id);
+			formData.append(elementtype+"_id", id);
 			formData.append("type", "edit");
 			
 			// Ajax to insert new element
 			$.ajax({
-				url: '../loaded/manage'+typeUCF+'.php',
+				url: '../loaded/manage'+elementtypeUCF+'.php',
 				type: 'POST',
 				data: formData,
 				processData: false,
@@ -315,7 +320,7 @@
 						});	
 						
 						// Return to span
-						backToSpan($inputs, $span, $options, type, id);
+						backToSpan($inputs, $span, $options, elementtype, id);
 					}else{
 						showMessage(id+"Errmsg", retval[1]);
 					}
@@ -326,12 +331,12 @@
 	
 		
 	// Main function for inline edit
-	function editInLine(id, type) {
-		var typeUCF = type[0].toUpperCase() + type.substring(1);
+	function editInLine(id, elementtype) {
+		var elementtypeUCF = elementtype[0].toUpperCase() + elementtype.substring(1);
 		
-		var $span = $('#'+type+'_'+id+' span.span2input');
-		var $options = $('#'+type+'_'+id+' span.edit');
-		if(type=="account"){
+		var $span = $('#'+elementtype+'_'+id+' span.span2input');
+		var $options = $('#'+elementtype+'_'+id+' span.edit');
+		if(elementtype=="account"){
 			$span = $('span.span2input');
 			$options = $('span.options');
 		}
@@ -359,30 +364,30 @@
 		// Visual change of span to input
 		$span.replaceWith($inputs);
 		
-		$("a.edit"+typeUCF).addClass('hide');
-		$("a.delete"+typeUCF).addClass('hide');
+		$("a.edit"+elementtypeUCF).addClass('hide');
+		$("a.delete"+elementtypeUCF).addClass('hide');
 		$("a.logOut").addClass('hide');
 		$("a.toggleHelp").addClass('hide');
-		$options.children("a.save"+typeUCF).removeClass('hide');
-		$options.children("a.annul"+typeUCF).removeClass('hide');
+		$options.children("a.save"+elementtypeUCF).removeClass('hide');
+		$options.children("a.annul"+elementtypeUCF).removeClass('hide');
 		$inputs.children("input:first").focus();
 		
 		// Save input and return to span
-		$options.children("a.save"+typeUCF).on("click", function(event) {
+		$options.children("a.save"+elementtypeUCF).on("click", function(event) {
 			// Click on save
-			makeTheEdit($inputs, $span, $options, type, id);
+			makeTheEdit($inputs, $span, $options, elementtype, id);
 		});
 		$('.editInput').keypress(function(event) {
 			// Press enter
 			if (event.keyCode == 13) {
-				makeTheEdit($inputs, $span, $options, type, id);
+				makeTheEdit($inputs, $span, $options, elementtype, id);
 			}
 		});
 		
 		// Annul input and return to span
-		$options.children("a.annul"+typeUCF).one("click", function(event){
+		$options.children("a.annul"+elementtypeUCF).one("click", function(event){
 			// Return to span
-			backToSpan($inputs, $span, $options, type, id);
+			backToSpan($inputs, $span, $options, elementtype, id);
 		});
 	};
 	
@@ -409,11 +414,13 @@
 	}
 
 	// Toggle between the index views
-	function toggleFrontpageView(view, type = 'static') {
-		if(type == 'dynamic' && view == 'register'){
+	function toggleFrontpageView(view, elementtype) {
+		elementtype = elementtype || "static";
+		
+		if(elementtype == 'dynamic' && view == 'register'){
 			var name = $('#loginView input#name').val();
 			$('#registerView input#name').val(name);
-		}else if(type == 'dynamic' && view == 'forgotten'){
+		}else if(elementtype == 'dynamic' && view == 'forgotten'){
 			$(':input','#forgottenForm').not('#name, :button, :submit, :reset, :hidden').val('');
 			$("#forgottenForm span#emailSpan").removeClass('hide');
 			$("#forgottenForm span#securitySpan, #forgottenForm span#passwordSpan").addClass('hide');
