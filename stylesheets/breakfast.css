@@ -539,7 +539,7 @@ nav {
 	#settingsContent li span.options a{
 		display: inline-block;
 		width: 100%;
-		margin: 10px 0px 10px;
+		margin: 20px 0px 20px;
 		padding: 4px 2px;
 		border: 2px solid;
 		text-align: center;
@@ -557,6 +557,9 @@ nav {
 		-moz-box-shadow: 0 2px 1px #9c9c9c;
 		-webkit-box-shadow: 0 2px 1px #9c9c9c;
 		box-shadow: 0 2px 1px #9c9c9c;
+	}
+	#settingsContent li span.options a.annulAccount{
+		margin: 0px;
 	}
 	#settingsContent li span.options a:not(.green):hover{
 		color: #0186ba;
