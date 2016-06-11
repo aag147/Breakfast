@@ -1,4 +1,4 @@
-Breakfast Management
+#Breakfast Management#
 Bachelor project DIKU 2016
 Casper Radmer Jensen & Aleksander Adrian Gabel
 
