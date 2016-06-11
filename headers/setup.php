@@ -15,7 +15,7 @@ $weekdays_danish = array("Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "LÃ
 try{ 
 	$conn = new PDO("mysql:host=".DB_SERVER.";port=3306;dbname=".DB_NAME, DB_USER, DB_PASSWORD);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
-	
+		
 	// Handling login/session cookies
 	if(!empty($_COOKIE['cookie_project_id'])){
 		$cookie_project_id		= $_COOKIE['cookie_project_id'];

@@ -55,8 +55,8 @@ try{
 			// Saves cookies
 			if($checkbox==1){$time = 31536000;}
 			else{$time = 43200;}
-			setcookie("cookie_project_id",$project_id,time()+$time, '/', 'localhost');
-			setcookie("cookie_hash",$cookie_hash,time()+$time, '/', 'localhost');					
+			setcookie("cookie_project_id",$project_id,time()+$time, '/', false);
+			setcookie("cookie_hash",$cookie_hash,time()+$time, '/', false);					
 			$insert = $conn->prepare("INSERT INTO breakfast_projects_sessions (session_hash, project_id, session_date) VALUES (:hash, :project_id, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL $time SECOND))");
 			$insert->bindParam(':hash', $cookie_hash);
 			$insert->bindParam(':project_id', $project_id);
