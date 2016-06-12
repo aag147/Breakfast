@@ -65,11 +65,13 @@ try{
 	
 	// Extract single chef
 	$chef_db = $conn->prepare(" SELECT participant_id, participant_name, chef_replacement_id FROM
-									(SELECT * FROM breakfast_chefs WHERE project_id = :project_id AND chef_id = :chef_id) C
+									(SELECT * FROM breakfast_chefs
+									 WHERE project_id = :project_id AND breakfast_id = :breakfast_id AND chef_id = :chef_id) C
 								JOIN
 									breakfast_participants
 								ON chef_id = participant_id LIMIT 1");
 	$chef_db->bindParam(':project_id', $cookie_project_id);
+	$chef_db->bindParam(':breakfast_id', $breakfast_id);
 	$chef_db->bindParam(':chef_id', $chef_id);
 	
 	// Extract registration count for single breakfast
@@ -94,11 +96,12 @@ try{
 	$new_breakfast->bindParam(':breakfast_weekday', $breakfast_weekday);
 	
 	// Insert new chef
-	$new_chef = $conn->prepare("INSERT INTO breakfast_chefs (project_id, breakfast_id, chef_id)
-								   VALUES (:project_id, :breakfast_id, :chef_id)");
+	$new_chef = $conn->prepare("INSERT INTO breakfast_chefs (project_id, breakfast_id, chef_id, chef_replacement_id)
+								   VALUES (:project_id, :breakfast_id, :chef_id, :chef_replacement_id)");
 	$new_chef->bindParam(':project_id', $cookie_project_id);
 	$new_chef->bindParam(':breakfast_id', $breakfast_id);
 	$new_chef->bindParam(':chef_id', $chef_id);
+	$new_chef->bindParam(':chef_replacement_id', $chef_replacement_id);
 	
 	// Delete new chef
 	$delete_chef = $conn->prepare("DELETE FROM breakfast_chefs
@@ -351,6 +354,13 @@ try{
 								$index = array_search($chef_id, $old_breakfast_chefs_id);
 								$chef = $old_breakfast_chefs[$index];
 							}else{
+								// Chef registration
+								$registration_db->execute();
+								$is_registered = $registration_db->rowCount();
+								$registration = $registration_db->fetch();
+								if($is_registered AND !$registration['participant_attending']){$chef_replacement_id = -1;}
+								else{$chef_replacement_id = 0;}
+								
 								// Insert new chef
 								$new_chef->execute();
 								
