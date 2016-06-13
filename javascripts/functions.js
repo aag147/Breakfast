@@ -297,7 +297,7 @@
 			
 			// Creating formdata
 			formData = new FormData();
-			$inputs.children('input').each(function () {
+			$inputs.children('form').children('input').each(function () {
 				formData.append($(this).attr('name'), $(this).val());
 			});
 			formData.append(elementtype+"_id", id);
@@ -313,7 +313,7 @@
 				dataType: "json",
 				success: function(retval) {
 					if(retval[0] == 1){
-						$inputs.children('input').each(function () {
+						$inputs.children('form').children('input').each(function () {
 							value = $(this).val();
 							if($(this).attr('name')=="email"){value = "Email: " + value;}
 							$span.children('.'+$(this).attr('name')).text(value);
@@ -345,21 +345,34 @@
 		$inputs = $('<span />', {
 			'class': 'span2input' 
 		});
+		$form = $('<form />', {
+			'id': 'span2inputForm' 
+		});
 
 		// Appending inputs to new span
 		$span.children('span').each(function () {
-			value = $(this).text();
-			if($(this).attr('class')=="email"){value = value.replace("Email: ", "");}
+			var value = $(this).text();
+			var type = 'text';
+			if($(this).attr('class')=="email"){
+				value = value.replace("Email: ", "");
+				type = 'email';
+			}
 			
-			input = $('<input />', {
-				'type':  'text',
+			$input = $('<input />', {
+				'type':  type,
 				'id': $(this).attr('id'),
 				'value': value,
 				'name': $(this).attr('class'),
 				'class': 'editInput'
 			});			
-			$inputs.append( input );
+			$form.append( $input );
 		});
+		$submit = $('<input />', {
+				'type':  'submit',
+				'class': 'hide'
+		});	
+		$form.append( $submit );
+		$inputs.append( $form );
 		
 		// Visual change of span to input
 		$span.replaceWith($inputs);
@@ -371,17 +384,16 @@
 		$options.children("a.save"+elementtypeUCF).removeClass('hide');
 		$options.children("a.annul"+elementtypeUCF).removeClass('hide');
 		$inputs.children("input:first").focus();
-		
+
 		// Save input and return to span
 		$options.children("a.save"+elementtypeUCF).on("click", function(event) {
 			// Click on save
-			makeTheEdit($inputs, $span, $options, elementtype, id);
+			$('#span2inputForm').submit();
 		});
-		$('.editInput').keypress(function(event) {
+		$('#span2inputForm').submit(function(event) {
 			// Press enter
-			if (event.keyCode == 13) {
-				makeTheEdit($inputs, $span, $options, elementtype, id);
-			}
+			makeTheEdit($inputs, $span, $options, elementtype, id);
+			event.preventDefault();
 		});
 		
 		// Annul input and return to span
